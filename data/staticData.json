@@ -1,0 +1,34 @@
+{
+    "moonVoidOfCourse": [
+        {
+            "date": "2024-10-24",
+            "start": "14:30",
+            "end": "18:00",
+            "description": "Bu saatlerde yeni başlangıçlardan kaçın."
+        }
+    ],
+    "eclipses": [
+        {
+            "date": "2024-10-02",
+            "type": "Solar Eclipse",
+            "sign": "Terazi",
+            "description": "İlişkilerde yeni vizyonlar."
+        }
+    ],
+    "retrogrades": [
+        {
+            "planet": "Merkür",
+            "startDate": "2024-08-05",
+            "endDate": "2024-08-28",
+            "sign": "Başak-Aslan"
+        }
+    ],
+    "auspiciousHours": [
+        {
+            "dayOfWeek": "Thursday",
+            "concept": "Dua & Meditasyon",
+            "start": "06:00",
+            "end": "07:30"
+        }
+    ]
+}

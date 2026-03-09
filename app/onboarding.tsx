@@ -1,0 +1,319 @@
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, Modal, FlatList, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useStore } from '../store/useStore';
+import { useState } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import districtsData from '../data/districts.json';
+
+type Province = {
+    id: number;
+    name: string;
+    districts: District[];
+};
+
+type District = {
+    name: string;
+    latitude: number;
+    longitude: number;
+};
+
+export default function OnboardingScreen() {
+    const router = useRouter();
+    const { completeOnboarding } = useStore();
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [birthDate, setBirthDate] = useState('');
+    const [birthTime, setBirthTime] = useState('');
+    const [birthPlace, setBirthPlace] = useState('');
+
+    // Date Picker State
+    const [date, setDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+
+    // Location Picker State (Two-Step: Province -> District)
+    const [showLocationPicker, setShowLocationPicker] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
+
+    const onChangeDate = (event: any, selectedDate?: Date) => {
+        const currentDate = selectedDate || date;
+        setShowDatePicker(Platform.OS === 'ios');
+        setDate(currentDate);
+
+        if (event.type === 'set' || Platform.OS === 'ios') {
+            const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}.${(currentDate.getMonth() + 1).toString().padStart(2, '0')}.${currentDate.getFullYear()}`;
+            setBirthDate(formattedDate);
+            if (Platform.OS === 'android') setShowDatePicker(false);
+        } else {
+            setShowDatePicker(false);
+        }
+    };
+
+    const confirmIOSDate = () => {
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
+        setBirthDate(formattedDate);
+        setShowDatePicker(false);
+    }
+
+    // Modal data filtering
+    const displayData = selectedProvince
+        ? selectedProvince.districts.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        : districtsData.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    const handleSelectLocation = (item: any) => {
+        if (!selectedProvince) {
+            // Selected a Province, now show Districts
+            setSelectedProvince(item as Province);
+            setSearchQuery('');
+        } else {
+            // Selected a District, close modal and save
+            setBirthPlace(`${selectedProvince.name}, ${item.name}`);
+            setShowLocationPicker(false);
+            setSelectedProvince(null);
+            setSearchQuery('');
+        }
+    };
+
+    const handleBackInModal = () => {
+        if (selectedProvince) {
+            setSelectedProvince(null);
+            setSearchQuery('');
+        } else {
+            setShowLocationPicker(false);
+        }
+    };
+
+    const handleComplete = () => {
+        if (!firstName || !birthDate || !birthPlace) return;
+
+        completeOnboarding({
+            firstName,
+            lastName,
+            birthDate,
+            birthTime,
+            birthPlace,
+        });
+        router.replace('/(tabs)');
+    };
+
+    return (
+        <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+                {/* Header Exact match from HTML */}
+                <View className="flex-row items-center p-4">
+                    <TouchableOpacity className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-zinc-500 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800">
+                        <MaterialIcons name="arrow-back" size={24} color="#71717a" />
+                    </TouchableOpacity>
+                    <View className="flex-1 items-center">
+                        <View className="mx-auto h-1.5 w-24 rounded-full bg-zinc-200 dark:bg-zinc-700 overflow-hidden">
+                            <View className="h-full w-1/3 bg-primary" />
+                        </View>
+                    </View>
+                    <View className="h-10 w-10 shrink-0" />
+                </View>
+
+                {/* Content */}
+                <View className="flex flex-1 flex-col px-4 pt-2 pb-6">
+                    <View className="mb-4">
+                        <Text className="text-3xl font-bold leading-tight tracking-tight text-zinc-900 dark:text-white">
+                            Kişisel Rehberin Seni Bekliyor
+                        </Text>
+                        <Text className="mt-2 text-base font-normal leading-normal text-zinc-600 dark:text-zinc-400">
+                            Doğru bir analiz için lütfen doğum bilgilerini eksiksiz gir.
+                        </Text>
+                    </View>
+
+                    {/* Profile Chips Exact HTML style */}
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6 flex-row" contentContainerStyle={{ paddingBottom: 8 }}>
+                        <TouchableOpacity className="flex shrink-0 items-center justify-center rounded-full bg-primary px-4 py-2 mr-2">
+                            <Text className="text-sm font-semibold text-white">Sen</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="flex shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2 mr-2 dark:border-zinc-700 dark:bg-zinc-800">
+                            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Eşim</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="flex shrink-0 flex-row items-center gap-2 rounded-full border border-dashed border-zinc-400 bg-transparent px-4 py-2 mr-2 dark:border-zinc-600">
+                            <MaterialIcons name="add" size={18} color="#52525b" />
+                            <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Ek Profil Ekle</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+
+                    {/* Form exact HTML structure */}
+                    <View className="flex flex-col gap-y-4">
+                        <View className="flex flex-col">
+                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Ad</Text>
+                            <TextInput
+                                className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white p-4 text-base font-normal leading-normal text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+                                placeholder="Adını gir"
+                                placeholderTextColor="#a1a1aa"
+                                value={firstName}
+                                onChangeText={setFirstName}
+                            />
+                        </View>
+                        <View className="flex flex-col">
+                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Soyad</Text>
+                            <TextInput
+                                className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white p-4 text-base font-normal leading-normal text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+                                placeholder="Soyadını gir"
+                                placeholderTextColor="#a1a1aa"
+                                value={lastName}
+                                onChangeText={setLastName}
+                            />
+                        </View>
+
+                        <View className="flex-row gap-4">
+                            <View className="flex flex-col flex-1">
+                                <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Doğum Tarihi</Text>
+                                <TouchableOpacity
+                                    onPress={() => setShowDatePicker(true)}
+                                    className="relative h-14 w-full justify-center rounded-[32px] border border-zinc-300 bg-white pl-4 pr-12 dark:border-zinc-700 dark:bg-zinc-800"
+                                >
+                                    <Text className={`text-base font-normal leading-normal ${birthDate ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                                        {birthDate || "GG.AA.YYYY"}
+                                    </Text>
+                                    <MaterialIcons name="calendar-today" size={20} color="#71717a" style={{ position: 'absolute', right: 16 }} />
+                                </TouchableOpacity>
+                            </View>
+                            <View className="flex flex-col flex-1">
+                                <View className="flex-row items-center gap-1.5 pb-2">
+                                    <Text className="text-base font-medium text-zinc-900 dark:text-white">Doğum Saati</Text>
+                                    <MaterialIcons name="help-outline" size={16} color="#71717a" />
+                                </View>
+                                <View className="relative justify-center">
+                                    <TextInput
+                                        className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white pl-4 pr-12 text-base font-normal leading-normal text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+                                        placeholder="SS:DD"
+                                        placeholderTextColor="#a1a1aa"
+                                        value={birthTime}
+                                        onChangeText={setBirthTime}
+                                        keyboardType="numeric"
+                                    />
+                                    <MaterialIcons name="schedule" size={20} color="#71717a" style={{ position: 'absolute', right: 16 }} />
+                                </View>
+                            </View>
+                        </View>
+
+                        <View className="flex flex-col">
+                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Doğum Yeri</Text>
+                            <TouchableOpacity
+                                onPress={() => setShowLocationPicker(true)}
+                                className="relative h-14 w-full justify-center rounded-[32px] border border-zinc-300 bg-white pl-12 pr-4 dark:border-zinc-700 dark:bg-zinc-800"
+                            >
+                                <MaterialIcons name="search" size={20} color="#71717a" style={{ position: 'absolute', left: 16, zIndex: 1 }} />
+                                <Text className={`text-base font-normal leading-normal ${birthPlace ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                                    {birthPlace || "Şehir, Ülke ara"}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    <View className="mt-8 flex flex-col items-center pt-8">
+                        <TouchableOpacity
+                            onPress={handleComplete}
+                            className="flex h-14 w-full items-center justify-center rounded-full bg-primary px-8"
+                        >
+                            <Text className="text-base font-bold text-white">Haritamı Hesapla</Text>
+                        </TouchableOpacity>
+                        <View className="mt-4 flex flex-row items-center gap-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
+                            <MaterialIcons name="lock" size={16} color="#71717a" />
+                            <Text>Bilgilerin bizimle güvende.</Text>
+                        </View>
+                    </View>
+                </View>
+            </ScrollView>
+
+            {/* Date Picker Modal / Overlay for iOS */}
+            {Platform.OS === 'ios' && showDatePicker ? (
+                <Modal transparent={true} animationType="fade">
+                    <View className="flex-1 justify-end bg-black/50">
+                        <View className="bg-white dark:bg-zinc-900 pb-8 pt-4 rounded-t-3xl">
+                            <View className="flex-row justify-between px-6 mb-4">
+                                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                                    <Text className="text-zinc-500 dark:text-zinc-400 text-lg">İptal</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={confirmIOSDate}>
+                                    <Text className="text-primary text-lg font-bold">Onayla</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode="date"
+                                display="spinner"
+                                onChange={onChangeDate}
+                                maximumDate={new Date()}
+                                textColor={Platform.OS === 'ios' ? undefined : "#1f2937"} // iOS handles its own theming natively but we can leave it undefined so it follows dark mode properly
+                            />
+                        </View>
+                    </View>
+                </Modal>
+            ) : null}
+
+            {/* Date Picker for Android */}
+            {Platform.OS === 'android' && showDatePicker && (
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="date"
+                    display="default"
+                    onChange={onChangeDate}
+                    maximumDate={new Date()}
+                />
+            )}
+
+            {/* Two-Step Location Picker Modal */}
+            <Modal visible={showLocationPicker} animationType="slide" transparent={true}>
+                <View className="flex-1 bg-black/50 justify-end">
+                    <View className="bg-white dark:bg-zinc-900 h-[80%] rounded-t-3xl p-4">
+                        <View className="flex-row justify-between items-center mb-4 mt-2">
+                            <View className="flex-row items-center">
+                                {selectedProvince && (
+                                    <TouchableOpacity onPress={handleBackInModal} className="mr-3">
+                                        <MaterialIcons name="arrow-back" size={24} color="#71717a" />
+                                    </TouchableOpacity>
+                                )}
+                                <Text className="text-xl font-bold text-zinc-900 dark:text-white">
+                                    {selectedProvince ? `${selectedProvince.name} İlçeleri` : 'Doğum Yeri Seç'}
+                                </Text>
+                            </View>
+                            <TouchableOpacity onPress={() => { setShowLocationPicker(false); setSelectedProvince(null); setSearchQuery(''); }} className="p-2">
+                                <MaterialIcons name="close" size={24} color="#71717a" />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View className="relative mb-4">
+                            <MaterialIcons name="search" size={20} color="#71717a" style={{ position: 'absolute', left: 16, top: 14, zIndex: 1 }} />
+                            <TextInput
+                                placeholder={selectedProvince ? "İlçe Ara..." : "Şehir Ara..."}
+                                placeholderTextColor="#a1a1aa"
+                                value={searchQuery}
+                                onChangeText={setSearchQuery}
+                                className="h-12 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-[32px] pl-12 pr-4 text-zinc-900 dark:text-white"
+                            />
+                        </View>
+
+                        <FlatList
+                            data={displayData}
+                            keyExtractor={item => 'id' in item ? item.id.toString() : item.name}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    className="py-4 border-b border-zinc-100 dark:border-zinc-800 flex-row justify-between items-center"
+                                    onPress={() => handleSelectLocation(item)}
+                                >
+                                    <Text className="text-lg text-zinc-900 dark:text-white">{item.name}</Text>
+                                    <MaterialIcons name="chevron-right" size={24} color="#d4d4d8" />
+                                </TouchableOpacity>
+                            )}
+                            ListEmptyComponent={
+                                <Text className="text-center text-zinc-500 mt-8">Sonuç bulunamadı.</Text>
+                            }
+                        />
+                    </View>
+                </View>
+            </Modal>
+
+        </SafeAreaView>
+    );
+}

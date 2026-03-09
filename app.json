@@ -3,9 +3,14 @@
     "name": "pera-enerji-takvimi",
     "slug": "pera-enerji-takvimi",
     "version": "1.0.0",
+    "scheme": "peraenerjitakvimi",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      "expo-router",
+      "@react-native-community/datetimepicker"
+    ],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
