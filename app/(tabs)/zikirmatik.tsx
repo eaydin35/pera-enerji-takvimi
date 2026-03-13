@@ -16,7 +16,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle } from 'react-native-svg';
 import { useZikirStore, ESMA_LIST, Esma } from '../../store/useZikirStore';
-import { useRef, useState } from 'react';
+import { useAuthStore } from '../../store/useAuthStore';
+import { useRef, useState, useEffect } from 'react';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -91,6 +92,7 @@ function StoneBead({ stone, size, onPress, opacity = 1 }: {
 
 export default function ZikirmatikScreen() {
     const { activeEsmaId, sessions, setActiveEsma, increment, resetActive } = useZikirStore();
+    const { user } = useAuthStore();
     const [selectedStone, setSelectedStone] = useState(STONES[0]);
     const [vibrationOn, setVibrationOn]     = useState(true);
     const [showModal, setShowModal]          = useState(false);
@@ -103,7 +105,7 @@ export default function ZikirmatikScreen() {
 
     const handleBeadPress = useCallback(() => {
         if (vibrationOn) Vibration.vibrate(25);
-        increment();
+        increment(user?.id);
         const next = count + 1;
         if (next === activeEsma.target) {
             Alert.alert(`🎉 Tamamlandı!`, `${activeEsma.tr} hedefine ulaştınız: ${activeEsma.target.toLocaleString('tr-TR')}`, [

@@ -2,6 +2,8 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, Moda
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useStore } from '../store/useStore';
+import { useAuthStore } from '../store/useAuthStore';
+import { supabase } from '../utils/supabase';
 import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import districtsData from '../data/districts.json';
@@ -21,6 +23,7 @@ type District = {
 export default function OnboardingScreen() {
     const router = useRouter();
     const { completeOnboarding } = useStore();
+    const { user } = useAuthStore();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -100,19 +103,27 @@ export default function OnboardingScreen() {
         }
     };
 
-    const handleComplete = () => {
+    const handleComplete = async () => {
         if (!firstName || !birthDate || !birthPlace || birthLat === undefined || birthLng === undefined) return;
 
-        completeOnboarding({
-            firstName,
-            lastName,
-            birthDate,
-            birthTime,
-            birthPlace,
-            birthLat,
-            birthLng,
-        });
-        router.replace('/(tabs)');
+        const profile = { firstName, lastName, birthDate, birthTime, birthPlace, birthLat, birthLng };
+        completeOnboarding(profile);
+
+        // Save to Supabase if user is already signed in
+        if (user) {
+            await supabase.from('profiles').upsert({
+                id: user.id,
+                first_name: firstName,
+                last_name: lastName,
+                birth_date: birthDate,
+                birth_time: birthTime,
+                birth_place: birthPlace,
+                birth_lat: birthLat,
+                birth_lng: birthLng,
+            });
+        }
+        // _layout will decide next route (auth or tabs)
+        router.replace(user ? '/(tabs)' : '/auth');
     };
 
     // Developer bypass for testing
