@@ -6,6 +6,8 @@ interface UserProfile {
     birthDate: string;
     birthTime: string;
     birthPlace: string;
+    birthLat?: number;
+    birthLng?: number;
     sunSign?: string;
     moonSign?: string;
     ascendant?: string;

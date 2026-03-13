@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, Modal, FlatList, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, Modal, FlatList, Platform, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useStore } from '../store/useStore';
@@ -24,9 +24,12 @@ export default function OnboardingScreen() {
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
     const [birthDate, setBirthDate] = useState('');
     const [birthTime, setBirthTime] = useState('');
     const [birthPlace, setBirthPlace] = useState('');
+    const [birthLat, setBirthLat] = useState<number | undefined>(undefined);
+    const [birthLng, setBirthLng] = useState<number | undefined>(undefined);
 
     // Date Picker State
     const [date, setDate] = useState(new Date());
@@ -57,6 +60,17 @@ export default function OnboardingScreen() {
         setShowDatePicker(false);
     }
 
+    // Birth time auto-colon handler
+    const handleBirthTimeChange = (text: string) => {
+        // Strip everything except digits
+        let digits = text.replace(/[^0-9]/g, '');
+        // Auto-insert colon after 2 digits
+        if (digits.length > 2) {
+            digits = digits.substring(0, 2) + ':' + digits.substring(2, 4);
+        }
+        setBirthTime(digits);
+    };
+
     // Modal data filtering
     const displayData = selectedProvince
         ? selectedProvince.districts.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -64,12 +78,13 @@ export default function OnboardingScreen() {
 
     const handleSelectLocation = (item: any) => {
         if (!selectedProvince) {
-            // Selected a Province, now show Districts
             setSelectedProvince(item as Province);
             setSearchQuery('');
         } else {
-            // Selected a District, close modal and save
-            setBirthPlace(`${selectedProvince.name}, ${item.name}`);
+            const district = item as District;
+            setBirthPlace(`${selectedProvince.name}, ${district.name}`);
+            setBirthLat(district.latitude);
+            setBirthLng(district.longitude);
             setShowLocationPicker(false);
             setSelectedProvince(null);
             setSearchQuery('');
@@ -86,7 +101,7 @@ export default function OnboardingScreen() {
     };
 
     const handleComplete = () => {
-        if (!firstName || !birthDate || !birthPlace) return;
+        if (!firstName || !birthDate || !birthPlace || birthLat === undefined || birthLng === undefined) return;
 
         completeOnboarding({
             firstName,
@@ -94,16 +109,37 @@ export default function OnboardingScreen() {
             birthDate,
             birthTime,
             birthPlace,
+            birthLat,
+            birthLng,
         });
         router.replace('/(tabs)');
+    };
+
+    // Developer bypass for testing
+    const handleDevBypass = () => {
+        completeOnboarding({
+            firstName: 'Emrullah',
+            lastName: 'Aydın',
+            birthDate: '01.01.1990',
+            birthTime: '10:00',
+            birthPlace: 'İstanbul, Kadıköy',
+            birthLat: 40.9816,
+            birthLng: 29.0266,
+        });
+        router.replace('/(tabs)');
+    };
+
+    // Mock photo upload (UI only)
+    const handlePickImage = () => {
+        Alert.alert('Fotoğraf Yükle', 'Bu özellik yakında aktif olacak.', [{ text: 'Tamam' }]);
     };
 
     return (
         <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
-                {/* Header Exact match from HTML */}
+                {/* Header */}
                 <View className="flex-row items-center p-4">
-                    <TouchableOpacity className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-zinc-500 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800">
+                    <TouchableOpacity className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
                         <MaterialIcons name="arrow-back" size={24} color="#71717a" />
                     </TouchableOpacity>
                     <View className="flex-1 items-center">
@@ -111,7 +147,13 @@ export default function OnboardingScreen() {
                             <View className="h-full w-1/3 bg-primary" />
                         </View>
                     </View>
-                    <View className="h-10 w-10 shrink-0" />
+                    {/* Dev bypass button - subtle */}
+                    <TouchableOpacity
+                        onPress={handleDevBypass}
+                        className="flex h-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-3"
+                    >
+                        <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Test Geç</Text>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Content */}
@@ -125,21 +167,36 @@ export default function OnboardingScreen() {
                         </Text>
                     </View>
 
-                    {/* Profile Chips Exact HTML style */}
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6 flex-row" contentContainerStyle={{ paddingBottom: 8 }}>
-                        <TouchableOpacity className="flex shrink-0 items-center justify-center rounded-full bg-primary px-4 py-2 mr-2">
-                            <Text className="text-sm font-semibold text-white">Sen</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className="flex shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white px-4 py-2 mr-2 dark:border-zinc-700 dark:bg-zinc-800">
-                            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Eşim</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className="flex shrink-0 flex-row items-center gap-2 rounded-full border border-dashed border-zinc-400 bg-transparent px-4 py-2 mr-2 dark:border-zinc-600">
-                            <MaterialIcons name="add" size={18} color="#52525b" />
-                            <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Ek Profil Ekle</Text>
-                        </TouchableOpacity>
-                    </ScrollView>
+                    {/* Profile Chips – Compact Round Avatars */}
+                    <View className="flex-row items-center gap-3 mb-6">
+                        {/* Sen – Active */}
+                        <View className="items-center">
+                            <View className="w-14 h-14 rounded-full bg-primary border-2 border-primary items-center justify-center">
+                                {profileImageUri ? (
+                                    <Image source={{ uri: profileImageUri }} className="w-full h-full rounded-full" />
+                                ) : (
+                                    <MaterialIcons name="person" size={26} color="#1f1317" />
+                                )}
+                            </View>
+                            <Text className="mt-1 text-xs font-semibold text-zinc-700 dark:text-zinc-300">Sen</Text>
+                        </View>
+                        {/* Eşim */}
+                        <View className="items-center opacity-60">
+                            <View className="w-12 h-12 rounded-full border-2 border-zinc-300 dark:border-zinc-600 bg-zinc-100 dark:bg-zinc-800 items-center justify-center">
+                                <MaterialIcons name="person" size={22} color="#71717a" />
+                            </View>
+                            <Text className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">Eşim</Text>
+                        </View>
+                        {/* Ek Profil */}
+                        <View className="items-center">
+                            <View className="w-12 h-12 rounded-full border-2 border-dashed border-zinc-400 dark:border-zinc-600 bg-transparent items-center justify-center">
+                                <MaterialIcons name="add" size={20} color="#71717a" />
+                            </View>
+                            <Text className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">Ekle</Text>
+                        </View>
+                    </View>
 
-                    {/* Form exact HTML structure */}
+                    {/* Form */}
                     <View className="flex flex-col gap-y-4">
                         <View className="flex flex-col">
                             <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Ad</Text>
@@ -160,6 +217,22 @@ export default function OnboardingScreen() {
                                 value={lastName}
                                 onChangeText={setLastName}
                             />
+                        </View>
+
+                        {/* Profile Photo Upload */}
+                        <View className="flex flex-col">
+                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Profil Fotoğrafı</Text>
+                            <TouchableOpacity
+                                onPress={handlePickImage}
+                                className="flex-row items-center h-14 w-full rounded-[32px] border border-dashed border-zinc-400 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-4 gap-3"
+                            >
+                                <View className="w-8 h-8 rounded-full bg-primary items-center justify-center">
+                                    <MaterialIcons name="add-a-photo" size={16} color="#1f1317" />
+                                </View>
+                                <Text className="text-base text-zinc-400 dark:text-zinc-500">
+                                    {profileImageUri ? 'Fotoğraf Seçildi' : 'Fotoğraf Yükle (İsteğe Bağlı)'}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
 
                         <View className="flex-row gap-4">
@@ -186,8 +259,9 @@ export default function OnboardingScreen() {
                                         placeholder="SS:DD"
                                         placeholderTextColor="#a1a1aa"
                                         value={birthTime}
-                                        onChangeText={setBirthTime}
-                                        keyboardType="numeric"
+                                        onChangeText={handleBirthTimeChange}
+                                        keyboardType="number-pad"
+                                        maxLength={5}
                                     />
                                     <MaterialIcons name="schedule" size={20} color="#71717a" style={{ position: 'absolute', right: 16 }} />
                                 </View>
@@ -202,13 +276,13 @@ export default function OnboardingScreen() {
                             >
                                 <MaterialIcons name="search" size={20} color="#71717a" style={{ position: 'absolute', left: 16, zIndex: 1 }} />
                                 <Text className={`text-base font-normal leading-normal ${birthPlace ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
-                                    {birthPlace || "Şehir, Ülke ara"}
+                                    {birthPlace || "Şehir ara"}
                                 </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
 
-                    <View className="mt-8 flex flex-col items-center pt-8">
+                    <View className="mt-8 flex flex-col items-center pt-4">
                         <TouchableOpacity
                             onPress={handleComplete}
                             className="flex h-14 w-full items-center justify-center rounded-full bg-primary px-8"
@@ -217,13 +291,13 @@ export default function OnboardingScreen() {
                         </TouchableOpacity>
                         <View className="mt-4 flex flex-row items-center gap-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
                             <MaterialIcons name="lock" size={16} color="#71717a" />
-                            <Text>Bilgilerin bizimle güvende.</Text>
+                            <Text className="text-sm text-zinc-500 dark:text-zinc-400">Bilgilerin bizimle güvende.</Text>
                         </View>
                     </View>
                 </View>
             </ScrollView>
 
-            {/* Date Picker Modal / Overlay for iOS */}
+            {/* Date Picker Modal for iOS */}
             {Platform.OS === 'ios' && showDatePicker ? (
                 <Modal transparent={true} animationType="fade">
                     <View className="flex-1 justify-end bg-black/50">
@@ -243,7 +317,6 @@ export default function OnboardingScreen() {
                                 display="spinner"
                                 onChange={onChangeDate}
                                 maximumDate={new Date()}
-                                textColor={Platform.OS === 'ios' ? undefined : "#1f2937"} // iOS handles its own theming natively but we can leave it undefined so it follows dark mode properly
                             />
                         </View>
                     </View>
@@ -294,10 +367,10 @@ export default function OnboardingScreen() {
                         </View>
 
                         <FlatList
-                            data={displayData}
-                            keyExtractor={item => 'id' in item ? item.id.toString() : item.name}
+                            data={displayData as any[]}
+                            keyExtractor={(item: any) => 'id' in item ? item.id.toString() : item.name}
                             showsVerticalScrollIndicator={false}
-                            renderItem={({ item }) => (
+                            renderItem={({ item }: { item: any }) => (
                                 <TouchableOpacity
                                     className="py-4 border-b border-zinc-100 dark:border-zinc-800 flex-row justify-between items-center"
                                     onPress={() => handleSelectLocation(item)}

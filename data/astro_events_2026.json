@@ -1,0 +1,254 @@
+[
+  {
+    "date": "2026-01-11",
+    "type": "positive",
+    "title": "Yeni Ay – Oğlak Burcu",
+    "description": "Kariyer ve uzun vadeli hedefler için güçlü bir başlangıç enerjisi var. Yeni bir iş kurmak veya hedef belirlemek için ideal zaman.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-01-26",
+    "type": "negative",
+    "title": "Dolunay – Aslan Burcu (Ay Tutulması)",
+    "description": "İlişkilerde ve kişisel kimlikte gerginlik yaşanabilir. Ego çatışmalarından uzak durun, büyük kararlar almaktan kaçının.",
+    "dotColor": "#f97316"
+  },
+  {
+    "date": "2026-02-09",
+    "type": "negative",
+    "title": "Merkür Geriye Gidiş Başlangıcı – Balık",
+    "description": "Merkür geri gidişi başlıyor. Sözleşmeler imzalamaktan, yeni teknoloji satın almaktan ve büyük iletişim kararlarından kaçının. Eski konular gün yüzüne çıkabilir.",
+    "dotColor": "#ef4444"
+  },
+  {
+    "date": "2026-02-10",
+    "type": "positive",
+    "title": "Yeni Ay – Kova Burcu",
+    "description": "Topluluk, arkadaşlık ve yenilikçi fikirler için güçlü Yeni Ay. Gelecek planları yapmak için harika.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-02-25",
+    "type": "positive",
+    "title": "Dolunay – Başak Burcu",
+    "description": "Sağlık ve rutin alanında farkındalık artıyor. Sağlıklı alışkanlıkları pekiştirmek için güçlü zaman.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-03-03",
+    "type": "negative",
+    "title": "Merkür Geri Dönüş Sonu",
+    "description": "Merkür tekrar ileri gidiyor. Geri gidiş döneminde askıya alınan kararlar ve iletişimler yeniden değerlendirilebilir.",
+    "dotColor": "#f59e0b"
+  },
+  {
+    "date": "2026-03-11",
+    "type": "positive",
+    "title": "Yeni Ay – Balık Burcu",
+    "description": "Maneviyat, sezgi ve şifa için güçlü enerji. Meditasyon, yaratıcılık ve ruhsal çalışmalar için ideal.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-03-20",
+    "type": "positive",
+    "title": "Bahar Ekinoksu – İlkbahar Başlangıcı",
+    "description": "Güneş Koç burcuna giriyor. Yeni başlangıçlar, yenilenme ve taze enerji dönemi. Yıldızlar harekete geçmenizi destekliyor.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-03-25",
+    "type": "negative",
+    "title": "Dolunay – Terazi Burcu (Ay Tutulması)",
+    "description": "Tutulma günü – ilişkiler ve denge alanında ani gelişmeler olabilir. Bugün için önemli anlaşmalar ve tartışmalardan kaçının.",
+    "dotColor": "#f97316"
+  },
+  {
+    "date": "2026-04-07",
+    "type": "positive",
+    "title": "Venüs Direkt – İleri Harekete Geçiyor",
+    "description": "Venüs geri gidişini tamamlıyor. Aşk, güzellik ve finansal konularda donmuş enerji çözülüyor. İlişkilerde tıkanan kapılar açılabilir.",
+    "dotColor": "#ec4899"
+  },
+  {
+    "date": "2026-04-10",
+    "type": "positive",
+    "title": "Yeni Ay – Koç Burcu",
+    "description": "Yılın en güçlü 'yeni başlangıç' Yeni Ay'ı. Cesaret gerektiren adımlar atmak, girişimler ve kişisel hedefler için ideal.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-04-24",
+    "type": "positive",
+    "title": "Dolunay – Akrep Burcu",
+    "description": "Derin dönüşüm ve serbest bırakma vakti. İçsel çalışma, şifa ve bağı kesilmesi gereken şeyleri bırakmak için güçlü enerji.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-05-09",
+    "type": "positive",
+    "title": "Yeni Ay – Boğa Burcu",
+    "description": "Maddi güvenlik, konfor ve değerler üzerine odaklanmak için güçlü Yeni Ay. Finansal hedefler belirlemek için uygun.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-05-13",
+    "type": "negative",
+    "title": "Merkür Geriye Gidiş Başlangıcı – İkizler",
+    "description": "İkinci Merkür retrosu başlıyor. Seyahat, iletişim ve sözleşmelerde dikkatli olun. Eski bağlantılar tekrar gündeme gelebilir.",
+    "dotColor": "#ef4444"
+  },
+  {
+    "date": "2026-05-23",
+    "type": "positive",
+    "title": "Dolunay – Yay Burcu",
+    "description": "Özgürlük, yüksek öğrenim ve seyahat konularında doruk noktası. Bir hedef veya arzunuzun meyvelerini toplayabilirsiniz.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-06-05",
+    "type": "negative",
+    "title": "Merkür Geri Dönüş Sonu",
+    "description": "Merkür İkizler'de ileri harekete geçiyor. Mayıs ortasından bu yana askıya alınan kararlar netlik kazanıyor.",
+    "dotColor": "#f59e0b"
+  },
+  {
+    "date": "2026-06-08",
+    "type": "positive",
+    "title": "Yeni Ay – İkizler Burcu",
+    "description": "İletişim, öğrenme ve kısa seyahatler için taze enerji. Yeni bir ders, kurs ya da sosyal çevre için başlangıç zamanı.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-06-21",
+    "type": "positive",
+    "title": "Yaz Gündönümü",
+    "description": "Güneş Yengeç burcuna giriyor ve yılın en uzun günü. Aile, kökleri ve iç dünyayı beslemek için özel bir zaman.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-06-22",
+    "type": "positive",
+    "title": "Dolunay – Oğlak Burcu",
+    "description": "Kariyer ve kişisel hedeflerde zirve enerjisi. Uzun vadeli çalışmalarınızın karşılığını almaya başlayabilirsiniz.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-07-07",
+    "type": "positive",
+    "title": "Yeni Ay – Yengeç Burcu",
+    "description": "Ev, aile, duygusal güvenlik alanında güçlü başlangıçlar. Ev taşınması veya aile planları için olumlu enerji.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-07-21",
+    "type": "negative",
+    "title": "Dolunay – Kova Burcu (Ay Tutulması)",
+    "description": "Tutulma enerji güçlü ve bazen sarsıcı. Topluluk ve bireysellik arasındaki gerilim dorukta. Beklenmedik gelişmelere hazırlıklı olun.",
+    "dotColor": "#f97316"
+  },
+  {
+    "date": "2026-08-05",
+    "type": "positive",
+    "title": "Yeni Ay – Aslan Burcu (Güneş Tutulması)",
+    "description": "Güçlü bir Güneş Tutulması. Yaratıcılık, liderlik ve özgün ifade alanında köklü yeni başlangıçlar mümkün.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-08-12",
+    "type": "negative",
+    "title": "Merkür Geriye Gidiş Başlangıcı – Başak",
+    "description": "Üçüncü Merkür retrosu başlıyor. Sağlık, rutin ve iş detaylarında aksaklıklar çıkabilir. Kontrol listelerini gözden geçirin.",
+    "dotColor": "#ef4444"
+  },
+  {
+    "date": "2026-08-19",
+    "type": "positive",
+    "title": "Dolunay – Kova Burcu",
+    "description": "Yenilikçi projeler ve ortak hedefler meyvelerini veriyor. Grupla yürütülen çalışmalarda dönüm noktası.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-09-03",
+    "type": "negative",
+    "title": "Merkür Geri Dönüş Sonu",
+    "description": "Merkür ileri harekete geçiyor. İş ve sağlık konularında Ağustos'tan bu yana belirsiz olan konular netleşiyor.",
+    "dotColor": "#f59e0b"
+  },
+  {
+    "date": "2026-09-04",
+    "type": "positive",
+    "title": "Yeni Ay – Başak Burcu",
+    "description": "Sağlık rutinleri, organizasyon ve hizmet alanında taze başlangıçlar için güçlü enerji.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-09-18",
+    "type": "positive",
+    "title": "Dolunay – Balık Burcu",
+    "description": "Maneviyat, sanat ve empati dorukta. Sezgilerinize güvenin, rüyalar ve içgüdüler güçlü mesajlar taşıyabilir.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-10-03",
+    "type": "positive",
+    "title": "Yeni Ay – Terazi Burcu",
+    "description": "İlişkiler, ortaklıklar ve adalet alanında yeni bir dönem başlıyor. Sözleşmeler ve anlaşmalar için elverişli.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-10-17",
+    "type": "negative",
+    "title": "Dolunay – Koç Burcu",
+    "description": "Bireysel ihtiyaçlar ile ilişki dinamikleri arasında gerilim. Olgun, öfke kontrolüyle hareket edin.",
+    "dotColor": "#f97316"
+  },
+  {
+    "date": "2026-11-02",
+    "type": "positive",
+    "title": "Yeni Ay – Akrep Burcu",
+    "description": "Dönüşüm, derinlik ve gizli konularda güçlü enerji. Mali yönetim ve ortak kaynaklar için başlangıç zamanı.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-11-11",
+    "type": "negative",
+    "title": "Merkür Geriye Gidiş Başlangıcı – Yay",
+    "description": "Son Merkür retrosu yıl bitmeden başlıyor. Uluslararası konular, yayıncılık ve seyahatte dikkatli olun.",
+    "dotColor": "#ef4444"
+  },
+  {
+    "date": "2026-11-16",
+    "type": "positive",
+    "title": "Dolunay – Boğa Burcu",
+    "description": "Materyal konularda ve değerlerde zirve enerji. Güzellik, sanat ve maddi güvenlik meyvelerini veriyor.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-12-01",
+    "type": "positive",
+    "title": "Yeni Ay – Yay Burcu",
+    "description": "Seyahat, yüksek öğrenim ve felsefe alanında taze başlangıçlar. Vizyonunuzu genişletmek için güçlü zaman.",
+    "dotColor": "#a8c5da"
+  },
+  {
+    "date": "2026-12-01",
+    "type": "negative",
+    "title": "Merkür Geri Dönüş Sonu",
+    "description": "Merkür Kasım'ın ikinci yarısından bu yana askıya alınan kararlar artık hayata geçirilebilir.",
+    "dotColor": "#f59e0b"
+  },
+  {
+    "date": "2026-12-16",
+    "type": "positive",
+    "title": "Dolunay – İkizler Burcu",
+    "description": "İletişim, öğrenme ve sosyal bağlantılarda doruk. Yıl sonu projelerini tamamlamak için güçlü enerji.",
+    "dotColor": "#22c55e"
+  },
+  {
+    "date": "2026-12-21",
+    "type": "positive",
+    "title": "Kış Gündönümü",
+    "description": "Güneş Oğlak burcuna giriyor ve yılın en kısa günü. İçe dönme, planlama ve yeni yıla niyetleri belirleme zamanı.",
+    "dotColor": "#22c55e"
+  }
+]
