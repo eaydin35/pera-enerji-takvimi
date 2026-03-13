@@ -1,9 +1,11 @@
 import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView, Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useStore } from '../../store/useStore';
+import { useRouter } from 'expo-router';
 
 export default function DashboardScreen() {
     const { userProfile } = useStore();
+    const router = useRouter();
 
     return (
         <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
@@ -41,7 +43,7 @@ export default function DashboardScreen() {
                         Günaydın, {userProfile?.firstName || 'Bilinmeyen'}
                     </Text>
                     <Text className="mt-1 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        24 Ekim 2024, Ay İkizler burcunda
+                        24 Ekim 2024, Ay Ikizler burcunda
                     </Text>
                 </View>
 
@@ -138,6 +140,28 @@ export default function DashboardScreen() {
                             <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Bugün uygun değil</Text>
                         </View>
                     </View>
+                </View>
+
+                {/* Günlük Egzersiz Card */}
+                <View className="px-4 mb-4">
+                    <TouchableOpacity
+                        onPress={() => router.push('/workout' as any)}
+                        className="overflow-hidden rounded-[24px] shadow-sm"
+                        style={{ backgroundColor: '#f0fdf4', borderWidth: 1, borderColor: '#bbf7d0' }}
+                    >
+                        <View className="flex-row items-center p-5">
+                            <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: '#22c55e', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
+                                <MaterialIcons name="self-improvement" size={26} color="#fff" />
+                            </View>
+                            <View className="flex-1">
+                                <Text style={{ fontSize: 16, fontWeight: '700', color: '#14532d' }}>Günlük Esneme Rutini</Text>
+                                <Text style={{ fontSize: 13, color: '#16a34a', marginTop: 2 }}>10 adım • ~10 dakika</Text>
+                            </View>
+                            <View style={{ backgroundColor: '#22c55e', borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 }}>
+                                <Text style={{ fontSize: 13, fontWeight: '700', color: '#fff' }}>Başla</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Günün Niyeti & Stones of Pera */}
