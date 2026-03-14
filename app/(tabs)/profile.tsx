@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -10,13 +10,17 @@ import {
     Switch,
     Alert,
     Linking,
+    ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
 import { useStore } from '../../store/useStore';
 import { useZikirStore } from '../../store/useZikirStore';
+import { useAuthStore } from '../../store/useAuthStore';
+import { supabase } from '../../utils/supabase';
 import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -83,13 +87,75 @@ export default function ProfileScreen() {
     const { userProfile, resetOnboarding } = useStore();
     const { sessions, resetAll: resetZikir } = useZikirStore();
     const { colorScheme, setColorScheme } = useColorScheme();
+    const { user } = useAuthStore();
     const router = useRouter();
     const isDark = colorScheme === 'dark';
 
     const [notificationsOn, setNotificationsOn] = useState(true);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
     const sunSign = getSunSign(userProfile?.birthDate ?? '');
     const totalZikir = Object.values(sessions).reduce((sum, s) => sum + (s.count ?? 0), 0);
+
+    // Load saved avatar on mount
+    useEffect(() => {
+        if (!user) return;
+        supabase
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', user.id)
+            .single()
+            .then(({ data }) => {
+                if (data?.avatar_url) setAvatarUrl(data.avatar_url);
+            });
+    }, [user]);
+
+    // Upload photo to Supabase Storage
+    const handlePickImage = async () => {
+        if (!user) {
+            Alert.alert('Giriş Yapın', 'Fotoğraf yüklemek için giriş yapmanız gerekiyor.');
+            return;
+        }
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('İzin Gerekli', 'Galeri erişimine izin verin.');
+            return;
+        }
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.7,
+        });
+        if (result.canceled || !result.assets?.length) return;
+
+        setUploadingPhoto(true);
+        try {
+            const asset = result.assets[0];
+            const ext = asset.uri.split('.').pop() ?? 'jpg';
+            const fileName = `${user.id}.${ext}`;
+            const response = await fetch(asset.uri);
+            const blob = await response.blob();
+            const arrayBuffer = await new Response(blob).arrayBuffer();
+            const { error: uploadError } = await supabase.storage
+                .from('avatars')
+                .upload(fileName, arrayBuffer, {
+                    contentType: `image/${ext}`,
+                    upsert: true,
+                });
+            if (uploadError) throw uploadError;
+            const { data } = supabase.storage.from('avatars').getPublicUrl(fileName);
+            const publicUrl = data.publicUrl;
+            setAvatarUrl(publicUrl);
+            await supabase.from('profiles').upsert({ id: user.id, avatar_url: publicUrl });
+            Alert.alert('✨ Başarılı', 'Profil fotoğrafın güncellendi!');
+        } catch (e: any) {
+            Alert.alert('Hata', e.message || 'Yükleme başarısız oldu.');
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
 
     const handleLogout = () => {
         Alert.alert('Oturumu Kapat', 'Çıkmak istediğinize emin misiniz?', [
@@ -125,11 +191,20 @@ export default function ProfileScreen() {
                     <View style={styles.avatarWrapper}>
                         <View style={styles.avatarRing}>
                             <View style={styles.avatarInner}>
-                                <MaterialIcons name="person" size={60} color="#c4b5c9" />
+                                {avatarUrl ? (
+                                    <Image
+                                        source={{ uri: avatarUrl }}
+                                        style={{ width: '100%', height: '100%', borderRadius: 60 }}
+                                    />
+                                ) : (
+                                    <MaterialIcons name="person" size={60} color="#c4b5c9" />
+                                )}
                             </View>
                         </View>
-                        <TouchableOpacity style={styles.editBtn}>
-                            <MaterialIcons name="edit" size={14} color="#fff" />
+                        <TouchableOpacity style={styles.editBtn} onPress={handlePickImage}>
+                            {uploadingPhoto
+                                ? <ActivityIndicator size="small" color="#fff" />
+                                : <MaterialIcons name="edit" size={14} color="#fff" />}
                         </TouchableOpacity>
                     </View>
                     <Text style={[styles.profileName, isDark && { color: '#f1f5f9' }]}>

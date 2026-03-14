@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, Modal, FlatList, Platform, Image, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, Modal, FlatList, Platform, Image, Alert, KeyboardAvoidingView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useStore } from '../store/useStore';
@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { supabase } from '../utils/supabase';
 import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
 import districtsData from '../data/districts.json';
 
 type Province = {
@@ -65,13 +66,14 @@ export default function OnboardingScreen() {
 
     // Birth time auto-colon handler
     const handleBirthTimeChange = (text: string) => {
-        // Strip everything except digits
-        let digits = text.replace(/[^0-9]/g, '');
-        // Auto-insert colon after 2 digits
-        if (digits.length > 2) {
-            digits = digits.substring(0, 2) + ':' + digits.substring(2, 4);
+        // Allow digits and colon only
+        let cleaned = text.replace(/[^0-9:]/g, '');
+        // Auto-insert colon after 2 digits if user didn't type it
+        if (cleaned.length === 2 && !cleaned.includes(':') && birthTime.length < 2) {
+            cleaned = cleaned + ':';
         }
-        setBirthTime(digits);
+        // Clamp to 5 chars max (HH:MM)
+        if (cleaned.length <= 5) setBirthTime(cleaned);
     };
 
     // Modal data filtering
@@ -140,14 +142,31 @@ export default function OnboardingScreen() {
         router.replace('/(tabs)');
     };
 
-    // Mock photo upload (UI only)
-    const handlePickImage = () => {
-        Alert.alert('Fotoğraf Yükle', 'Bu özellik yakında aktif olacak.', [{ text: 'Tamam' }]);
+    // Real photo upload using expo-image-picker
+    const handlePickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('İzin Gerekli', 'Fotoğraf seçmek için galeri erişimine izin verin.');
+            return;
+        }
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.7,
+        });
+        if (!result.canceled && result.assets.length > 0) {
+            setProfileImageUri(result.assets[0].uri);
+        }
     };
 
     return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+        >
         <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
                 {/* Header */}
                 <View className="flex-row items-center p-4">
                     <TouchableOpacity className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
@@ -271,8 +290,9 @@ export default function OnboardingScreen() {
                                         placeholderTextColor="#a1a1aa"
                                         value={birthTime}
                                         onChangeText={handleBirthTimeChange}
-                                        keyboardType="number-pad"
+                                        keyboardType="default"
                                         maxLength={5}
+                                        returnKeyType="done"
                                     />
                                     <MaterialIcons name="schedule" size={20} color="#71717a" style={{ position: 'absolute', right: 16 }} />
                                 </View>
@@ -296,9 +316,9 @@ export default function OnboardingScreen() {
                     <View className="mt-8 flex flex-col items-center pt-4">
                         <TouchableOpacity
                             onPress={handleComplete}
-                            className="flex h-14 w-full items-center justify-center rounded-full bg-primary px-8"
+                            className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-900 dark:bg-primary px-8"
                         >
-                            <Text className="text-base font-bold text-white">Haritamı Hesapla</Text>
+                            <Text className="text-base font-bold text-white dark:text-zinc-900">Haritamı Hesapla</Text>
                         </TouchableOpacity>
                         <View className="mt-4 flex flex-row items-center gap-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
                             <MaterialIcons name="lock" size={16} color="#71717a" />
@@ -399,5 +419,6 @@ export default function OnboardingScreen() {
             </Modal>
 
         </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }
