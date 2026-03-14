@@ -9,30 +9,37 @@ initAuthListener();
 
 export default function RootLayout() {
     const { hasCompletedOnboarding } = useStore();
-    const { session } = useAuthStore();
+    const { session, isLoading } = useAuthStore();
     const segments = useSegments();
     const router = useRouter();
 
     useEffect(() => {
-        const inTabsGroup   = segments[0] === '(tabs)';
-        const inAuthScreen  = segments[0] === 'auth';
-        const inOnboarding  = segments[0] === 'onboarding';
-        const inWorkout     = segments[0] === 'workout';
+        // Wait until everything is loaded before making routing decisions
+        if (isLoading) return;
 
-        // Allow workout screen irrespective of auth (launched from within tabs)
-        if (inWorkout) return;
+        // Check for navigation within a timeout to ensure layout is mounted
+        const timeout = setTimeout(() => {
+            const inTabsGroup   = segments[0] === '(tabs)';
+            const inAuthScreen  = segments[0] === 'auth';
+            const inOnboarding  = segments[0] === 'onboarding';
+            const inWorkout     = segments[0] === 'workout';
 
-        if (!hasCompletedOnboarding) {
-            // Not onboarded: always go to onboarding
-            if (!inOnboarding) router.replace('/onboarding');
-        } else if (!session) {
-            // Onboarded but not signed in → auth screen
-            if (!inAuthScreen) router.replace('/auth');
-        } else {
-            // Fully authenticated → app
-            if (!inTabsGroup) router.replace('/(tabs)');
-        }
-    }, [hasCompletedOnboarding, session, segments]);
+            // Allow standalone screens (workout etc.) to stay open
+            if (inWorkout) return;
+
+            if (!hasCompletedOnboarding) {
+                if (!inOnboarding) router.replace('/onboarding');
+            } else if (!session) {
+                if (!inAuthScreen) router.replace('/auth');
+            } else {
+                if (!inTabsGroup) router.replace('/(tabs)');
+            }
+        }, 100);
+
+        return () => clearTimeout(timeout);
+    }, [hasCompletedOnboarding, session, segments, isLoading]);
+
+    if (isLoading) return null; // Or a splash screen
 
     return <Slot />;
 }

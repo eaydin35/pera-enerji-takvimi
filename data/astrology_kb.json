@@ -1,0 +1,50 @@
+{
+  "planets_in_signs": {
+    "Sun": {
+      "Koc": "Gunes Koc burcunda; guclu bir irade, liderlik vasiflari ve yuksek enerji verir. Onculuk etme istegi on plandadir.",
+      "Boga": "Gunes Boga burcunda; sabir, istikrar ve maddi guvenlik arayisina isaret eder. Pratik ve ayaklari yere basan bir yapidir.",
+      "Ikizler": "Gunes Ikizler burcunda; merak, iletisim becerileri ve zihinsel esneklik kazandirir. Bilgi paylasimi onemlidir.",
+      "Yengec": "Gunes Yengec burcunda; duygusallik, korumacilara ve aile baglarina verilen onemi artirir. Sezgiler gucludur.",
+      "Aslan": "Gunes Aslan burcunda; yaraticilik, ozguven ve sahne isiginda olma istegi verir. Comert ve gururlu bir dogadir.",
+      "Basak": "Gunes Basak burcunda; titizlik, analiz yetenegi ve hizmet odakli olmayi simgeler. Duzen ve verimlilik aranir.",
+      "Terazi": "Gunes Terazi burcunda; denge, adalet ve iliskilerde uyum arayisina isaret eder. Estetik algisi yuksektir.",
+      "Akrep": "Gunes Akrep burcunda; derinlik, tutku ve donusturucu guc verir. Gizemli ve odaklanmis bir yapidir.",
+      "Yay": "Gunes Yay burcunda; ozgurluk, keşif ruhu ve felsefi bakis acisi kazandirir. Iyimser ve maceracidir.",
+      "Oglak": "Gunes Oglak burcunda; disiplin, sorumluluk ve kariyer odaklilik verir. Ciddiyet ve sabir hakimdir.",
+      "Kova": "Gunes Kova burcunda; ozgunluk, insancil idealler ve entelektuel bagimsizlik simgesidir. Yenilikcidir.",
+      "Balik": "Gunes Balik burcunda; empati, hayal gucu ve maneviyat kazandirir. Hassas ve fedakar bir karakterdir."
+    },
+    "Moon": {
+      "Koc": "Ay Koc burcunda; duygusal durumlarda ani tepkiler ve bagimsizlik ihtiyaci verir.",
+      "Boga": "Ay Boga burcunda; duygusal huzur, konfor ve guvenlik arayisini simgeler. Huzur arar.",
+      "Ikizler": "Ay Ikizler burcunda; duygulari mantikla anlama ve iletisim kurma istegi verir.",
+      "Yengec": "Ay Yengec burcunda; cok gucludur. Derin ebeveynlik icguduleri ve yuva ozlemi verir.",
+      "Aslan": "Ay Aslan burcunda; takdir gorulme ihtiyaci ve coskulu duygusal ifadeler kazandirir.",
+      "Basak": "Ay Basak burcunda; yardim etme istegi ve duygusal duzen ihtiyaci verir.",
+      "Terazi": "Ay Terazi burcunda; huzur ve iliskilerde denge ihtiyaci on plandadir.",
+      "Akrep": "Ay Akrep burcunda; yogun ve donusturucu duygular, derin sezgiler verir.",
+      "Yay": "Ay Yay burcunda; duygusal ozgurluk ve yeni deneyimler yasama istegi kazandirir.",
+      "Oglak": "Ay Oglak burcunda; duygulari kontrol etme ve guvenlik ihtiyacini simgeler.",
+      "Kova": "Ay Kova burcunda; duygusal mesafelilik ve toplumsal baglanti ihtiyaci verir.",
+      "Balik": "Ay Balik burcunda; yuksek empati ve hayal gucu kazandirir."
+    }
+  },
+  "planets_in_houses": {
+    "1": "1. Ev: Kisilik, dis gorunus ve hayata baslangic tarzi.",
+    "2": "2. Ev: Maddi kaynaklar, oz deger duygusu ve yetenekler.",
+    "3": "3. Ev: Iletisim, kisa yolculuklar ve yakin cevre.",
+    "4": "4. Ev: Yuva, aile kökleri ve duygusal temeller.",
+    "5": "5. Ev: Yaraticilik, ask hayati ve cocuklar.",
+    "6": "6. Ev: Gunluk rutinler, saglik ve hizmet.",
+    "7": "7. Ev: Ortakliklar, evlilik ve acik dusmanlar.",
+    "8": "8. Ev: Ortak kaynaklar, donusum ve krizler.",
+    "9": "9. Ev: Yuksek ogrenim, felsefe ve uzak yolculuklar.",
+    "10": "10. Ev: Kariyer, toplumsal statu ve hedefler.",
+    "11": "11. Ev: Arkadasliklar, sosyal gruplar ve umutlar.",
+    "12": "12. Ev: Bilincdisi, izolasyon ve teslimiyet."
+  },
+  "transits": {
+    "Mercury Retrograde": "Merkur Retrosu: Iletisim kazalari, teknolojik aksakliklar ve gecmis konularin tekrar gundeme gelmesi mumkundur. Yeni baslangiclar yerine gozden gecirme donemidir.",
+    "Saturn Return": "Saturn Donusu: Hayatta buyuk bir olgunlasma ve sorumluluk alma donemidir. Karar verme ve yapilanma zamanidir."
+  }
+}

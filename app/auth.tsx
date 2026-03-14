@@ -148,9 +148,16 @@ export default function AuthScreen() {
                         {/* Dev bypass */}
                         <TouchableOpacity
                             style={styles.devBtn}
-                            onPress={() => router.replace('/(tabs)')}
+                            onPress={() => {
+                                // Set a fake session so _layout routing guard lets us through
+                                useAuthStore.setState({
+                                    session: { access_token: 'dev-bypass', user: { id: 'dev-user' } } as any,
+                                    user: { id: 'dev-user' } as any,
+                                });
+                                router.replace('/(tabs)');
+                            }}
                         >
-                            <Text style={styles.devText}>Test Hesabıyla Geç →</Text>
+                            <Text style={styles.devText}>Test Hesabiyla Gec →</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

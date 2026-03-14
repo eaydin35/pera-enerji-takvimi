@@ -1,9 +1,15 @@
-import { View, Text, SafeAreaView, ScrollView } from 'react-native';
-import { useState, useMemo } from 'react';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useState, useMemo, useEffect } from 'react';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useColorScheme } from 'nativewind';
+import { LinearGradient } from 'expo-linear-gradient';
 import astroEvents from '../../data/astro_events_2026.json';
+import { useAuthStore } from '../../store/useAuthStore';
+import { useStore } from '../../store/useStore';
+import { calculateChart } from '../../utils/astrology';
+import { getAstrologyInsight } from '../../utils/ai-astrology';
+import AILoading from '../../components/AILoading';
 
 LocaleConfig.locales['tr'] = {
   monthNames: [
@@ -25,12 +31,44 @@ type AstroEvent = {
   dotColor: string;
 };
 
-export default function CalendarScreen() {
+function CalendarScreen() {
     const { colorScheme } = useColorScheme();
     const isDark = colorScheme === 'dark';
+    const { user } = useAuthStore();
+    const { userProfile } = useStore();
+    
     const today = new Date().toISOString().split('T')[0];
     const [selectedDate, setSelectedDate] = useState(today);
     const [currentMonth, setCurrentMonth] = useState(today.substring(0, 7)); // "2026-03"
+
+    // AI Insight State
+    const [aiInsight, setAiInsight] = useState<string | null>(null);
+    const [isAILoading, setIsAILoading] = useState(false);
+
+    // Fetch AI Insight when selected date changes (or button pressed)
+    const fetchAIInsight = async (date: string) => {
+        if (!user) return;
+        
+        setIsAILoading(true);
+        setAiInsight(null);
+
+        // Get user's natal chart for personalization
+        const natalChart = calculateChart(
+            userProfile?.birthDate || "01.01.1990",
+            userProfile?.birthTime || "12:00",
+            userProfile?.birthLat || 41.0082,
+            userProfile?.birthLng || 28.9784
+        );
+
+        const insight = await getAstrologyInsight(user.id, date, 'daily_transit', natalChart);
+        setAiInsight(insight);
+        setIsAILoading(false);
+    };
+
+    // Auto-fetch for today or when date manually selected
+    useEffect(() => {
+        fetchAIInsight(selectedDate);
+    }, [selectedDate]);
 
     // Build marked dates from events data
     const markedDates = useMemo(() => {
@@ -109,12 +147,50 @@ export default function CalendarScreen() {
                                 textDayFontWeight: '500',
                                 textMonthFontWeight: 'bold',
                                 textDayHeaderFontWeight: '600',
-                                textDayFontSize: 15,
-                                textMonthFontSize: 18,
                                 textDayHeaderFontSize: 13,
                             } as any}
                         />
                     </View>
+                </View>
+
+                {/* Kozmik Rehber AI Section */}
+                <View className="px-4 mt-6">
+                    <View className="flex-row items-center justify-between mb-3">
+                        <Text className="text-xl font-bold text-text-primary-light dark:text-text-primary-dark">
+                            Kozmik Rehber
+                        </Text>
+                        <MaterialIcons name="auto-awesome" size={20} color="#ad92c9" />
+                    </View>
+
+                    {isAILoading ? (
+                        <AILoading />
+                    ) : aiInsight ? (
+                        <View className="rounded-[24px] bg-white border border-primary/20 p-6 shadow-sm dark:bg-zinc-900 overflow-hidden">
+                            <LinearGradient
+                                colors={['rgba(173, 146, 201, 0.05)', 'transparent']}
+                                className="absolute inset-0"
+                            />
+                            <Text className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 font-medium">
+                                {aiInsight}
+                            </Text>
+                            <View className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex-row items-center justify-between">
+                                <Text className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
+                                    Gemini AI Synthesized
+                                </Text>
+                                <TouchableOpacity onPress={() => fetchAIInsight(selectedDate)}>
+                                    <MaterialIcons name="refresh" size={16} color="#ad92c9" />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    ) : (
+                        <TouchableOpacity 
+                            onPress={() => fetchAIInsight(selectedDate)}
+                            className="rounded-[20px] bg-primary/10 border border-primary/30 p-5 items-center justify-center flex-row gap-2"
+                        >
+                            <MaterialIcons name="psychology" size={20} color="#ad92c9" />
+                            <Text className="text-sm font-bold text-primary-dark">Günün Yorumunu Oluştur</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
 
                 {/* Selected Day Events */}
@@ -222,3 +298,5 @@ export default function CalendarScreen() {
         </SafeAreaView>
     );
 }
+
+export default CalendarScreen;

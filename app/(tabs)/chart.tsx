@@ -54,17 +54,30 @@ export default function ChartScreen() {
     const { userProfile } = useStore();
     const { user } = useAuthStore();
     const [saving, setSaving] = useState(false);
+    const [calcError, setCalcError] = useState<string | null>(null);
 
     const chartData = useMemo(() => {
-        if (!userProfile || !userProfile.birthLat || !userProfile.birthLng) {
-            return calculateChart("01.01.1990", "12:00", 41.0082, 28.9784);
+        try {
+            if (!userProfile || !userProfile.birthLat || !userProfile.birthLng) {
+                return calculateChart("01.01.1990", "12:00", 41.0082, 28.9784);
+            }
+            return calculateChart(
+                userProfile.birthDate,
+                userProfile.birthTime,
+                userProfile.birthLat,
+                userProfile.birthLng
+            );
+        } catch (e: any) {
+            setCalcError(e?.message || 'Harita hesaplama hatasi');
+            // Return a safe empty chart
+            return {
+                positions: [],
+                aspects: [],
+                elements: { fire: 25, earth: 25, air: 25, water: 25 },
+                ascendant: 0,
+                houses: Array.from({ length: 12 }, (_, i) => i * 30),
+            };
         }
-        return calculateChart(
-            userProfile.birthDate,
-            userProfile.birthTime,
-            userProfile.birthLat,
-            userProfile.birthLng
-        );
     }, [userProfile]);
 
     // Save chart to Supabase once
