@@ -1,208 +1,209 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import React, { useMemo, useEffect, useState } from 'react';
+import {
+    View, Text, ScrollView, TouchableOpacity, SafeAreaView,
+    StyleSheet, ActivityIndicator,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useStore } from '../../store/useStore';
-import { useMemo } from 'react';
-import { calculateChart } from '../../utils/astrology';
+import { useAuthStore } from '../../store/useAuthStore';
+import { calculateChart, type ChartData, type PlanetPosition } from '../../utils/astrology';
+import { supabase } from '../../utils/supabase';
+import NatalChart from '../../components/NatalChart';
 
-// Maps aspects to styles
-const ASPECT_STYLES = {
-    "UYUMLU": {
-        bg: "bg-emerald-100 dark:bg-emerald-900/30",
-        text: "text-emerald-700 dark:text-emerald-400",
-        iconContainer: "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600",
-        iconStr: "change-history" // using standard icon as placeholder for TRINE
-    },
-    "GERİLİMLİ": {
-        bg: "bg-rose-100 dark:bg-rose-900/30",
-        text: "text-rose-700 dark:text-rose-400",
-        iconContainer: "bg-rose-50 dark:bg-rose-900/20 text-rose-600",
-        iconStr: "crop-square" // for SQUARE
-    },
-    "GÜÇLÜ": {
-        bg: "bg-purple-100 dark:bg-purple-900/30",
-        text: "text-purple-700 dark:text-purple-400",
-        iconContainer: "bg-purple-50 dark:bg-purple-900/20 text-purple-600",
-        iconStr: "radio-button-checked" // for CONJUNCTION
-    }
-} as Record<string, any>;
+// ─── Planet visual configs ───────────────────────────────────────────────────
 
 const PLANET_ICONS: Record<string, keyof typeof MaterialIcons.glyphMap> = {
-    "Güneş": "light-mode",
-    "Ay": "dark-mode",
-    "Merkür": "blur-circular",
-    "Venüs": "circle",
-    "Mars": "adjust",
-    "Jüpiter": "donut-large",
-    "Satürn": "language",
-    "Uranüs": "flare",
-    "Neptün": "water",
-    "Plüton": "public"
+    "Gunes":  "light-mode",  "Ay":     "dark-mode",
+    "Merkur": "blur-circular","Venus":  "circle",
+    "Mars":   "adjust",      "Jupiter":"donut-large",
+    "Saturn": "language",     "Uranus": "flare",
+    "Neptun": "water",       "Pluton": "public",
 };
 
 const PLANET_COLORS: Record<string, string> = {
-    "Güneş": "text-yellow-700 bg-yellow-100",
-    "Ay": "text-slate-700 bg-slate-100",
-    "Merkür": "text-teal-700 bg-teal-100",
-    "Venüs": "text-indigo-700 bg-indigo-100",
-    "Mars": "text-red-700 bg-red-100",
-    "Jüpiter": "text-orange-700 bg-orange-100",
-    "Satürn": "text-stone-700 bg-stone-100",
-    "Uranüs": "text-cyan-700 bg-cyan-100",
-    "Neptün": "text-blue-700 bg-blue-100",
-    "Plüton": "text-purple-700 bg-purple-100",
+    "Gunes":  "#f59e0b", "Ay":     "#94a3b8",
+    "Merkur": "#14b8a6", "Venus":  "#ec4899",
+    "Mars":   "#ef4444", "Jupiter":"#f97316",
+    "Saturn": "#78716c", "Uranus": "#06b6d4",
+    "Neptun": "#3b82f6", "Pluton": "#7c3aed",
 };
+
+const ASPECT_STYLES: Record<string, { bg: string; text: string; icon: string }> = {
+    "UYUMLU":    { bg: '#d1fae5', text: '#059669', icon: 'change-history' },
+    "GER\u0130ML\u0130": { bg: '#ffe4e6', text: '#e11d48', icon: 'crop-square' },
+    "G\u00dc\u00c7L\u00dc":     { bg: '#ede9fe', text: '#7c3aed', icon: 'radio-button-checked' },
+};
+
+function getZodiacEmoji(sign: string): string {
+    const map: Record<string, string> = {
+        'Koc': '\u2648', 'Boga': '\u2649', 'Ikizler': '\u264A', 'Yengec': '\u264B',
+        'Aslan': '\u264C', 'Basak': '\u264D', 'Terazi': '\u264E', 'Akrep': '\u264F',
+        'Yay': '\u2650', 'Oglak': '\u2651', 'Kova': '\u2652', 'Balik': '\u2653',
+    };
+    // Normalize Turkish chars for lookup
+    const norm = sign.replace(/\u015f/g,'s').replace(/\u00e7/g,'c').replace(/\u00fc/g,'u')
+                     .replace(/\u00f6/g,'o').replace(/\u0131/g,'i').replace(/\u011f/g,'g')
+                     .replace(/\u0130/g,'I').replace(/\u00dc/g,'U').replace(/\u00d6/g,'O')
+                     .replace(/\u015e/g,'S').replace(/\u00c7/g,'C').replace(/\u011e/g,'G');
+    return map[norm] || '\u2B50';
+}
+
+// ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export default function ChartScreen() {
     const { userProfile } = useStore();
+    const { user } = useAuthStore();
+    const [saving, setSaving] = useState(false);
 
     const chartData = useMemo(() => {
         if (!userProfile || !userProfile.birthLat || !userProfile.birthLng) {
-            // Default to Istanbul 1990 if incomplete for demo/safety
             return calculateChart("01.01.1990", "12:00", 41.0082, 28.9784);
         }
-        return calculateChart(userProfile.birthDate, userProfile.birthTime, userProfile.birthLat, userProfile.birthLng);
+        return calculateChart(
+            userProfile.birthDate,
+            userProfile.birthTime,
+            userProfile.birthLat,
+            userProfile.birthLng
+        );
     }, [userProfile]);
 
+    // Save chart to Supabase once
+    useEffect(() => {
+        if (!user || !chartData || saving) return;
+        setSaving(true);
+        supabase.from('birth_charts').upsert({
+            user_id: user.id,
+            profile_type: 'self',
+            birth_date: userProfile?.birthDate || '',
+            birth_time: userProfile?.birthTime || '',
+            birth_place: userProfile?.birthPlace || '',
+            birth_lat: userProfile?.birthLat || 0,
+            birth_lng: userProfile?.birthLng || 0,
+            chart_data: chartData,
+        }, { onConflict: 'user_id,profile_type' }).then(() => setSaving(false));
+    }, [user, chartData]);
+
+    // Zodiac signs for ascendant display
+    const ascSign = chartData.positions.length > 0
+        ? (() => {
+            const norm = chartData.ascendant % 360;
+            const signs = ["Koc","Boga","Ikizler","Yengec","Aslan","Basak","Terazi","Akrep","Yay","Oglak","Kova","Balik"];
+            return signs[Math.floor(norm / 30)];
+        })()
+        : '';
+
     return (
-        <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
+        <SafeAreaView style={styles.container}>
             {/* Header */}
-            <View className="flex-row items-center px-4 py-4 border-b border-primary/20 bg-background-light/80 dark:bg-background-dark/80">
-                <TouchableOpacity className="p-2 rounded-full hover:bg-primary/20">
-                    <MaterialIcons name="arrow-back" size={24} className="text-zinc-900 dark:text-zinc-100" />
-                </TouchableOpacity>
-                <Text className="flex-1 text-center text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                    Haritam
-                </Text>
-                <TouchableOpacity className="p-2 rounded-full hover:bg-primary/20">
-                    <MaterialIcons name="share" size={24} className="text-zinc-900 dark:text-zinc-100" />
+            <View style={styles.header}>
+                <View style={{ width: 44 }} />
+                <Text style={styles.headerTitle}>Dogum Haritam</Text>
+                <TouchableOpacity style={styles.headerBtn}>
+                    <MaterialIcons name="share" size={22} color="#374151" />
                 </TouchableOpacity>
             </View>
 
-            <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
 
-                {/* Birth Chart Image Section */}
-                <View className="px-4 py-6">
-                    <View className="aspect-square w-full rounded-3xl overflow-hidden bg-white dark:bg-zinc-800 shadow-sm border border-primary/10">
-                        <Image
-                            source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AG8M_4m7Z3_8Xf7Wq_zE4-W4U8q8zYmE_o6X6P_f1v0n3H-q0J2I5g4F7L9k0S3G5_5h0v2l1M-W6Q4E3F7R8y9t0U1V2W3X4Y5Z' }}
-                            style={{ width: '100%', height: '100%' }}
-                            resizeMode="contain"
-                            className="p-4"
+                {/* ── SVG Natal Chart ── */}
+                <View style={styles.chartSection}>
+                    <View style={styles.chartCard}>
+                        <NatalChart
+                            positions={chartData.positions}
+                            aspects={chartData.aspects}
+                            ascendant={chartData.ascendant}
+                            size={320}
                         />
                     </View>
-                </View>
-
-                {/* Element Analizi Section */}
-                <View className="px-4 pb-8">
-                    <View className="bg-white dark:bg-background-dark/50 rounded-3xl p-6 shadow-sm border border-primary/10">
-                        <Text className="text-xl font-extrabold tracking-tight mb-6 text-zinc-900 dark:text-white">ELEMENT ANALİZİ</Text>
-
-                        <View className="space-y-6">
-                            {/* Fire */}
-                            <View className="flex-col gap-2">
-                                <View className="flex-row justify-between items-center mb-2">
-                                    <Text className="text-base font-bold text-zinc-900 dark:text-zinc-100">🔥 Ateş (Fire)</Text>
-                                    <Text className="text-sm font-semibold opacity-70 text-zinc-900 dark:text-zinc-100">{chartData.elements.fire}%</Text>
-                                </View>
-                                <View className="h-3 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                                    <View className="h-full bg-orange-500 rounded-full" style={{ width: `${chartData.elements.fire}%` }} />
-                                </View>
-                                <Text className="text-xs text-zinc-500 font-medium mt-1">Yüksek enerji, tutku ve inisiyatif.</Text>
-                            </View>
-
-                            {/* Earth */}
-                            <View className="flex-col gap-2 mt-4">
-                                <View className="flex-row justify-between items-center mb-2">
-                                    <Text className="text-base font-bold text-zinc-900 dark:text-zinc-100">⛰️ Toprak (Earth)</Text>
-                                    <Text className="text-sm font-semibold opacity-70 text-zinc-900 dark:text-zinc-100">{chartData.elements.earth}%</Text>
-                                </View>
-                                <View className="h-3 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                                    <View className="h-full bg-green-500 rounded-full" style={{ width: `${chartData.elements.earth}%` }} />
-                                </View>
-                                <Text className="text-xs text-zinc-500 font-medium mt-1">Güçlü temel, istikrar ve pratiklik.</Text>
-                            </View>
-
-                            {/* Air */}
-                            <View className="flex-col gap-2 mt-4">
-                                <View className="flex-row justify-between items-center mb-2">
-                                    <Text className="text-base font-bold text-zinc-900 dark:text-zinc-100">💨 Hava (Air)</Text>
-                                    <Text className="text-sm font-semibold opacity-70 text-zinc-900 dark:text-zinc-100">{chartData.elements.air}%</Text>
-                                </View>
-                                <View className="h-3 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                                    <View className="h-full bg-sky-500 rounded-full" style={{ width: `${chartData.elements.air}%` }} />
-                                </View>
-                                <Text className="text-xs text-zinc-500 font-medium mt-1">Mükemmel iletişim ve entelektüel odak.</Text>
-                            </View>
-
-                            {/* Water */}
-                            <View className="flex-col gap-2 mt-4">
-                                <View className="flex-row justify-between items-center mb-2">
-                                    <Text className="text-base font-bold text-zinc-900 dark:text-zinc-100">💧 Su (Water)</Text>
-                                    <Text className="text-sm font-semibold opacity-70 text-zinc-900 dark:text-zinc-100">{chartData.elements.water}%</Text>
-                                </View>
-                                <View className="h-3 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                                    <View className="h-full bg-blue-600 rounded-full" style={{ width: `${chartData.elements.water}%` }} />
-                                </View>
-                                <Text className="text-xs text-zinc-500 font-medium mt-1">Sezgi ve duygusal derinlik.</Text>
-                            </View>
-                        </View>
+                    {/* Ascendant badge */}
+                    <View style={styles.ascBadge}>
+                        <Text style={styles.ascLabel}>Yukselen</Text>
+                        <Text style={styles.ascValue}>{getZodiacEmoji(ascSign)} {ascSign}</Text>
+                        <Text style={styles.ascDeg}>{(chartData.ascendant % 30).toFixed(1)}\u00b0</Text>
                     </View>
                 </View>
 
-                {/* Öne Çıkan Açılar Section */}
-                <View className="px-4 pb-8">
-                    <Text className="text-lg font-bold mb-4 px-1 uppercase tracking-tight text-zinc-900 dark:text-white">Öne Çıkan Açılar</Text>
-                    <View className="space-y-3">
-                        {chartData.aspects.map((aspect, idx) => {
-                            const styleData = ASPECT_STYLES[aspect.nature] || ASPECT_STYLES["UYUMLU"];
-
-                            return (
-                                <View key={idx} className="bg-white dark:bg-background-dark/50 p-4 rounded-2xl border border-primary/10 flex-row items-center justify-between shadow-sm mb-3">
-                                    <View className="flex-row items-center gap-4">
-                                        <View className={`h-10 w-10 rounded-full flex items-center justify-center ${styleData.iconContainer}`}>
-                                            <MaterialIcons name={styleData.iconStr} size={20} />
-                                        </View>
-                                        <View>
-                                            <Text className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
-                                                {aspect.planet1} {aspect.type} {aspect.planet2}
-                                            </Text>
-                                            <Text className="text-[10px] text-zinc-500 font-medium">Orb: {aspect.orb.toFixed(2)}°</Text>
-                                        </View>
-                                    </View>
-                                    <View className={`px-2 py-1 rounded-full ${styleData.bg}`}>
-                                        <Text className={`text-[10px] font-extrabold ${styleData.text}`}>{aspect.nature}</Text>
-                                    </View>
+                {/* ── Element Analysis ── */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>ELEMENT ANALIZI</Text>
+                    <View style={styles.elemCard}>
+                        {[
+                            { emoji: '\uD83D\uDD25', name: 'Ates', pct: chartData.elements.fire,  color: '#f97316' },
+                            { emoji: '\u26F0\uFE0F', name: 'Toprak', pct: chartData.elements.earth, color: '#22c55e' },
+                            { emoji: '\uD83D\uDCA8', name: 'Hava',   pct: chartData.elements.air,   color: '#0ea5e9' },
+                            { emoji: '\uD83D\uDCA7', name: 'Su',     pct: chartData.elements.water, color: '#3b82f6' },
+                        ].map(e => (
+                            <View key={e.name} style={styles.elemRow}>
+                                <View style={styles.elemHeader}>
+                                    <Text style={styles.elemName}>{e.emoji} {e.name}</Text>
+                                    <Text style={styles.elemPct}>{e.pct}%</Text>
                                 </View>
-                            )
-                        })}
-                        {chartData.aspects.length === 0 && (
-                            <Text className="text-sm text-zinc-500">Önemli/Kesin bir açı bulunamadı.</Text>
-                        )}
+                                <View style={styles.elemTrack}>
+                                    <View style={[styles.elemFill, { width: `${e.pct}%`, backgroundColor: e.color }]} />
+                                </View>
+                            </View>
+                        ))}
                     </View>
                 </View>
 
-                {/* Planetary Positions */}
-                <View className="px-4 pb-8">
-                    <Text className="text-lg font-bold mb-4 px-1 text-zinc-900 dark:text-white">Gezegen Konumları</Text>
-                    <View className="flex-row flex-wrap justify-between">
+                {/* ── Aspects ── */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>ONE CIKAN ACILAR</Text>
+                    {chartData.aspects.map((asp, idx) => {
+                        const nature = asp.nature || 'UYUMLU';
+                        const styleKey = Object.keys(ASPECT_STYLES).find(k => nature.includes(k.substring(0, 3))) || 'UYUMLU';
+                        const s = ASPECT_STYLES[styleKey] || ASPECT_STYLES['UYUMLU'];
+
+                        return (
+                            <View key={idx} style={styles.aspectRow}>
+                                <View style={[styles.aspectIcon, { backgroundColor: s.bg }]}>
+                                    <MaterialIcons name={s.icon as any} size={18} color={s.text} />
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.aspectText}>{asp.planet1} {asp.type} {asp.planet2}</Text>
+                                    <Text style={styles.aspectOrb}>Orb: {asp.orb.toFixed(2)}\u00b0</Text>
+                                </View>
+                                <View style={[styles.natureBadge, { backgroundColor: s.bg }]}>
+                                    <Text style={[styles.natureText, { color: s.text }]}>{nature}</Text>
+                                </View>
+                            </View>
+                        );
+                    })}
+                    {chartData.aspects.length === 0 && (
+                        <Text style={styles.emptyText}>Onemli aci bulunamadi.</Text>
+                    )}
+                </View>
+
+                {/* ── Planet Positions Grid ── */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>GEZEGEN KONUMLARI</Text>
+                    <View style={styles.planetGrid}>
                         {chartData.positions.map((pos, idx) => {
-                            const iconName = PLANET_ICONS[pos.name] || 'circle';
-                            const colors = PLANET_COLORS[pos.name] || 'text-zinc-700 bg-zinc-100';
+                            const normName = pos.name.replace(/\u00fc/g,'u').replace(/\u00f6/g,'o')
+                                .replace(/\u00e7/g,'c').replace(/\u015f/g,'s')
+                                .replace(/\u0131/g,'i').replace(/\u011f/g,'g')
+                                .replace(/\u00dc/g,'U').replace(/\u00d6/g,'O')
+                                .replace(/\u00c7/g,'C').replace(/\u015e/g,'S')
+                                .replace(/\u0130/g,'I').replace(/\u011e/g,'G');
+                            const iconName = PLANET_ICONS[normName] || 'circle';
+                            const col = PLANET_COLORS[normName] || '#6b7280';
 
                             return (
-                                <View key={idx} className="w-[48%] bg-white dark:bg-background-dark/50 p-4 rounded-2xl border border-primary/10 flex-row items-center gap-3 shadow-sm mb-3">
-                                    <View className={`h-10 w-10 rounded-full flex items-center justify-center ${colors}`}>
-                                        <MaterialIcons name={iconName} size={20} />
+                                <View key={idx} style={styles.planetCard}>
+                                    <View style={[styles.planetIcon, { backgroundColor: col + '20' }]}>
+                                        <MaterialIcons name={iconName} size={20} color={col} />
                                     </View>
                                     <View>
-                                        <Text className="text-[10px] uppercase tracking-wider font-bold opacity-50 text-zinc-900 dark:text-zinc-100">{pos.name}</Text>
-                                        <Text className="text-sm font-bold text-zinc-900 dark:text-white">{pos.sign} {Math.floor(pos.degreeInSign)}°</Text>
+                                        <Text style={styles.planetName}>{pos.name}</Text>
+                                        <Text style={styles.planetSign}>
+                                            {getZodiacEmoji(pos.sign)} {pos.sign} {Math.floor(pos.degreeInSign)}\u00b0
+                                        </Text>
                                     </View>
                                     {pos.isRetrograde && (
-                                        <Text className="absolute right-4 top-4 text-xs font-bold text-rose-500">Rx</Text>
+                                        <Text style={styles.retroBadge}>Rx</Text>
                                     )}
                                 </View>
-                            )
+                            );
                         })}
                     </View>
                 </View>
@@ -211,3 +212,79 @@ export default function ChartScreen() {
         </SafeAreaView>
     );
 }
+
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
+const styles = StyleSheet.create({
+    container:   { flex: 1, backgroundColor: '#f8f6f7' },
+    header: {
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+        paddingHorizontal: 16, paddingVertical: 12,
+        borderBottomWidth: 1, borderBottomColor: 'rgba(247,225,232,0.4)',
+    },
+    headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
+    headerBtn:   { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+
+    // Chart
+    chartSection: { alignItems: 'center', paddingVertical: 16 },
+    chartCard: {
+        backgroundColor: '#fff', borderRadius: 28, padding: 16,
+        shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08, shadowRadius: 16, elevation: 4,
+        borderWidth: 1, borderColor: 'rgba(247,225,232,0.3)',
+    },
+    ascBadge: {
+        flexDirection: 'row', alignItems: 'center', gap: 8,
+        marginTop: 12, backgroundColor: '#fdf2f8',
+        paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20,
+    },
+    ascLabel: { fontSize: 12, fontWeight: '600', color: '#9ca3af' },
+    ascValue: { fontSize: 14, fontWeight: '700', color: '#1f1317' },
+    ascDeg:   { fontSize: 12, color: '#6b7280' },
+
+    // Sections
+    section:      { paddingHorizontal: 16, marginTop: 20 },
+    sectionTitle: { fontSize: 14, fontWeight: '800', color: '#374151', letterSpacing: 1, marginBottom: 12 },
+
+    // Elements
+    elemCard: {
+        backgroundColor: '#fff', borderRadius: 20, padding: 20,
+        shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05, shadowRadius: 6, elevation: 2,
+    },
+    elemRow:    { marginBottom: 14 },
+    elemHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
+    elemName:   { fontSize: 14, fontWeight: '600', color: '#111827' },
+    elemPct:    { fontSize: 13, fontWeight: '700', color: '#6b7280' },
+    elemTrack: {
+        height: 8, borderRadius: 4, backgroundColor: '#f1f5f9', overflow: 'hidden',
+    },
+    elemFill: { height: 8, borderRadius: 4 },
+
+    // Aspects
+    aspectRow: {
+        flexDirection: 'row', alignItems: 'center', gap: 12,
+        backgroundColor: '#fff', borderRadius: 16, padding: 14,
+        marginBottom: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.03, shadowRadius: 4, elevation: 1,
+    },
+    aspectIcon:  { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+    aspectText:  { fontSize: 13, fontWeight: '600', color: '#111827' },
+    aspectOrb:   { fontSize: 10, color: '#9ca3af', marginTop: 2 },
+    natureBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
+    natureText:  { fontSize: 9, fontWeight: '800' },
+    emptyText:   { fontSize: 13, color: '#9ca3af' },
+
+    // Planets
+    planetGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+    planetCard: {
+        width: '48%' as any, flexDirection: 'row', alignItems: 'center', gap: 10,
+        backgroundColor: '#fff', borderRadius: 16, padding: 12,
+        shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.04, shadowRadius: 4, elevation: 1,
+    },
+    planetIcon: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
+    planetName: { fontSize: 10, fontWeight: '700', color: '#6b7280', letterSpacing: 0.5, textTransform: 'uppercase' },
+    planetSign: { fontSize: 13, fontWeight: '600', color: '#111827', marginTop: 1 },
+    retroBadge: { position: 'absolute', right: 8, top: 8, fontSize: 10, fontWeight: '800', color: '#ef4444' },
+});

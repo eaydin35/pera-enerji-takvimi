@@ -31,6 +31,8 @@ export type ChartData = {
     positions: PlanetPosition[];
     aspects: Aspect[];
     elements: Elements;
+    ascendant: number;  // longitude of ascendant
+    houses: number[];   // 12 house cusps (longitudes)
 };
 
 const ZODIAC_SIGNS = [
@@ -172,5 +174,26 @@ export function calculateChart(dateStr: string, timeStr: string, lat: number, ln
         water: Math.round((elementCounts.water / totalPlanets) * 100) || 0,
     };
 
-    return { positions, aspects, elements };
+    // Ascendant approximation (simplified)
+    // Proper Ascendant requires obliquity + local sidereal time
+    const obliquity = 23.4393; // Earth's axial tilt
+    const jd = date.getTime() / 86400000 + 2440587.5;
+    const T = (jd - 2451545.0) / 36525;
+    const GMST = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T;
+    const LST = (GMST + lng) % 360;
+    // Ascendant formula
+    const ascRad = Math.atan2(
+        Math.cos(LST * Math.PI / 180),
+        -(Math.sin(LST * Math.PI / 180) * Math.cos(obliquity * Math.PI / 180)
+          + Math.tan(lat * Math.PI / 180) * Math.sin(obliquity * Math.PI / 180))
+    );
+    let ascendant = (ascRad * 180 / Math.PI + 360) % 360;
+
+    // Equal House system: each house = 30 degrees from Ascendant
+    const houses: number[] = [];
+    for (let i = 0; i < 12; i++) {
+        houses.push((ascendant + i * 30) % 360);
+    }
+
+    return { positions, aspects, elements, ascendant, houses };
 }
