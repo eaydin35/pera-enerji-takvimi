@@ -1,111 +1,233 @@
 import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView, Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useStore } from '../../store/useStore';
+
 import { useRouter } from 'expo-router';
+
+import { useMemo } from 'react';
+import { calculateChart } from '../../utils/astrology';
+import { getDailyRecommendation, getNatalSummary } from '../../utils/recommendation-engine';
+import { calculateDailyTransits, getWeeklyEvents } from '../../utils/transit-engine';
+
+import astroEvents2026 from '../../data/astro_events_2026.json';
+import staticData from '../../data/staticData.json';
+
+
 
 export default function DashboardScreen() {
     const { userProfile } = useStore();
     const router = useRouter();
+
+    const dashboardData = useMemo(() => {
+        if (!userProfile?.birthDate) return null;
+
+        const chart = calculateChart(
+            userProfile.birthDate,
+            userProfile.birthTime,
+            userProfile.birthLat || 41.0082,
+            userProfile.birthLng || 28.9784
+        );
+
+        const recommendations = getDailyRecommendation(chart);
+        const transit = calculateDailyTransits(chart);
+        const weekly = getWeeklyEvents(astroEvents2026);
+
+
+        return { chart, recommendations, transit, weekly };
+    }, [userProfile]);
+
+
+    const todayDateStr = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    if (!dashboardData) return null;
+
+    const { recommendations, transit, weekly } = dashboardData;
 
     return (
         <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
             {/* Header */}
             <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
                 <View className="flex-row items-center gap-2">
-                    {/* User Avatar */}
-                    <View className="h-12 w-12 rounded-full border-2 border-primary">
-                        <Image
-                            source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_XhyEFXefcU9wA9FNdiFZhj7X8eAu5lPtIwFauQjw9C_W2ZZWDOrHPnwJ6EzFvPmSnAads9LbCwtMdlcA8lHc6j34Rhc90BlM-xHdgJ4ojWBPFzvJ3enWXq4E1abzAm6GQUUiuTt-iY6ddLG5_NfvN1pTohGooLDTS_enluA4EkoNWC9iRzNwTUT7cwyE4uwF0Ge171kBez2YEQeECN9QEphQsYoFPCXvC-L_W6J8JEBI1xq9SCL-Ds3CLKuW1nwSWpFm-nfVrA' }}
-                            className="flex-1 rounded-full"
-                        />
-                    </View>
-                    {/* Spouse Avatar */}
-                    <View className="h-10 w-10 opacity-60">
-                        <Image
-                            source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDs53rt9wanX7NWWQhqg2cfaLiPUpsdiOhxbAyBEdIuBzpCc2zrIWlZZZEXUibG96XTXPf2ZHfa5-Wp8tD8LVn2qMB8vJViEPfE8QYTw9mNIeVbwFe5fMDDUqfYR_eQAG3BDwrK69Zt4rG3bKJCofAupzNFtAIoN-hRkg_ArYIEwTc0rhrpJPx_RHudvrWZSssD9CxNcIhrtFLWOqOqHuTINJuH5qPvrTZaeoQQVtvKXNXPpdBQ-_6rjWa5oJvlgOJohclkT_0ZSw' }}
-                            className="flex-1 rounded-full"
-                        />
-                    </View>
-                    {/* Add Profile */}
-                    <TouchableOpacity className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed border-zinc-400">
-                        <MaterialIcons name="add" size={20} color="#71717a" />
-                    </TouchableOpacity>
+                    <MaterialIcons name="auto-awesome" size={28} color="#ad92c9" />
+                    <Text className="text-xl font-extrabold tracking-tight text-text-primary-light dark:text-text-primary-dark">Pera</Text>
                 </View>
+
+
                 <TouchableOpacity className="flex h-10 w-10 items-center justify-center rounded-full bg-card-light dark:bg-card-dark">
                     <MaterialIcons name="notifications-none" size={24} color="#1f2937" className="dark:text-white" />
                 </TouchableOpacity>
             </View>
-
+ 
             <ScrollView contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
-                {/* Greeting */}
-                <View className="px-4 pb-3 pt-2">
-                    <Text className="text-xl font-bold text-text-primary-light dark:text-text-primary-dark">
-                        Günaydın, {userProfile?.firstName || 'Bilinmeyen'}
+                <View className="px-4 pb-0 pt-2">
+                    <Text className="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark">
+                        Günaydın, {userProfile?.firstName || 'Gezgin'}
                     </Text>
-                    <Text className="mt-1 text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        24 Ekim 2024, Ay Ikizler burcunda
+                    
+                    {/* User Avatar Circle right under the name */}
+                    <TouchableOpacity 
+                        onPress={() => router.push('/profile' as any)}
+                        className="mt-3 h-20 w-20 rounded-full border-4 border-white dark:border-zinc-800 shadow-xl overflow-hidden bg-primary/10 items-center justify-center"
+                    >
+                        {userProfile?.avatarUrl ? (
+                            <Image
+                                source={{ uri: userProfile.avatarUrl }}
+                                className="flex-1 w-full"
+                            />
+                        ) : (
+                            <MaterialIcons name="person" size={40} color="#c4b5c9" />
+                        )}
+                    </TouchableOpacity>
+
+                    <Text className="mt-4 text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
+                        {todayDateStr}, Ay {transit.moonSign} burcunda
                     </Text>
                 </View>
+
+
 
                 {/* Daily Energy Theme */}
                 <View className="px-4 mb-4">
                     <View className="overflow-hidden rounded-[24px] border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark shadow-sm">
-                        <Image
-                            source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDdGvb7yIWHUneDnq9K6wakcs4ebyqyTOjt6QN66qOcQ0NwHqu859FykCiSd3_94xHJse99yfU4Xg2EX_fl1cBocDkuZl9YntXAbV0J2dJfpkuvW3rQXeUsEmfOYB1H1UGdO2FqS6kzzdm2g8GtDsUSVOC1RmKP1zrbz1D7vrInxNA0IXaEPQJzUoGAOVuWp1aOAiiZK3tqYuYsYqu4N_veTo_YU10zjK245mgXFe6ZN9lhEmNwLTDUPTPcUwUNJMZXGlNuyinZKw' }}
-                            className="h-40 w-full"
+                        <LinearGradient 
+                            colors={['#ad92c9', '#f7e1e8']} 
+                            start={{ x: 0, y: 0 }} 
+                            end={{ x: 1, y: 1 }}
+                            style={{ height: 100, width: '100%', opacity: 0.6 }}
                         />
+
                         <View className="p-5">
                             <Text className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Günün Enerji Teması</Text>
-                            <Text className="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mt-1">Bugün İletişim Günü</Text>
+                            <Text className="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mt-1">{transit.energyTheme}</Text>
                             <Text className="text-base font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark mt-2">
-                                Fikirlerini cesurca ifade etmek için harika bir gün. Zihnin berrak ve sezgilerin güçlü.
+                                {transit.energyDescription}
                             </Text>
                         </View>
+
                     </View>
                 </View>
 
                 {/* Recommendations Grid */}
                 <View className="flex-row px-4 mb-4 gap-4">
                     <View className="flex-1 rounded-[24px] border border-border-light bg-card-light p-5 dark:border-border-dark dark:bg-card-dark shadow-sm">
-                        <View className="h-10 w-10 items-center justify-center rounded-full bg-primary mb-2">
-                            <MaterialIcons name="palette" size={20} color="#1f1317" />
+                        <View className="h-10 w-10 items-center justify-center rounded-full bg-primary mb-2" style={{ backgroundColor: recommendations.color.hex }}>
+                            <MaterialIcons name="palette" size={20} color="#fff" />
                         </View>
-                        <Text className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mt-auto">Mavi</Text>
+                        <Text className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mt-auto">{recommendations.color.name}</Text>
                         <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Günün Rengi</Text>
                     </View>
-                    <View className="flex-1 rounded-[24px] border border-border-light bg-card-light p-5 dark:border-border-dark dark:bg-card-dark shadow-sm">
+                    <TouchableOpacity 
+                        className="flex-1 rounded-[24px] border border-border-light bg-card-light p-5 dark:border-border-dark dark:bg-card-dark shadow-sm"
+                        onPress={() => {
+                            const stoneName = recommendations.stone.name.toLowerCase()
+                                .replace(/ı/g,'i').replace(/ö/g,'o').replace(/ü/g,'u')
+                                .replace(/ş/g,'s').replace(/ç/g,'c').replace(/ğ/g,'g');
+                            Linking.openURL(`https://stonesofpera.com/?s=${stoneName}&post_type=product`);
+                        }}
+                    >
                         <View className="h-10 w-10 items-center justify-center rounded-full bg-primary mb-2">
                             <MaterialIcons name="diamond" size={20} color="#1f1317" />
                         </View>
-                        <Text className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mt-auto">Lapis Lazuli</Text>
+                        <Text className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mt-auto">{recommendations.stone.name}</Text>
                         <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Günün Taşı</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
-                <View className="px-4 mb-4">
+
+                <TouchableOpacity 
+                    className="px-4 mb-4"
+                    onPress={() => router.push({ pathname: '/zikirmatik', params: { esma: recommendations.esma.name } } as any)}
+                >
                     <View className="rounded-[24px] border border-border-light bg-card-light p-5 dark:border-border-dark dark:bg-card-dark shadow-sm flex-row items-center">
                         <View className="h-12 w-12 items-center justify-center rounded-full bg-primary mr-4">
                             <MaterialIcons name="star" size={24} color="#1f1317" />
                         </View>
-                        <View>
-                            <Text className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark">El-Fettâh</Text>
-                            <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Günün Esması</Text>
+                        <View className="flex-1">
+
+                            <Text className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark">{recommendations.esma.name}</Text>
+                            <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{recommendations.esma.meaning}</Text>
                         </View>
                     </View>
-                </View>
+                </TouchableOpacity>
+
+
 
                 {/* Alerts */}
-                <View className="px-4 mb-6">
+                {/* Alerts & Element Warnings */}
+                <View className="px-4 mb-6 gap-4">
+                    {recommendations.elementWarning && (
+                        <View className="flex-row items-start rounded-[24px] border border-primary/30 bg-primary/5 p-5 shadow-sm">
+                            <MaterialIcons name="waves" size={24} color="#ad92c9" />
+                            <View className="ml-3 flex-1">
+                                <Text className="text-base font-bold text-zinc-900 dark:text-white">{recommendations.elementWarning.elementTr} Elementi Zayıf</Text>
+                                <Text className="mt-1 text-sm leading-normal text-zinc-600 dark:text-zinc-300">
+                                    {recommendations.elementWarning.advice}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+
+                    {/* Weekly Highlights Horizontal Scroll */}
+                    <View>
+                        <Text className="mb-3 text-lg font-bold text-text-primary-light dark:text-text-primary-dark">Bu Hafta Öne Çıkanlar</Text>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12 }}>
+                            {weekly.map((event, idx) => (
+                                <View key={idx} className="w-64 rounded-2xl border border-border-light bg-card-light p-4 dark:border-border-dark dark:bg-card-dark">
+                                    <View className="flex-row items-center gap-2 mb-2">
+                                        <View className="h-2 w-2 rounded-full" style={{ backgroundColor: event.dotColor }} />
+                                        <Text className="text-xs font-semibold text-text-secondary-light dark:text-text-secondary-dark">{new Date(event.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</Text>
+                                    </View>
+                                    <Text className="text-base font-bold text-text-primary-light dark:text-text-primary-dark mb-1" numberOfLines={1}>{event.title}</Text>
+                                    <Text className="text-xs text-text-secondary-light dark:text-text-secondary-dark" numberOfLines={2}>{event.description}</Text>
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
+
+                    {/* Static but relevant alerts */}
                     <View className="flex-row items-start rounded-[24px] border border-yellow-500/30 bg-yellow-50 dark:bg-yellow-500/10 p-5 shadow-sm">
                         <MaterialIcons name="warning-amber" size={24} color="#eab308" />
                         <View className="ml-3 flex-1">
                             <Text className="text-base font-bold text-zinc-900 dark:text-white">Ay Boşlukta Uyarısı</Text>
                             <Text className="mt-1 text-sm leading-normal text-zinc-600 dark:text-zinc-300">
-                                14:30 - 18:00 arası Ay boşlukta. Bu saatlerde yeni başlangıçlardan, önemli kararlardan ve imzalardan kaçın.
+                                Bugün 14:30 - 18:00 arası Ay boşlukta. Önemli kararlarınızı başka bir vakte erteleyin.
                             </Text>
                         </View>
                     </View>
                 </View>
+                {/* Transit Insights */}
+                <View className="px-4 mb-6">
+                    <Text className="mb-4 text-xl font-bold text-text-primary-light dark:text-text-primary-dark">Günün Öne Çıkan Transitleri</Text>
+                    {transit.activeTransits.map((t, idx) => (
+                        <View key={idx} className="mb-3 flex-row items-center rounded-[24px] border border-border-light bg-card-light p-4 dark:border-border-dark dark:bg-card-dark shadow-sm">
+                            <View className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
+                                <MaterialIcons 
+                                    name={t.nature === 'UYUMLU' ? 'check-circle' : t.nature === 'GERİLİMLİ' ? 'error' : 'flash-on'} 
+                                    size={24} 
+                                    color="#1f1317" 
+                                />
+                            </View>
+                            <View className="ml-4 flex-1">
+                                <Text className="text-base font-bold text-text-primary-light dark:text-text-primary-dark">
+                                    {t.transitPlanet} {t.aspectType} {t.natalPlanet}
+                                </Text>
+                                <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{t.transitSign} burcunda, {t.affectedHouse}. evinizden geçiyor.</Text>
+                            </View>
+                        </View>
+                    ))}
+                    
+                    <View className="mb-3 flex-row items-center rounded-[24px] border border-border-light bg-card-light p-4 dark:border-border-dark dark:bg-card-dark shadow-sm">
+                        <View className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
+                            <MaterialIcons name="self-improvement" size={24} color="#1f1317" />
+                        </View>
+                        <View className="ml-4 flex-1">
+                            <Text className="text-base font-bold text-text-primary-light dark:text-text-primary-dark">Şanslı Aktivite</Text>
+                            <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{recommendations.luckyActivity}</Text>
+                        </View>
+                    </View>
+                </View>
+
 
                 {/* Important Timings */}
                 <View className="px-4 mb-6">
@@ -164,8 +286,37 @@ export default function DashboardScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Günün Niyeti & Stones of Pera */}
-                <View className="px-4 gap-4">
+                {/* Personalized Natal Insights - The 15-20 min reading content */}
+                <View className="px-4 mt-6 mb-4">
+                    <Text className="mb-4 text-xl font-bold text-text-primary-light dark:text-text-primary-dark">Senin İçin... (Hızlı Analiz)</Text>
+                    <View className="rounded-[24px] border border-border-light bg-card-light overflow-hidden dark:border-border-dark dark:bg-card-dark shadow-sm">
+                        <View className="bg-primary/20 p-4">
+                            <Text className="text-sm font-bold text-primary-dark dark:text-primary-light">Bu bilgiler senin doğum haritana özeldir.</Text>
+                        </View>
+                        <View className="p-4 gap-4">
+                            {getNatalSummary(dashboardData.chart).slice(0, 5).map((item, idx) => (
+                                <View key={idx} className="flex-row items-start">
+                                    <View className="h-6 w-6 rounded-full bg-primary items-center justify-center mt-0.5 mr-3">
+                                        <Text className="text-[10px] font-bold text-white">{idx+1}</Text>
+                                    </View>
+                                    <Text className="flex-1 text-sm leading-relaxed text-text-secondary-light dark:text-text-secondary-dark italic">
+                                        "{item}"
+                                    </Text>
+                                </View>
+                            ))}
+                            <TouchableOpacity 
+                                onPress={() => router.push('/chart' as any)}
+                                className="mt-2 items-center"
+                            >
+                                <Text className="text-sm font-bold text-primary">Tam Analizi Gör →</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+                {/* Stones of Pera */}
+                <View className="px-4 gap-4 mb-8">
+
                     <TouchableOpacity className="relative flex-row overflow-hidden rounded-[24px] border border-border-light bg-card-light p-5 pt-6 pb-6 dark:border-border-dark dark:bg-card-dark shadow-sm">
                         <View className="flex-1 pr-4 z-10">
                             <Text className="text-lg font-bold text-text-primary-light dark:text-text-primary-dark mb-1">Günün Niyeti</Text>

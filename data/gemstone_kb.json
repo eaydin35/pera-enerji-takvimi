@@ -1,0 +1,343 @@
+{
+  "by_weak_element": {
+    "fire": {
+      "stones": [
+        {
+          "name": "Karnelyan",
+          "description": "Ateş enerjisini artırır, motivasyon ve cesaret verir. Yaratıcılığı uyandırır.",
+          "color": "#E25822"
+        },
+        {
+          "name": "Sitrin",
+          "description": "Güneş enerjisi taşır, özgüveni güçlendirir. Bolluk ve başarıyı çeker.",
+          "color": "#E4A700"
+        },
+        {
+          "name": "Kehribar",
+          "description": "Yaşam gücünü canlandırır, enerjiyi artırır. Sıcaklık ve neşe getirir.",
+          "color": "#FFBF00"
+        },
+        {
+          "name": "Kırmızı Jasper",
+          "description": "Dayanıklılık ve kararlılık verir. Kök çakrayı uyarır, topraklar.",
+          "color": "#BF4E30"
+        }
+      ],
+      "advice": "Ateş enerjiniz düşük. Motivasyon ve özgüven konusunda destek alabilirsiniz. Kırmızı ve turuncu tonlarda taşlar taşımanız, aktif sporlar yapmanız tavsiye edilir."
+    },
+    "earth": {
+      "stones": [
+        {
+          "name": "Yeşim (Jade)",
+          "description": "Topraklama ve denge sağlar. Bolluk ve uyum enerjisi verir.",
+          "color": "#00A86B"
+        },
+        {
+          "name": "Kaplan Gözü",
+          "description": "Pratik düşünme ve odaklanma gücü verir. Koruyucu enerji taşır.",
+          "color": "#B8860B"
+        },
+        {
+          "name": "Turmalin (Siyah)",
+          "description": "Güçlü koruyucu enerji, köklendirme ve topraklama sağlar.",
+          "color": "#1C1C1C"
+        },
+        {
+          "name": "Dumanlı Kuvars",
+          "description": "Stresi azaltır, topraklar. Negatif enerjiyi dönüştürür.",
+          "color": "#736F6E"
+        }
+      ],
+      "advice": "Toprak enerjiniz düşük. Pratiklik ve istikrar konusunda destek alabilirsiniz. Yeşil ve kahverengi tonlarda taşlar taşımanız, doğada yürüyüş yapmanız tavsiye edilir."
+    },
+    "air": {
+      "stones": [
+        {
+          "name": "Lapis Lazuli",
+          "description": "Zihinsel berraklık ve iletişimi güçlendirir. Bilgelik taşıdır.",
+          "color": "#26619C"
+        },
+        {
+          "name": "Akuamarin",
+          "description": "Sakin iletişim ve duygusal ifade gücü verir. Boğaz çakrasını açar.",
+          "color": "#7FDBFF"
+        },
+        {
+          "name": "Florit",
+          "description": "Zihinsel netlik, odaklanma ve öğrenme kapasitesini artırır.",
+          "color": "#7B68EE"
+        },
+        {
+          "name": "Sodalit",
+          "description": "Mantıksal düşünme ve rasyonel iletişimi destekler.",
+          "color": "#003399"
+        }
+      ],
+      "advice": "Hava enerjiniz düşük. İletişim ve sosyal etkileşim konusunda destek alabilirsiniz. Mavi ve turkuaz tonlarda taşlar taşımanız, okuma ve yazma aktiviteleri yapmanız tavsiye edilir."
+    },
+    "water": {
+      "stones": [
+        {
+          "name": "Aytaşı",
+          "description": "Sezgiyi güçlendirir, duygusal dengeyi sağlar. Ay enerjisi taşır.",
+          "color": "#C4C4C4"
+        },
+        {
+          "name": "Ametist",
+          "description": "Ruhani farkındalık ve duygusal şifa sağlar. Meditasyon taşıdır.",
+          "color": "#9966CC"
+        },
+        {
+          "name": "Gül Kuvarsı",
+          "description": "Koşulsuz sevgi ve şefkat enerjisi verir. Kalp çakrasını açar.",
+          "color": "#FFB6C1"
+        },
+        {
+          "name": "Labradorit",
+          "description": "Sezgisel yetenekleri artırır, dönüşümü destekler.",
+          "color": "#4B6584"
+        }
+      ],
+      "advice": "Su enerjiniz düşük. Duygusal ifade ve empati konusunda destek alabilirsiniz. Mavi ve mor tonlarda taşlar taşımanız, meditasyon ve su kenarı aktiviteleri yapmanız tavsiye edilir."
+    }
+  },
+  "by_weak_planet": {
+    "Sun": {
+      "stones": [
+        "Sitrin",
+        "Altın Topaz",
+        "Kaplan Gözü"
+      ],
+      "esma": "En-Nûr",
+      "esma_meaning": "Nur veren, aydınlatan",
+      "color": "#FFA500",
+      "color_name": "Altın/Turuncu"
+    },
+    "Moon": {
+      "stones": [
+        "Aytaşı",
+        "Selenite",
+        "İnci"
+      ],
+      "esma": "El-Vedûd",
+      "esma_meaning": "Seven, sevgi kaynağı",
+      "color": "#C0C0C0",
+      "color_name": "Gümüş/Beyaz"
+    },
+    "Mercury": {
+      "stones": [
+        "Akuamarin",
+        "Florit",
+        "Agat"
+      ],
+      "esma": "El-Alîm",
+      "esma_meaning": "Her şeyi bilen",
+      "color": "#00CED1",
+      "color_name": "Turkuaz"
+    },
+    "Venus": {
+      "stones": [
+        "Gül Kuvarsı",
+        "Rodokrozit",
+        "Kunzit"
+      ],
+      "esma": "El-Cemîl",
+      "esma_meaning": "Güzel olan, güzellik veren",
+      "color": "#FF69B4",
+      "color_name": "Pembe"
+    },
+    "Mars": {
+      "stones": [
+        "Kırmızı Jasper",
+        "Garnet",
+        "Kan Taşı"
+      ],
+      "esma": "El-Kavî",
+      "esma_meaning": "Güçlü olan",
+      "color": "#DC143C",
+      "color_name": "Kırmızı"
+    },
+    "Jupiter": {
+      "stones": [
+        "Ametist",
+        "Lapis Lazuli",
+        "Safir"
+      ],
+      "esma": "El-Fettâh",
+      "esma_meaning": "Açan, fetheden",
+      "color": "#4B0082",
+      "color_name": "Mor/Lacivert"
+    },
+    "Saturn": {
+      "stones": [
+        "Obsidyen",
+        "Oniks",
+        "Hematit"
+      ],
+      "esma": "Es-Sabûr",
+      "esma_meaning": "Çok sabırlı olan",
+      "color": "#2F4F4F",
+      "color_name": "Siyah/Koyu Gri"
+    },
+    "Uranus": {
+      "stones": [
+        "Labradorit",
+        "Tanzanit",
+        "Opal"
+      ],
+      "esma": "El-Bedî",
+      "esma_meaning": "Eşsiz yaratıcı",
+      "color": "#00BFFF",
+      "color_name": "Elektrik Mavi"
+    },
+    "Neptune": {
+      "stones": [
+        "Ametist",
+        "Larimar",
+        "Sujilit"
+      ],
+      "esma": "El-Bâtın",
+      "esma_meaning": "Gizli olan, iç yüz",
+      "color": "#7B68EE",
+      "color_name": "Deniz Moru"
+    },
+    "Pluto": {
+      "stones": [
+        "Obsidyen",
+        "Moldavit",
+        "Smoky Kuvars"
+      ],
+      "esma": "El-Muhyî",
+      "esma_meaning": "Hayat veren, dirilten",
+      "color": "#800020",
+      "color_name": "Bordo"
+    }
+  },
+  "by_day_of_week": {
+    "Monday": {
+      "planet": "Moon",
+      "color_name": "Gümüş/Beyaz",
+      "color_hex": "#C0C0C0",
+      "esma": "El-Kadîr",
+      "esma_meaning": "Güç ve kudret sahibi",
+      "stone": "Aytaşı",
+      "activity": "Meditasyon ve iç gözlem"
+    },
+    "Tuesday": {
+      "planet": "Mars",
+      "color_name": "Kırmızı",
+      "color_hex": "#DC143C",
+      "esma": "El-Kavî",
+      "esma_meaning": "Güçlü olan",
+      "stone": "Garnet",
+      "activity": "Fiziksel egzersiz ve hedef belirleme"
+    },
+    "Wednesday": {
+      "planet": "Mercury",
+      "color_name": "Yeşil/Turkuaz",
+      "color_hex": "#00CED1",
+      "esma": "El-Alîm",
+      "esma_meaning": "Her şeyi bilen",
+      "stone": "Zümrüt",
+      "activity": "Öğrenme, yazma ve iletişim"
+    },
+    "Thursday": {
+      "planet": "Jupiter",
+      "color_name": "Mor/Lacivert",
+      "color_hex": "#4B0082",
+      "esma": "El-Fettâh",
+      "esma_meaning": "Açan, fetheden",
+      "stone": "Ametist",
+      "activity": "Dua, şükür ve genişleme niyetleri"
+    },
+    "Friday": {
+      "planet": "Venus",
+      "color_name": "Pembe/Yeşil",
+      "color_hex": "#FF69B4",
+      "esma": "El-Vedûd",
+      "esma_meaning": "Seven, sevgi kaynağı",
+      "stone": "Gül Kuvarsı",
+      "activity": "Sanat, güzellik ve ilişkiler"
+    },
+    "Saturday": {
+      "planet": "Saturn",
+      "color_name": "Siyah/Koyu Gri",
+      "color_hex": "#2F4F4F",
+      "esma": "Es-Sabûr",
+      "esma_meaning": "Çok sabırlı olan",
+      "stone": "Obsidyen",
+      "activity": "Planlama, disiplin ve temizlik"
+    },
+    "Sunday": {
+      "planet": "Sun",
+      "color_name": "Altın/Turuncu",
+      "color_hex": "#FFA500",
+      "esma": "En-Nûr",
+      "esma_meaning": "Nur veren, aydınlatan",
+      "stone": "Sitrin",
+      "activity": "Kendine zaman ayırma ve enerji toplama"
+    }
+  },
+  "by_ascendant_sign": {
+    "Koç": {
+      "lifeStone": "Elmas",
+      "supportStone": "Kırmızı Jasper",
+      "element": "fire"
+    },
+    "Boğa": {
+      "lifeStone": "Zümrüt",
+      "supportStone": "Gül Kuvarsı",
+      "element": "earth"
+    },
+    "İkizler": {
+      "lifeStone": "Akuamarin",
+      "supportStone": "Agat",
+      "element": "air"
+    },
+    "Yengeç": {
+      "lifeStone": "İnci",
+      "supportStone": "Aytaşı",
+      "element": "water"
+    },
+    "Aslan": {
+      "lifeStone": "Yakut",
+      "supportStone": "Sitrin",
+      "element": "fire"
+    },
+    "Başak": {
+      "lifeStone": "Safir",
+      "supportStone": "Peridot",
+      "element": "earth"
+    },
+    "Terazi": {
+      "lifeStone": "Opal",
+      "supportStone": "Lapis Lazuli",
+      "element": "air"
+    },
+    "Akrep": {
+      "lifeStone": "Topaz",
+      "supportStone": "Obsidyen",
+      "element": "water"
+    },
+    "Yay": {
+      "lifeStone": "Turkuaz",
+      "supportStone": "Ametist",
+      "element": "fire"
+    },
+    "Oğlak": {
+      "lifeStone": "Garnet",
+      "supportStone": "Oniks",
+      "element": "earth"
+    },
+    "Kova": {
+      "lifeStone": "Ametist",
+      "supportStone": "Labradorit",
+      "element": "air"
+    },
+    "Balık": {
+      "lifeStone": "Akuamarin",
+      "supportStone": "Aytaşı",
+      "element": "water"
+    }
+  }
+}

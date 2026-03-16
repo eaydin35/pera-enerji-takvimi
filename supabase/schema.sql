@@ -13,6 +13,7 @@ create table if not exists profiles (
   birth_place text,
   birth_lat  float,
   birth_lng  float,
+  avatar_url text,
   created_at timestamptz default now()
 );
 
@@ -30,6 +31,16 @@ create table if not exists zikir_sessions (
 alter table profiles       enable row level security;
 alter table zikir_sessions enable row level security;
 
--- 4. Her kullanici sadece kendi verisini okuyup yazabilsin
-create policy "Own profile"  on profiles       for all using (auth.uid() = id);
-create policy "Own sessions" on zikir_sessions for all using (auth.uid() = user_id);
+-- 4. Politikalar
+-- Profiles
+drop policy if exists "Own profile" on profiles;
+create policy "Users can view own profile"   on profiles for select using (auth.uid() = id);
+create policy "Users can update own profile" on profiles for update using (auth.uid() = id);
+create policy "Users can insert own profile" on profiles for insert with check (auth.uid() = id);
+
+-- Sessions
+drop policy if exists "Own sessions" on zikir_sessions;
+create policy "Users can view own sessions"   on zikir_sessions for select using (auth.uid() = user_id);
+create policy "Users can update own sessions" on zikir_sessions for update using (auth.uid() = user_id);
+create policy "Users can insert own sessions" on zikir_sessions for insert with check (auth.uid() = user_id);
+

@@ -84,8 +84,11 @@ function SettingsRow({
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
-    const { userProfile, resetOnboarding } = useStore();
+    const { userProfile, tokens, isPremium, setPremiumStatus, setAvatarUrl: setStoreAvatar, resetOnboarding } = useStore();
     const { sessions, resetAll: resetZikir } = useZikirStore();
+
+
+
     const { colorScheme, setColorScheme } = useColorScheme();
     const { user } = useAuthStore();
     const router = useRouter();
@@ -107,8 +110,12 @@ export default function ProfileScreen() {
             .eq('id', user.id)
             .single()
             .then(({ data }) => {
-                if (data?.avatar_url) setAvatarUrl(data.avatar_url);
+                if (data?.avatar_url) {
+                    setAvatarUrl(data.avatar_url);
+                    setStoreAvatar(data.avatar_url);
+                }
             });
+
     }, [user]);
 
     // Upload photo to Supabase Storage
@@ -148,7 +155,9 @@ export default function ProfileScreen() {
             const { data } = supabase.storage.from('avatars').getPublicUrl(fileName);
             const publicUrl = data.publicUrl;
             setAvatarUrl(publicUrl);
+            setStoreAvatar(publicUrl);
             await supabase.from('profiles').upsert({ id: user.id, avatar_url: publicUrl });
+
             Alert.alert('✨ Başarılı', 'Profil fotoğrafın güncellendi!');
         } catch (e: any) {
             Alert.alert('Hata', e.message || 'Yükleme başarısız oldu.');
@@ -227,10 +236,10 @@ export default function ProfileScreen() {
                     ) : null}
                 </View>
 
-                {/* Premium Plan Card */}
+                {/* Jeton Cüzdanı & Premium Plan */}
                 <View style={styles.section}>
                     <LinearGradient
-                        colors={['#1e1127', '#2d1a3e']}
+                        colors={isPremium ? ['#4c1d95', '#1e1127'] : ['#1e1127', '#2d1a3e']}
                         start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                         style={styles.premiumCard}
                     >
@@ -238,20 +247,43 @@ export default function ProfileScreen() {
                         <View style={{ zIndex: 1 }}>
                             <View style={styles.premiumHeader}>
                                 <View>
-                                    <Text style={styles.premiumLabel}>MEVCUT PLAN</Text>
-                                    <Text style={styles.premiumTitle}>Premium Enerji Takvimi</Text>
+                                    <View style={styles.tokenRow}>
+                                        <MaterialIcons name={isPremium ? "all-inclusive" : "stars"} size={18} color="#f7e1e8" />
+                                        <Text style={styles.premiumLabel}>
+                                            {isPremium ? "SINIRSIZ ERİŞİM AKTİF" : `${tokens} JETONUN VAR`}
+                                        </Text>
+                                    </View>
+                                    <Text style={styles.premiumTitle}>
+                                        {isPremium ? "Premium Üyelik" : "Kozmik Cüzdan"}
+                                    </Text>
                                 </View>
-                                <MaterialIcons name="auto-awesome" size={24} color="#f7e1e8" />
+                                <MaterialIcons name={isPremium ? "verified" : "auto-awesome"} size={26} color="#f7e1e8" />
                             </View>
                             <Text style={styles.premiumDesc}>
-                                Kişiselleştirilmiş günlük analizler ve detaylı doğum haritası yorumları aktif.
+                                {isPremium 
+                                    ? "Tüm AI Danışmanlık ve derinlemesine analiz özelliklerine sınırsız erişimin var. Yıldızlar seninle!" 
+                                    : "AI Danışman Sema ile yapacağın her soru 1 jeton harcamaktadır."}
                             </Text>
-                            <TouchableOpacity style={styles.premiumBtn}>
-                                <Text style={styles.premiumBtnText}>Yükselt veya Yönet</Text>
-                            </TouchableOpacity>
+                            <View style={{ flexDirection: 'row', gap: 10 }}>
+                                {!isPremium && (
+                                    <TouchableOpacity style={[styles.premiumBtn, { flex: 1 }]}>
+                                        <Text style={styles.premiumBtnText}>Jeton Yükle</Text>
+                                    </TouchableOpacity>
+                                )}
+                                <TouchableOpacity 
+                                    style={[styles.premiumBtn, { flex: 1, backgroundColor: isPremium ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)', borderWidth: 1, borderColor: '#f7e1e8' }]}
+                                    onPress={() => isPremium ? null : setPremiumStatus(true)} // Mock subscription for demo
+                                >
+                                    <Text style={[styles.premiumBtnText, { color: '#f7e1e8' }]}>
+                                        {isPremium ? "Planı Yönet" : "Abone Ol"}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </LinearGradient>
                 </View>
+
+
 
                 {/* Stats */}
                 <View style={styles.section}>
@@ -267,39 +299,9 @@ export default function ProfileScreen() {
                     </View>
                 </View>
 
-                {/* Bağlı Profiller */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <Text style={[styles.sectionTitle, isDark && { color: '#f1f5f9' }]}>Bağlı Profiller</Text>
-                        <TouchableOpacity><Text style={styles.sectionAction}>Düzenle</Text></TouchableOpacity>
-                    </View>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingHorizontal: 16, gap: 16 }}>
-                        {/* Me */}
-                        <View style={styles.profileChip}>
-                            <View style={[styles.profileAvatar, { borderColor: '#f7e1e8', backgroundColor: '#fdf2f5' }]}>
-                                <MaterialIcons name="person" size={26} color="#c4b5c9" />
-                            </View>
-                            <Text style={[styles.profileChipLabel, isDark && { color: '#f1f5f9' }]}>Sen</Text>
-                        </View>
-                        {/* Spouse */}
-                        <View style={styles.profileChip}>
-                            <View style={[styles.profileAvatar, { borderColor: '#e5e7eb', backgroundColor: '#f9fafb' }]}>
-                                <MaterialIcons name="person" size={26} color="#9ca3af" />
-                            </View>
-                            <Text style={[styles.profileChipLabel, isDark && { color: '#f1f5f9' }]}>Eşim</Text>
-                        </View>
-                        {/* Add */}
-                        <View style={styles.profileChip}>
-                            <TouchableOpacity style={[styles.profileAvatar, styles.profileAvatarAdd]}>
-                                <MaterialIcons name="add" size={24} color="#9ca3af" />
-                            </TouchableOpacity>
-                            <Text style={[styles.profileChipLabel, isDark && { color: '#f1f5f9' }]}>Yeni Ekle</Text>
-                        </View>
-                    </ScrollView>
-                </View>
 
                 {/* Kişisel Bilgiler */}
+
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, { paddingHorizontal: 16, marginBottom: 10 }, isDark && { color: '#f1f5f9' }]}>
                         Kişisel Bilgiler
@@ -464,8 +466,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(247,225,232,0.15)',
     },
     premiumHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 },
-    premiumLabel:  { fontSize: 10, fontWeight: '600', color: '#9ca3af', letterSpacing: 2, marginBottom: 4 },
+    tokenRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 },
+    premiumLabel:  { fontSize: 10, fontWeight: '600', color: '#9ca3af', letterSpacing: 1.5 },
     premiumTitle:  { fontSize: 18, fontWeight: '700', color: '#f7e1e8' },
+
     premiumDesc:   { fontSize: 13, color: '#94a3b8', lineHeight: 18, marginBottom: 16 },
     premiumBtn: {
         backgroundColor: '#f7e1e8', borderRadius: 10,

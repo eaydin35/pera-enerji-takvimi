@@ -1,50 +1,455 @@
 {
   "planets_in_signs": {
     "Sun": {
-      "Koc": "Gunes Koc burcunda; guclu bir irade, liderlik vasiflari ve yuksek enerji verir. Onculuk etme istegi on plandadir.",
-      "Boga": "Gunes Boga burcunda; sabir, istikrar ve maddi guvenlik arayisina isaret eder. Pratik ve ayaklari yere basan bir yapidir.",
-      "Ikizler": "Gunes Ikizler burcunda; merak, iletisim becerileri ve zihinsel esneklik kazandirir. Bilgi paylasimi onemlidir.",
-      "Yengec": "Gunes Yengec burcunda; duygusallik, korumacilara ve aile baglarina verilen onemi artirir. Sezgiler gucludur.",
-      "Aslan": "Gunes Aslan burcunda; yaraticilik, ozguven ve sahne isiginda olma istegi verir. Comert ve gururlu bir dogadir.",
-      "Basak": "Gunes Basak burcunda; titizlik, analiz yetenegi ve hizmet odakli olmayi simgeler. Duzen ve verimlilik aranir.",
-      "Terazi": "Gunes Terazi burcunda; denge, adalet ve iliskilerde uyum arayisina isaret eder. Estetik algisi yuksektir.",
-      "Akrep": "Gunes Akrep burcunda; derinlik, tutku ve donusturucu guc verir. Gizemli ve odaklanmis bir yapidir.",
-      "Yay": "Gunes Yay burcunda; ozgurluk, keşif ruhu ve felsefi bakis acisi kazandirir. Iyimser ve maceracidir.",
-      "Oglak": "Gunes Oglak burcunda; disiplin, sorumluluk ve kariyer odaklilik verir. Ciddiyet ve sabir hakimdir.",
-      "Kova": "Gunes Kova burcunda; ozgunluk, insancil idealler ve entelektuel bagimsizlik simgesidir. Yenilikcidir.",
-      "Balik": "Gunes Balik burcunda; empati, hayal gucu ve maneviyat kazandirir. Hassas ve fedakar bir karakterdir."
+      "Koç": "Güneş Koç burcunda: Güçlü irade, liderlik vasıfları ve yüksek enerji verir. Öncülük etme isteği ön plandadır. Cesur ve kararlı bir doğaya sahipsiniz.",
+      "Boğa": "Güneş Boğa burcunda: Sabır, istikrar ve maddi güvenlik arayışına işaret eder. Pratik ve ayakları yere basan bir yapıdır. Konfor ve güzellik sizin için önemlidir.",
+      "İkizler": "Güneş İkizler burcunda: Merak, iletişim becerileri ve zihinsel esneklik kazandırır. Bilgi paylaşımı önemlidir. Çok yönlü ve uyumlu bir doğanız var.",
+      "Yengeç": "Güneş Yengeç burcunda: Duygusallık, korumacılık ve aile bağlarına verilen önemi artırır. Sezgiler güçlüdür. Anaç ve şefkatli bir karakteriniz var.",
+      "Aslan": "Güneş Aslan burcunda: Yaratıcılık, özgüven ve sahne ışığında olma isteği verir. Cömert ve gururlu bir doğadır. Doğal liderlik özellikleriniz güçlüdür.",
+      "Başak": "Güneş Başak burcunda: Titizlik, analiz yeteneği ve hizmet odaklı olmayı simgeler. Düzen ve verimlilik aranır. Mükemmeliyetçi ve pratik bir yapınız var.",
+      "Terazi": "Güneş Terazi burcunda: Denge, adalet ve ilişkilerde uyum arayışına işaret eder. Estetik algısı yüksektir. Diplomatik ve zarif bir doğanız var.",
+      "Akrep": "Güneş Akrep burcunda: Derinlik, tutku ve dönüştürücü güç verir. Gizemli ve odaklanmış bir yapıdır. Sezgisel zekanız son derece güçlüdür.",
+      "Yay": "Güneş Yay burcunda: Özgürlük, keşif ruhu ve felsefi bakış açısı kazandırır. İyimser ve maceracıdır. Bilgelik arayışınız sizi hep ileri taşır.",
+      "Oğlak": "Güneş Oğlak burcunda: Disiplin, sorumluluk ve kariyer odaklılık verir. Ciddiyet ve sabır hakimdir. Uzun vadeli hedeflerinize kararlılıkla ilerlersiniz.",
+      "Kova": "Güneş Kova burcunda: Özgünlük, insancıl idealler ve entelektüel bağımsızlık simgesidir. Yenilikçidir. Alışılmadık fikirlere açık, vizyon sahibi birisiniz.",
+      "Balık": "Güneş Balık burcunda: Empati, hayal gücü ve maneviyat kazandırır. Hassas ve fedakar bir karakterdir. Sezgisel yetenekleriniz olağanüstü güçlüdür."
     },
     "Moon": {
-      "Koc": "Ay Koc burcunda; duygusal durumlarda ani tepkiler ve bagimsizlik ihtiyaci verir.",
-      "Boga": "Ay Boga burcunda; duygusal huzur, konfor ve guvenlik arayisini simgeler. Huzur arar.",
-      "Ikizler": "Ay Ikizler burcunda; duygulari mantikla anlama ve iletisim kurma istegi verir.",
-      "Yengec": "Ay Yengec burcunda; cok gucludur. Derin ebeveynlik icguduleri ve yuva ozlemi verir.",
-      "Aslan": "Ay Aslan burcunda; takdir gorulme ihtiyaci ve coskulu duygusal ifadeler kazandirir.",
-      "Basak": "Ay Basak burcunda; yardim etme istegi ve duygusal duzen ihtiyaci verir.",
-      "Terazi": "Ay Terazi burcunda; huzur ve iliskilerde denge ihtiyaci on plandadir.",
-      "Akrep": "Ay Akrep burcunda; yogun ve donusturucu duygular, derin sezgiler verir.",
-      "Yay": "Ay Yay burcunda; duygusal ozgurluk ve yeni deneyimler yasama istegi kazandirir.",
-      "Oglak": "Ay Oglak burcunda; duygulari kontrol etme ve guvenlik ihtiyacini simgeler.",
-      "Kova": "Ay Kova burcunda; duygusal mesafelilik ve toplumsal baglanti ihtiyaci verir.",
-      "Balik": "Ay Balik burcunda; yuksek empati ve hayal gucu kazandirir."
+      "Koç": "Ay Koç burcunda: Duygusal tepkiler ani ve güçlüdür. Bağımsızlık ihtiyacı yüksektir. Heyecan arayışı duygusal dünyanızı şekillendirir.",
+      "Boğa": "Ay Boğa burcunda: Duygusal huzur, konfor ve güvenlik arayışını simgeler. Sakin ve sadık bir iç dünyanız var. Rutinler sizi rahatlatır.",
+      "İkizler": "Ay İkizler burcunda: Duyguları mantıkla anlama ve iletişim kurma isteği verir. Zihinsel uyarılma duygusal ihtiyaçtır. Meraklı bir iç dünyanız var.",
+      "Yengeç": "Ay Yengeç burcunda: Çok güçlü konumdadır. Derin ebeveynlik içgüdüleri ve yuva özlemi verir. Duygusal hafızanız çok güçlüdür.",
+      "Aslan": "Ay Aslan burcunda: Takdir görme ihtiyacı ve coşkulu duygusal ifadeler kazandırır. Cömert ve sıcak bir iç dünyanız var. Yaratıcı enerjiniz güçlüdür.",
+      "Başak": "Ay Başak burcunda: Yardım etme isteği ve duygusal düzen ihtiyacı verir. Analitik bir iç dünyaya sahipsiniz. Pratik çözümler sizi rahatlatır.",
+      "Terazi": "Ay Terazi burcunda: Huzur ve ilişkilerde denge ihtiyacı ön plandadır. Harmonik ortamlar duygusal dengeniz için şarttır.",
+      "Akrep": "Ay Akrep burcunda: Yoğun ve dönüştürücü duygular, derin sezgiler verir. Duygusal bağlılık çok güçlüdür. İç dünyanız derin ve tutkulu.",
+      "Yay": "Ay Yay burcunda: Duygusal özgürlük ve yeni deneyimler yaşama isteği kazandırır. İyimser bir iç dünyaya sahipsiniz. Macera sizi besler.",
+      "Oğlak": "Ay Oğlak burcunda: Duyguları kontrol etme eğilimi ve güvenlik ihtiyacını simgeler. Duygusal olgunluk erken yaşta gelir.",
+      "Kova": "Ay Kova burcunda: Duygusal mesafelilik ve toplumsal bağlantı ihtiyacı verir. Bağımsız ama insancıl bir iç dünyanız var.",
+      "Balık": "Ay Balık burcunda: Yüksek empati ve hayal gücü kazandırır. Sezgisel ve ruhani bir iç dünyaya sahipsiniz. Sanat ve müzik ruhunuzu besler."
+    },
+    "Mercury": {
+      "Koç": "Merkür Koç burcunda: Hızlı düşünme, dolaysız iletişim. Kararlar çabuk verilir, sabırsız bir zihin yapısı. Tartışma yeteneği güçlü.",
+      "Boğa": "Merkür Boğa burcunda: Yavaş ama derin düşünme. Pratik zeka, somut sonuçlara odaklı iletişim. Sağlam ve güvenilir fikirler üretir.",
+      "İkizler": "Merkür İkizler burcunda: Kendi evinde çok güçlü. Çok yönlü zeka, hızlı öğrenme, mükemmel iletişim becerileri. Bilgi toplama konusunda üstün.",
+      "Yengeç": "Merkür Yengeç burcunda: Duygusal zeka yüksek, sezgisel düşünme. Geçmişe dair hafıza güçlü. Empatik iletişim tarzı.",
+      "Aslan": "Merkür Aslan burcunda: Dramatik ve etkileyici konuşma. Yaratıcı fikirler, liderlik odaklı düşünce. Kendini ifade etmede yetenekli.",
+      "Başak": "Merkür Başak burcunda: Kendi evinde çok güçlü. Analitik zeka, detaylara hakim. Eleştirel düşünme ve problem çözme konusunda üstün.",
+      "Terazi": "Merkür Terazi burcunda: Diplomatik iletişim, her iki tarafı da görme yeteneği. Estetik duyarlılık fikirlerine yansır. Adil ve dengeli düşünce.",
+      "Akrep": "Merkür Akrep burcunda: Derin araştırmacı zeka, gizli bilgileri ortaya çıkarma yeteneği. Stratejik düşünme güçlü. Sezgisel analiz.",
+      "Yay": "Merkür Yay burcunda: Felsefi düşünce, büyük resmi görme yeteneği. Çok kültürlü ilgi alanları. İdealist ama bazen detayları kaçırır.",
+      "Oğlak": "Merkür Oğlak burcunda: Yapısal ve disiplinli düşünme. Pratik zeka, kariyer odaklı iletişim. Planlı ve organize bir zihin.",
+      "Kova": "Merkür Kova burcunda: Yenilikçi ve orijinal düşünce. Teknoloji ve bilimle ilgili güçlü kavrayış. Alışılmadık fikirlere açık.",
+      "Balık": "Merkür Balık burcunda: Sezgisel ve yaratıcı düşünme. Sanatsal ifade yeteneği güçlü. Empati ile iletişim kurar, imgeler ve sembollerle düşünür."
+    },
+    "Venus": {
+      "Koç": "Venüs Koç burcunda: Tutkulu ve spontan aşk tarzı. İlişkilerde heyecan ve yenilik arar. Bağımsızlık önemli, fetih duygusu güçlü.",
+      "Boğa": "Venüs Boğa burcunda: Kendi evinde çok güçlü. Sadık, duyusal ve konfor arayan aşk. Maddi güvenlik ve estetik önemli.",
+      "İkizler": "Venüs İkizler burcunda: Zihinsel uyum arayan aşk. İletişim ve eğlence ilişkinin temeli. Çeşitlilik ve sosyallik önemli.",
+      "Yengeç": "Venüs Yengeç burcunda: Koruyucu ve derin bağlar kuran aşk. Aile ve yuva değerleri ön planda. Duygusal güvenlik şart.",
+      "Aslan": "Venüs Aslan burcunda: Gösterişli, cömert ve sadık aşk. Romantizm ve takdir önemli. Partnerine kraliyet muamelesi yapar.",
+      "Başak": "Venüs Başak burcunda: Pratik ve hizmet odaklı aşk. Küçük jestler büyük anlamlar taşır. Mütevazı ama sadık sevgi.",
+      "Terazi": "Venüs Terazi burcunda: Kendi evinde çok güçlü. Uyum, güzellik ve ortaklık arayan aşk. Estetik ve denge çok önemli.",
+      "Akrep": "Venüs Akrep burcunda: Yoğun, dönüştürücü ve tutkulu aşk. Derin bağlılık ve sadakat. Kıskançlık eğilimi olabilir.",
+      "Yay": "Venüs Yay burcunda: Özgürlük ve macera arayan aşk. Farklı kültürlerden insanlarla bağ. Felsefi ve eğlenceli ilişkiler.",
+      "Oğlak": "Venüs Oğlak burcunda: Ciddi, sadık ve uzun vadeli aşk. Statü ve güvenlik önemli. Yavaş ama sağlam ilişkiler kurar.",
+      "Kova": "Venüs Kova burcunda: Arkadaşça ve özgür aşk. Alışılmadık ilişki dinamikleri. Entelektüel bağ fiziksel çekimden önce gelir.",
+      "Balık": "Venüs Balık burcunda: Yücelmiş konumda. Romantik, fedakar ve ruhani aşk. Koşulsuz sevgi verme kapasitesi yüksek."
+    },
+    "Mars": {
+      "Koç": "Mars Koç burcunda: Kendi evinde çok güçlü. Cesur, rekabetçi ve eylem odaklı enerji. Hızlı hareket eder, liderlik yapar.",
+      "Boğa": "Mars Boğa burcunda: Yavaş ama kararlı enerji. Sabırlı ve dayanıklı. Maddi hedefler için güçlü motivasyon.",
+      "İkizler": "Mars İkizler burcunda: Zihinsel enerji yüksek. Çok yönlü hareket, kelimelerle savaşma eğilimi. Çabuk sıkılır ama çabuk adapte olur.",
+      "Yengeç": "Mars Yengeç burcunda: Duygusal motivasyon. Aile ve sevdikleri için savaşır. Savunmacı enerji, pasif-agresif eğilim olabilir.",
+      "Aslan": "Mars Aslan burcunda: Dramatik ve gösterişli enerji. Yaratıcı projelerde güçlü. Gururu için savaşır, doğal lider.",
+      "Başak": "Mars Başak burcunda: Detaylara odaklı, verimli ve çalışkan enerji. Mükemmeliyetçi hedefler. Pratik çözümler üretir.",
+      "Terazi": "Mars Terazi burcunda: Diplomatik enerji. Çatışmadan kaçınır, adalet için savaşır. İş birliği ile güçlenir.",
+      "Akrep": "Mars Akrep burcunda: Kendi evinde çok güçlü. Yoğun, stratejik ve dönüştürücü enerji. Asla pes etmez, derin motivasyon.",
+      "Yay": "Mars Yay burcunda: Maceracı ve özgür enerji. Büyük hedefler için harekete geçer. Spor ve seyahatte güçlü.",
+      "Oğlak": "Mars Oğlak burcunda: Yücelmiş konumda. Disiplinli, stratejik ve hedef odaklı. Kariyer başarısı için güçlü motivasyon.",
+      "Kova": "Mars Kova burcunda: Yenilikçi ve toplumsal enerji. Alışılmadık yöntemlerle hareket eder. Toplum için savaşır.",
+      "Balık": "Mars Balık burcunda: Sezgisel ve yaratıcı enerji. Sanat ve maneviyat için güçlü motivasyon. Empati ile hareket eder."
+    },
+    "Jupiter": {
+      "Koç": "Jüpiter Koç burcunda: Cesaret ve girişimcilik genişler. Yeni başlangıçlarda şans. Liderlik fırsatları çoğalır.",
+      "Boğa": "Jüpiter Boğa burcunda: Maddi bolluk ve konfor genişler. Finansal şans dönemleri. Değerlerle büyüme.",
+      "İkizler": "Jüpiter İkizler burcunda: Zihinsel genişleme, öğrenme fırsatları. İletişim ve seyahatte şans. Bilgi ile büyüme.",
+      "Yengeç": "Jüpiter Yengeç burcunda: Yücelmiş konumda. Aile ve ev alanında bolluk. Duygusal bilgelik ve koruma genişler.",
+      "Aslan": "Jüpiter Aslan burcunda: Yaratıcılık ve özgüven genişler. Sanat ve eğlencede şans. Cömertlik ve liderlikte büyüme.",
+      "Başak": "Jüpiter Başak burcunda: Sağlık ve hizmet alanında genişleme. Detaylı çalışmalar meyvelerini verir. Pratik bilgelik.",
+      "Terazi": "Jüpiter Terazi burcunda: İlişkiler ve ortaklıklarda genişleme. Hukuk ve adalet alanında şans. Diplomatik başarı.",
+      "Akrep": "Jüpiter Akrep burcunda: Dönüşüm ve derin bilgi alanında genişleme. Psikoloji ve araştırmada şans. Miras ve ortak kaynaklar.",
+      "Yay": "Jüpiter Yay burcunda: Kendi evinde çok güçlü. Felsefe, yüksek öğrenim ve seyahatte bolluk. Vizyon ve bilgelik genişler.",
+      "Oğlak": "Jüpiter Oğlak burcunda: Kariyer ve statüde genişleme. Disiplinli büyüme, yavaş ama kalıcı başarı. Yapısal şans.",
+      "Kova": "Jüpiter Kova burcunda: Toplumsal ideal ve teknolojide genişleme. Yenilikçi projeler ve arkadaşlıklarda şans.",
+      "Balık": "Jüpiter Balık burcunda: Kendi evinde çok güçlü. Maneviyat, sanat ve empati alanında bolluk. Ruhani büyüme ve sezgisel şans."
+    },
+    "Saturn": {
+      "Koç": "Satürn Koç burcunda: Bağımsızlık ve liderlik alanında dersler. Sabır öğretilir, dürtüsel hareket sınırlanır.",
+      "Boğa": "Satürn Boğa burcunda: Mali disiplin ve maddi güvenlik dersleri. Değerlerin yeniden inşası. Sabırla zenginlik.",
+      "İkizler": "Satürn İkizler burcunda: İletişim ve düşünce yapısında disiplin. Dikkatli konuşma, yapısal öğrenme gerekliliği.",
+      "Yengeç": "Satürn Yengeç burcunda: Duygusal olgunlaşma ve aile sorumlulukları. İç güvenlik inşa etme dersleri.",
+      "Aslan": "Satürn Aslan burcunda: Yaratıcılık ve öz ifadede sınırlamalar. Alçakgönüllülük dersleri, olgun liderlik.",
+      "Başak": "Satürn Başak burcunda: İş ve sağlıkta disiplin. Mükemmeliyetçilik dengelenmeli. Verimli çalışma alışkanlıkları.",
+      "Terazi": "Satürn Terazi burcunda: Yücelmiş konumda. İlişkilerde olgunluk ve sorumluluk. Adalet ve denge dersleri.",
+      "Akrep": "Satürn Akrep burcunda: Güç ve kontrol konularında dersler. Derin dönüşüm, gölge ile yüzleşme.",
+      "Yay": "Satürn Yay burcunda: İnanç ve felsefe alanında disiplin. Aşırı iyimserlik dengelenir, pratik bilgelik gelişir.",
+      "Oğlak": "Satürn Oğlak burcunda: Kendi evinde çok güçlü. Kariyer ve toplumsal statüde büyük sorumluluklar. Disiplin meyvelerini verir.",
+      "Kova": "Satürn Kova burcunda: Kendi evinde güçlü. Toplumsal sorumluluk ve yenilikçi yapılar kurma. Sistemsel düşünme.",
+      "Balık": "Satürn Balık burcunda: Maneviyat ve empati alanında disiplin. Sınırlar koymayı öğrenme, ruhani olgunlaşma."
+    },
+    "Uranus": {
+      "Koç": "Uranüs Koç burcunda: Bu kuşağın kolektif yenilikçi enerjisi Koç burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Boğa": "Uranüs Boğa burcunda: Bu kuşağın kolektif yenilikçi enerjisi Boğa burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "İkizler": "Uranüs İkizler burcunda: Bu kuşağın kolektif yenilikçi enerjisi İkizler burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Yengeç": "Uranüs Yengeç burcunda: Bu kuşağın kolektif yenilikçi enerjisi Yengeç burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Aslan": "Uranüs Aslan burcunda: Bu kuşağın kolektif yenilikçi enerjisi Aslan burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Başak": "Uranüs Başak burcunda: Bu kuşağın kolektif yenilikçi enerjisi Başak burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Terazi": "Uranüs Terazi burcunda: Bu kuşağın kolektif yenilikçi enerjisi Terazi burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Akrep": "Uranüs Akrep burcunda: Bu kuşağın kolektif yenilikçi enerjisi Akrep burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Yay": "Uranüs Yay burcunda: Bu kuşağın kolektif yenilikçi enerjisi Yay burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Oğlak": "Uranüs Oğlak burcunda: Bu kuşağın kolektif yenilikçi enerjisi Oğlak burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Kova": "Uranüs Kova burcunda: Bu kuşağın kolektif yenilikçi enerjisi Kova burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Balık": "Uranüs Balık burcunda: Bu kuşağın kolektif yenilikçi enerjisi Balık burcunun alanlarında devrimsel değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir."
+    },
+    "Neptune": {
+      "Koç": "Neptün Koç burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Koç burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Boğa": "Neptün Boğa burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Boğa burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "İkizler": "Neptün İkizler burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi İkizler burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Yengeç": "Neptün Yengeç burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Yengeç burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Aslan": "Neptün Aslan burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Aslan burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Başak": "Neptün Başak burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Başak burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Terazi": "Neptün Terazi burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Terazi burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Akrep": "Neptün Akrep burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Akrep burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Yay": "Neptün Yay burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Yay burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Oğlak": "Neptün Oğlak burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Oğlak burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Kova": "Neptün Kova burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Kova burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Balık": "Neptün Balık burcunda: Bu kuşağın kolektif ruhani ve yaratıcı enerjisi Balık burcunun alanlarında etkisini gösterir. Bireysel haritada evin konumu daha belirleyicidir."
+    },
+    "Pluto": {
+      "Koç": "Plüton Koç burcunda: Bu kuşağın kolektif dönüşüm enerjisi Koç burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Boğa": "Plüton Boğa burcunda: Bu kuşağın kolektif dönüşüm enerjisi Boğa burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "İkizler": "Plüton İkizler burcunda: Bu kuşağın kolektif dönüşüm enerjisi İkizler burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Yengeç": "Plüton Yengeç burcunda: Bu kuşağın kolektif dönüşüm enerjisi Yengeç burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Aslan": "Plüton Aslan burcunda: Bu kuşağın kolektif dönüşüm enerjisi Aslan burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Başak": "Plüton Başak burcunda: Bu kuşağın kolektif dönüşüm enerjisi Başak burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Terazi": "Plüton Terazi burcunda: Bu kuşağın kolektif dönüşüm enerjisi Terazi burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Akrep": "Plüton Akrep burcunda: Bu kuşağın kolektif dönüşüm enerjisi Akrep burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Yay": "Plüton Yay burcunda: Bu kuşağın kolektif dönüşüm enerjisi Yay burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Oğlak": "Plüton Oğlak burcunda: Bu kuşağın kolektif dönüşüm enerjisi Oğlak burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Kova": "Plüton Kova burcunda: Bu kuşağın kolektif dönüşüm enerjisi Kova burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir.",
+      "Balık": "Plüton Balık burcunda: Bu kuşağın kolektif dönüşüm enerjisi Balık burcunun alanlarında köklü değişimler getirir. Bireysel haritada evin konumu daha belirleyicidir."
     }
   },
   "planets_in_houses": {
-    "1": "1. Ev: Kisilik, dis gorunus ve hayata baslangic tarzi.",
-    "2": "2. Ev: Maddi kaynaklar, oz deger duygusu ve yetenekler.",
-    "3": "3. Ev: Iletisim, kisa yolculuklar ve yakin cevre.",
-    "4": "4. Ev: Yuva, aile kökleri ve duygusal temeller.",
-    "5": "5. Ev: Yaraticilik, ask hayati ve cocuklar.",
-    "6": "6. Ev: Gunluk rutinler, saglik ve hizmet.",
-    "7": "7. Ev: Ortakliklar, evlilik ve acik dusmanlar.",
-    "8": "8. Ev: Ortak kaynaklar, donusum ve krizler.",
-    "9": "9. Ev: Yuksek ogrenim, felsefe ve uzak yolculuklar.",
-    "10": "10. Ev: Kariyer, toplumsal statu ve hedefler.",
-    "11": "11. Ev: Arkadasliklar, sosyal gruplar ve umutlar.",
-    "12": "12. Ev: Bilincdisi, izolasyon ve teslimiyet."
+    "Sun": {
+      "1": "Güneş 1. Evde: Güçlü kişilik, liderlik doğası. Kendinizi ifade etme konusunda doğal yeteneğiniz var. Fiziksel görünümünüz dikkat çeker.",
+      "2": "Güneş 2. Evde: Maddi değerler ve para kazanma kimliğinizin önemli bir parçası. Öz değer duygusu maddi başarıyla bağlantılı.",
+      "3": "Güneş 3. Evde: İletişim ve öğrenme hayatınızın merkezinde. Yazarlık, öğretmenlik veya medya alanlarında parlar.",
+      "4": "Güneş 4. Evde: Aile ve yuva hayatınızın odak noktası. Ev ortamında liderlik rolü üstlenirsiniz. Köklere bağlılık.",
+      "5": "Güneş 5. Evde: Yaratıcılık, romantizm ve eğlence hayatınızın ayrılmaz parçası. Çocuklarla özel bağ. Sahne sanatlarında yetenek.",
+      "6": "Güneş 6. Evde: İş ve sağlık rutinleri kimliğinizi şekillendirir. Hizmet odaklı yaşam. Mükemmeliyetçi çalışma tarzı.",
+      "7": "Güneş 7. Evde: İlişkiler ve ortaklıklar hayatınızın merkezinde. Güçlü bir partnere ihtiyaç duyarsınız. Diplomasi yeteneği.",
+      "8": "Güneş 8. Evde: Dönüşüm ve derin deneyimler hayatınızı şekillendirir. Psikoloji ve gizemle ilgi. Miras ve ortak kaynaklar.",
+      "9": "Güneş 9. Evde: Felsefe, seyahat ve yüksek öğrenim kimliğinizin parçası. Farklı kültürlere ilgi. Öğreticilik ve bilgelik.",
+      "10": "Güneş 10. Evde: Kariyer ve toplumsal statü çok önemli. Kamusal alanda parlarsınız. Otorite figürleriyle bağlantı.",
+      "11": "Güneş 11. Evde: Sosyal çevre ve ideal arayışı kimliğinizi belirler. Gruplar içinde liderlik. İnsancıl hedefler.",
+      "12": "Güneş 12. Evde: İç dünya ve maneviyat derindir. Görünmeyen güçlerle bağlantı. Yalnızlıkta güç bulursunuz."
+    },
+    "Moon": {
+      "1": "Ay 1. Evde: Duygular yüzeyde, hassas ve değişken bir doğa. Empati yüksek, çevreden kolayca etkilenirsiniz.",
+      "2": "Ay 2. Evde: Duygusal güvenlik maddi konforla bağlantılı. Harcama alışkanlıkları ruh haline göre değişir.",
+      "3": "Ay 3. Evde: Duygusal iletişim güçlü. Yakın çevreyle derin bağlar. Sezgisel öğrenme tarzı.",
+      "4": "Ay 4. Evde: Kendi evinde çok güçlü. Derin aile bağları, güçlü yuva özlemi. Duygusal hafıza çok güçlü.",
+      "5": "Ay 5. Evde: Yaratıcılık duygusal ifade aracı. Çocuklarla güçlü bağ. Romantizmde duygusal derinlik arar.",
+      "6": "Ay 6. Evde: Sağlık ve ruh hali doğrudan bağlantılı. İş ortamında duygusal doyum arar. Bakım verme isteği.",
+      "7": "Ay 7. Evde: İlişkilerde duygusal derinlik arar. Partnerin duygusal desteği hayati önemde. Evlilik odaklı.",
+      "8": "Ay 8. Evde: Derin duygusal dönüşümler. Sezgisel güç çok yüksek. Gizli duygular ve yoğun bağlar.",
+      "9": "Ay 9. Evde: Duygusal tatmin seyahat ve keşifte bulunur. Farklı kültürlere duygusal bağ. Felsefi sezgi.",
+      "10": "Ay 10. Evde: Kariyer alanında duygusal yatırım. Kamusal imajda annelik/babalık rolü. Halkla ilişkiler yeteneği.",
+      "11": "Ay 11. Evde: Arkadaşlıklarda duygusal destek arar. Toplumsal ideallerle duygusal bağ. Gruplardan beslenir.",
+      "12": "Ay 12. Evde: Derin bilinçaltı duyguları. Yalnızlıkta huzur bulur. Rüyalar ve sezgiler çok güçlü."
+    },
+    "Mercury": {
+      "1": "Merkür 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda düşünce tarzı ön plana çıkar.",
+      "2": "Merkür 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda mali zeka ön plana çıkar.",
+      "3": "Merkür 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda iletişim becerisi ön plana çıkar.",
+      "4": "Merkür 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda ailevi düşünceler ön plana çıkar.",
+      "5": "Merkür 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda yaratıcı fikirler ön plana çıkar.",
+      "6": "Merkür 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda analitik çalışma ön plana çıkar.",
+      "7": "Merkür 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda diplomatik konuşma ön plana çıkar.",
+      "8": "Merkür 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda araştırmacı zeka ön plana çıkar.",
+      "9": "Merkür 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda felsefi düşünce ön plana çıkar.",
+      "10": "Merkür 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda stratejik planlama ön plana çıkar.",
+      "11": "Merkür 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda toplumsal fikirler ön plana çıkar.",
+      "12": "Merkür 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda sezgisel düşünce ön plana çıkar."
+    },
+    "Venus": {
+      "1": "Venüs 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda kişisel çekicilik ön plana çıkar.",
+      "2": "Venüs 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda maddi zevkler ön plana çıkar.",
+      "3": "Venüs 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda sosyal ilişkiler ön plana çıkar.",
+      "4": "Venüs 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda aile sevgisi ön plana çıkar.",
+      "5": "Venüs 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda romantik ifade ön plana çıkar.",
+      "6": "Venüs 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda iş ilişkileri ön plana çıkar.",
+      "7": "Venüs 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda ortaklık uyumu ön plana çıkar.",
+      "8": "Venüs 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda derin bağlar ön plana çıkar.",
+      "9": "Venüs 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda kültürel estetik ön plana çıkar.",
+      "10": "Venüs 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda profesyonel güzellik ön plana çıkar.",
+      "11": "Venüs 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda sosyal çekicilik ön plana çıkar.",
+      "12": "Venüs 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda gizli aşklar ön plana çıkar."
+    },
+    "Mars": {
+      "1": "Mars 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda kişisel enerji ön plana çıkar.",
+      "2": "Mars 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda para için mücadele ön plana çıkar.",
+      "3": "Mars 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda sözlü tartışma ön plana çıkar.",
+      "4": "Mars 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda aile için savaş ön plana çıkar.",
+      "5": "Mars 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda yaratıcı enerji ön plana çıkar.",
+      "6": "Mars 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda çalışma azmi ön plana çıkar.",
+      "7": "Mars 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda ilişki enerjisi ön plana çıkar.",
+      "8": "Mars 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda dönüşüm gücü ön plana çıkar.",
+      "9": "Mars 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda macera ruhu ön plana çıkar.",
+      "10": "Mars 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda kariyer hırsı ön plana çıkar.",
+      "11": "Mars 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda toplumsal mücadele ön plana çıkar.",
+      "12": "Mars 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda gizli güç ön plana çıkar."
+    },
+    "Jupiter": {
+      "1": "Jüpiter 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda kişisel büyüme ön plana çıkar.",
+      "2": "Jüpiter 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda maddi bolluk ön plana çıkar.",
+      "3": "Jüpiter 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda öğrenme şansı ön plana çıkar.",
+      "4": "Jüpiter 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda aile bereketi ön plana çıkar.",
+      "5": "Jüpiter 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda yaratıcı şans ön plana çıkar.",
+      "6": "Jüpiter 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda sağlıkta iyileşme ön plana çıkar.",
+      "7": "Jüpiter 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda ilişki bereketi ön plana çıkar.",
+      "8": "Jüpiter 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda mirasta şans ön plana çıkar.",
+      "9": "Jüpiter 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda yüksek öğrenim ön plana çıkar.",
+      "10": "Jüpiter 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda kariyer büyümesi ön plana çıkar.",
+      "11": "Jüpiter 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda sosyal şans ön plana çıkar.",
+      "12": "Jüpiter 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda ruhani büyüme ön plana çıkar."
+    },
+    "Saturn": {
+      "1": "Satürn 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda kişisel disiplin ön plana çıkar.",
+      "2": "Satürn 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda mali sorumluluk ön plana çıkar.",
+      "3": "Satürn 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda iletişim disiplini ön plana çıkar.",
+      "4": "Satürn 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda aile yükümlülükleri ön plana çıkar.",
+      "5": "Satürn 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda yaratıcı sınırlar ön plana çıkar.",
+      "6": "Satürn 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda sağlık disiplini ön plana çıkar.",
+      "7": "Satürn 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda ilişki olgunluğu ön plana çıkar.",
+      "8": "Satürn 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda dönüşüm dersleri ön plana çıkar.",
+      "9": "Satürn 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda felsefi disiplin ön plana çıkar.",
+      "10": "Satürn 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda kariyer sorumluluğu ön plana çıkar.",
+      "11": "Satürn 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda sosyal sorumluluk ön plana çıkar.",
+      "12": "Satürn 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda ruhani dersler ön plana çıkar."
+    },
+    "Uranus": {
+      "1": "Uranüs 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda özgün kimlik ön plana çıkar.",
+      "2": "Uranüs 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda finansal devrim ön plana çıkar.",
+      "3": "Uranüs 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda iletişimde yenilik ön plana çıkar.",
+      "4": "Uranüs 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda aile yapısında değişim ön plana çıkar.",
+      "5": "Uranüs 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda yaratıcı devrim ön plana çıkar.",
+      "6": "Uranüs 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda iş hayatında yenilik ön plana çıkar.",
+      "7": "Uranüs 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda ilişkilerde özgürlük ön plana çıkar.",
+      "8": "Uranüs 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda köklü dönüşüm ön plana çıkar.",
+      "9": "Uranüs 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda entelektüel özgürlük ön plana çıkar.",
+      "10": "Uranüs 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda kariyer devrimi ön plana çıkar.",
+      "11": "Uranüs 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda sosyal devrim ön plana çıkar.",
+      "12": "Uranüs 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda ruhani uyanış ön plana çıkar."
+    },
+    "Neptune": {
+      "1": "Neptün 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda idealize kimlik ön plana çıkar.",
+      "2": "Neptün 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda finansal belirsizlik ön plana çıkar.",
+      "3": "Neptün 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda sezgisel iletişim ön plana çıkar.",
+      "4": "Neptün 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda aile hayalleri ön plana çıkar.",
+      "5": "Neptün 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda sanatsal yaratıcılık ön plana çıkar.",
+      "6": "Neptün 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda hizmet ideali ön plana çıkar.",
+      "7": "Neptün 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda romantik idealler ön plana çıkar.",
+      "8": "Neptün 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda mistik dönüşüm ön plana çıkar.",
+      "9": "Neptün 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda ruhani arayış ön plana çıkar.",
+      "10": "Neptün 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda kariyer vizyonu ön plana çıkar.",
+      "11": "Neptün 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda toplumsal idealler ön plana çıkar.",
+      "12": "Neptün 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda ruhani teslimiyet ön plana çıkar."
+    },
+    "Pluto": {
+      "1": "Plüton 1. Evde: Kişilik, dış görünüş ve hayata bakış tarzı üzerinde güçlü etki. Bu konumda kimlik dönüşümü ön plana çıkar.",
+      "2": "Plüton 2. Evde: Maddi kaynaklar, öz değer duygusu ve para kazanma tarzı. Bu konumda mali güç ön plana çıkar.",
+      "3": "Plüton 3. Evde: İletişim, kısa yolculuklar ve yakın çevre ilişkileri. Bu konumda güçlü iletişim ön plana çıkar.",
+      "4": "Plüton 4. Evde: Yuva, aile kökleri ve duygusal temeller üzerinde etki. Bu konumda aile dönüşümü ön plana çıkar.",
+      "5": "Plüton 5. Evde: Yaratıcılık, aşk hayatı, çocuklar ve eğlence. Bu konumda yaratıcı güç ön plana çıkar.",
+      "6": "Plüton 6. Evde: Günlük rutinler, sağlık alışkanlıkları ve hizmet. Bu konumda iş dönüşümü ön plana çıkar.",
+      "7": "Plüton 7. Evde: Ortaklıklar, evlilik ve birebir ilişkiler. Bu konumda ilişki dönüşümü ön plana çıkar.",
+      "8": "Plüton 8. Evde: Ortak kaynaklar, dönüşüm, krizler ve derin bağlar. Bu konumda derin dönüşüm ön plana çıkar.",
+      "9": "Plüton 9. Evde: Yüksek öğrenim, felsefe, uzak yolculuklar ve manevi arayış. Bu konumda felsefi dönüşüm ön plana çıkar.",
+      "10": "Plüton 10. Evde: Kariyer, toplumsal statü, hedefler ve kamusal imaj. Bu konumda kariyer dönüşümü ön plana çıkar.",
+      "11": "Plüton 11. Evde: Arkadaşlıklar, sosyal gruplar, umutlar ve idealler. Bu konumda sosyal güç ön plana çıkar.",
+      "12": "Plüton 12. Evde: Bilinçaltı, içe dönüklük, ruhani gelişim ve gizli yetenekler. Bu konumda ruhani dönüşüm ön plana çıkar."
+    }
   },
-  "transits": {
-    "Mercury Retrograde": "Merkur Retrosu: Iletisim kazalari, teknolojik aksakliklar ve gecmis konularin tekrar gundeme gelmesi mumkundur. Yeni baslangiclar yerine gozden gecirme donemidir.",
-    "Saturn Return": "Saturn Donusu: Hayatta buyuk bir olgunlasma ve sorumluluk alma donemidir. Karar verme ve yapilanma zamanidir."
+  "aspects": {
+    "Sun-Moon": {
+      "Kavuşum": "Güneş-Ay Kavuşum: Güçlü birleşim enerjisi. Bu açı Güneş ve Ay enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Güneş-Ay Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Güneş ve Ay enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Güneş-Ay Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Güneş ve Ay enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Güneş-Ay Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Güneş ve Ay enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Güneş-Ay Karşıt: Denge arayışı ve farkındalık. Bu açı Güneş ve Ay enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Sun-Mercury": {
+      "Kavuşum": "Güneş-Merkür Kavuşum: Güçlü birleşim enerjisi. Bu açı Güneş ve Merkür enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Güneş-Merkür Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Güneş ve Merkür enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Güneş-Merkür Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Güneş ve Merkür enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Güneş-Merkür Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Güneş ve Merkür enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Güneş-Merkür Karşıt: Denge arayışı ve farkındalık. Bu açı Güneş ve Merkür enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Sun-Venus": {
+      "Kavuşum": "Güneş-Venüs Kavuşum: Güçlü birleşim enerjisi. Bu açı Güneş ve Venüs enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Güneş-Venüs Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Güneş ve Venüs enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Güneş-Venüs Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Güneş ve Venüs enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Güneş-Venüs Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Güneş ve Venüs enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Güneş-Venüs Karşıt: Denge arayışı ve farkındalık. Bu açı Güneş ve Venüs enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Sun-Mars": {
+      "Kavuşum": "Güneş-Mars Kavuşum: Güçlü birleşim enerjisi. Bu açı Güneş ve Mars enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Güneş-Mars Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Güneş ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Güneş-Mars Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Güneş ve Mars enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Güneş-Mars Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Güneş ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Güneş-Mars Karşıt: Denge arayışı ve farkındalık. Bu açı Güneş ve Mars enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Sun-Jupiter": {
+      "Kavuşum": "Güneş-Jüpiter Kavuşum: Güçlü birleşim enerjisi. Bu açı Güneş ve Jüpiter enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Güneş-Jüpiter Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Güneş ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Güneş-Jüpiter Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Güneş ve Jüpiter enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Güneş-Jüpiter Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Güneş ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Güneş-Jüpiter Karşıt: Denge arayışı ve farkındalık. Bu açı Güneş ve Jüpiter enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Sun-Saturn": {
+      "Kavuşum": "Güneş-Satürn Kavuşum: Güçlü birleşim enerjisi. Bu açı Güneş ve Satürn enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Güneş-Satürn Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Güneş ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Güneş-Satürn Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Güneş ve Satürn enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Güneş-Satürn Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Güneş ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Güneş-Satürn Karşıt: Denge arayışı ve farkındalık. Bu açı Güneş ve Satürn enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Moon-Mercury": {
+      "Kavuşum": "Ay-Merkür Kavuşum: Güçlü birleşim enerjisi. Bu açı Ay ve Merkür enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Ay-Merkür Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Ay ve Merkür enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Ay-Merkür Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Ay ve Merkür enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Ay-Merkür Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Ay ve Merkür enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Ay-Merkür Karşıt: Denge arayışı ve farkındalık. Bu açı Ay ve Merkür enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Moon-Venus": {
+      "Kavuşum": "Ay-Venüs Kavuşum: Güçlü birleşim enerjisi. Bu açı Ay ve Venüs enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Ay-Venüs Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Ay ve Venüs enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Ay-Venüs Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Ay ve Venüs enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Ay-Venüs Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Ay ve Venüs enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Ay-Venüs Karşıt: Denge arayışı ve farkındalık. Bu açı Ay ve Venüs enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Moon-Mars": {
+      "Kavuşum": "Ay-Mars Kavuşum: Güçlü birleşim enerjisi. Bu açı Ay ve Mars enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Ay-Mars Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Ay ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Ay-Mars Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Ay ve Mars enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Ay-Mars Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Ay ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Ay-Mars Karşıt: Denge arayışı ve farkındalık. Bu açı Ay ve Mars enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Moon-Jupiter": {
+      "Kavuşum": "Ay-Jüpiter Kavuşum: Güçlü birleşim enerjisi. Bu açı Ay ve Jüpiter enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Ay-Jüpiter Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Ay ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Ay-Jüpiter Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Ay ve Jüpiter enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Ay-Jüpiter Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Ay ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Ay-Jüpiter Karşıt: Denge arayışı ve farkındalık. Bu açı Ay ve Jüpiter enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Moon-Saturn": {
+      "Kavuşum": "Ay-Satürn Kavuşum: Güçlü birleşim enerjisi. Bu açı Ay ve Satürn enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Ay-Satürn Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Ay ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Ay-Satürn Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Ay ve Satürn enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Ay-Satürn Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Ay ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Ay-Satürn Karşıt: Denge arayışı ve farkındalık. Bu açı Ay ve Satürn enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Mercury-Venus": {
+      "Kavuşum": "Merkür-Venüs Kavuşum: Güçlü birleşim enerjisi. Bu açı Merkür ve Venüs enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Merkür-Venüs Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Merkür ve Venüs enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Merkür-Venüs Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Merkür ve Venüs enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Merkür-Venüs Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Merkür ve Venüs enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Merkür-Venüs Karşıt: Denge arayışı ve farkındalık. Bu açı Merkür ve Venüs enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Mercury-Mars": {
+      "Kavuşum": "Merkür-Mars Kavuşum: Güçlü birleşim enerjisi. Bu açı Merkür ve Mars enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Merkür-Mars Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Merkür ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Merkür-Mars Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Merkür ve Mars enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Merkür-Mars Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Merkür ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Merkür-Mars Karşıt: Denge arayışı ve farkındalık. Bu açı Merkür ve Mars enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Mercury-Jupiter": {
+      "Kavuşum": "Merkür-Jüpiter Kavuşum: Güçlü birleşim enerjisi. Bu açı Merkür ve Jüpiter enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Merkür-Jüpiter Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Merkür ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Merkür-Jüpiter Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Merkür ve Jüpiter enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Merkür-Jüpiter Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Merkür ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Merkür-Jüpiter Karşıt: Denge arayışı ve farkındalık. Bu açı Merkür ve Jüpiter enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Mercury-Saturn": {
+      "Kavuşum": "Merkür-Satürn Kavuşum: Güçlü birleşim enerjisi. Bu açı Merkür ve Satürn enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Merkür-Satürn Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Merkür ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Merkür-Satürn Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Merkür ve Satürn enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Merkür-Satürn Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Merkür ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Merkür-Satürn Karşıt: Denge arayışı ve farkındalık. Bu açı Merkür ve Satürn enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Venus-Mars": {
+      "Kavuşum": "Venüs-Mars Kavuşum: Güçlü birleşim enerjisi. Bu açı Venüs ve Mars enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Venüs-Mars Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Venüs ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Venüs-Mars Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Venüs ve Mars enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Venüs-Mars Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Venüs ve Mars enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Venüs-Mars Karşıt: Denge arayışı ve farkındalık. Bu açı Venüs ve Mars enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Venus-Jupiter": {
+      "Kavuşum": "Venüs-Jüpiter Kavuşum: Güçlü birleşim enerjisi. Bu açı Venüs ve Jüpiter enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Venüs-Jüpiter Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Venüs ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Venüs-Jüpiter Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Venüs ve Jüpiter enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Venüs-Jüpiter Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Venüs ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Venüs-Jüpiter Karşıt: Denge arayışı ve farkındalık. Bu açı Venüs ve Jüpiter enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Venus-Saturn": {
+      "Kavuşum": "Venüs-Satürn Kavuşum: Güçlü birleşim enerjisi. Bu açı Venüs ve Satürn enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Venüs-Satürn Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Venüs ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Venüs-Satürn Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Venüs ve Satürn enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Venüs-Satürn Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Venüs ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Venüs-Satürn Karşıt: Denge arayışı ve farkındalık. Bu açı Venüs ve Satürn enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Mars-Jupiter": {
+      "Kavuşum": "Mars-Jüpiter Kavuşum: Güçlü birleşim enerjisi. Bu açı Mars ve Jüpiter enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Mars-Jüpiter Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Mars ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Mars-Jüpiter Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Mars ve Jüpiter enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Mars-Jüpiter Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Mars ve Jüpiter enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Mars-Jüpiter Karşıt: Denge arayışı ve farkındalık. Bu açı Mars ve Jüpiter enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Mars-Saturn": {
+      "Kavuşum": "Mars-Satürn Kavuşum: Güçlü birleşim enerjisi. Bu açı Mars ve Satürn enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Mars-Satürn Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Mars ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Mars-Satürn Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Mars ve Satürn enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Mars-Satürn Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Mars ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Mars-Satürn Karşıt: Denge arayışı ve farkındalık. Bu açı Mars ve Satürn enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    },
+    "Jupiter-Saturn": {
+      "Kavuşum": "Jüpiter-Satürn Kavuşum: Güçlü birleşim enerjisi. Bu açı Jüpiter ve Satürn enerjilerini birleştirir ve hayatınızda güçlü bir odak noktası yaratır.",
+      "Sekstil": "Jüpiter-Satürn Sekstil: Uyumlu ve destekleyici enerji akışı. Bu açı Jüpiter ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Kare": "Jüpiter-Satürn Kare: Gerilim ve meydan okuma ama büyüme potansiyeli. Bu açı Jüpiter ve Satürn enerjilerini harekete geçirir ve hayatınızda büyüme fırsatları yaratır.",
+      "Üçgen": "Jüpiter-Satürn Üçgen: Doğal yetenek ve kolay akan enerji. Bu açı Jüpiter ve Satürn enerjilerini harekete geçirir ve hayatınızda doğal akış yaratır.",
+      "Karşıt": "Jüpiter-Satürn Karşıt: Denge arayışı ve farkındalık. Bu açı Jüpiter ve Satürn enerjilerini dengeye getirir ve hayatınızda büyüme fırsatları yaratır."
+    }
+  },
+  "element_analysis": {
+    "fire_dominant": "Ateş elementi baskın: Enerjik, tutkulu ve spontan bir doğanız var. Motivasyonunuz yüksek, liderlik içgüdüleriniz güçlü. Dikkat: Sabırsızlık ve dürtüsellik kontrol edilmeli.",
+    "fire_weak": "Ateş elementi zayıf: Motivasyon ve özgüven eksikliği hissedebilirsiniz. Harekete geçmekte zorlanabilirsiniz. Öneri: Karnelyan, Sitrin veya Kehribar taşları taşıyın. Kırmızı ve turuncu tonlarını hayatınıza katın.",
+    "earth_dominant": "Toprak elementi baskın: Pratik, güvenilir ve istikrarlı bir doğanız var. Maddi dünya ile güçlü bağınız var. Dikkat: Aşırı materyalizm ve değişime direnç kontrol edilmeli.",
+    "earth_weak": "Toprak elementi zayıf: Pratiklik ve topraklanma eksikliği hissedebilirsiniz. Maddi konularda odaklanmak zor olabilir. Öneri: Yeşim, Turmalin veya Kaplan Gözü taşları taşıyın. Doğada vakit geçirin.",
+    "air_dominant": "Hava elementi baskın: Zihinsel, iletişimci ve sosyal bir doğanız var. Fikirler ve kavramlarla güçlü bağınız var. Dikkat: Aşırı rasyonellik ve duygusal kopukluk kontrol edilmeli.",
+    "air_weak": "Hava elementi zayıf: İletişim ve sosyal etkileşimde zorluk yaşayabilirsiniz. Fikirlerinizi ifade etmek zor olabilir. Öneri: Akuamarin, Florit veya Lapis Lazuli taşları taşıyın. Okuma ve tartışma gruplarına katılın.",
+    "water_dominant": "Su elementi baskın: Duygusal, sezgisel ve empatik bir doğanız var. İç dünya çok zengin. Dikkat: Aşırı duygusallık ve sınır koyma güçlüğü kontrol edilmeli.",
+    "water_weak": "Su elementi zayıf: Duygusal ifade ve empati konusunda zorluk yaşayabilirsiniz. Sezgilerinize güvenmek zor olabilir. Öneri: Aytaşı, Ametist veya Akuamarin taşları taşıyın. Meditasyon ve su kenarı aktiviteleri yapın."
+  },
+  "retrograde_effects": {
+    "Mercury": "Merkür Retrosu: İletişim kazaları, teknolojik aksaklıklar ve geçmiş konuların tekrar gündeme gelmesi mümkündür. Yeni başlangıçlar yerine gözden geçirme dönemidir. Eski sözleşmeleri kontrol edin, önemli imzalardan kaçının.",
+    "Venus": "Venüs Retrosu: Eski aşklar ve ilişkiler tekrar gündeme gelir. Estetik konularda değişikliklerden kaçının. Mali kararları erteleyin. Değerlerinizi ve ilişki ihtiyaçlarınızı yeniden değerlendirin.",
+    "Mars": "Mars Retrosu: Enerji düşüklüğü, motivasyon kaybı olabilir. Yeni projelere başlamak yerine devam edenlere odaklanın. Fiziksel enerjiyi dikkatli kullanın, öfke kontrolü önemli.",
+    "Jupiter": "Jüpiter Retrosu: İç büyüme ve felsefi sorgulama dönemi. Dışsal genişleme duraksar, içsel bilgelik derinleşir. Eğitim ve manevi gelişim için güçlü zaman.",
+    "Saturn": "Satürn Retrosu: Geçmiş sorumluluklar ve yapısal sorunlar gün yüzüne çıkar. Karma dersleri yoğunlaşır. İç disiplin ve olgunlaşma dönemi. Otorite figürleriyle ilişkiler sorgulanır.",
+    "Uranus": "Uranüs Retrosu: İçsel özgürleşme ve alışılmadık fikirlerin olgunlaşma dönemi. Ani değişimler içselleşir. Özgünlük yeniden tanımlanır.",
+    "Neptune": "Neptün Retrosu: Hayaller ve yanılsamalar sorgulanır. Ruhani derinleşme ve sezgisel netleşme dönemi. Sanatsal ilham içe döner.",
+    "Pluto": "Plüton Retrosu: Derin psikolojik dönüşüm içselleşir. Güç dinamikleri sorgulanır. Geçmiş travmalarla yüzleşme ve iyileşme dönemi."
   }
 }

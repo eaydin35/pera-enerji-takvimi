@@ -9,6 +9,9 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { calculateChart, type ChartData, type PlanetPosition } from '../../utils/astrology';
 import { supabase } from '../../utils/supabase';
 import NatalChart from '../../components/NatalChart';
+import housesKB from '../../data/houses_kb.json';
+import astrologyKB from '../../data/astrology_kb.json';
+
 
 // ─── Planet visual configs ───────────────────────────────────────────────────
 
@@ -100,10 +103,47 @@ export default function ChartScreen() {
     const ascSign = chartData.positions.length > 0
         ? (() => {
             const norm = chartData.ascendant % 360;
-            const signs = ["Koc","Boga","Ikizler","Yengec","Aslan","Basak","Terazi","Akrep","Yay","Oglak","Kova","Balik"];
+            const signs = ["Ko\u00e7","Bo\u011fa","\u0130kizler","Yenge\u00e7","Aslan","Ba\u015fak","Terazi","Akrep","Yay","O\u011flak","Kova","Bal\u0131k"];
             return signs[Math.floor(norm / 30)];
         })()
         : '';
+
+    // Calculate house signs
+    const ZODIAC_SIGNS_TR = ["Ko\u00e7","Bo\u011fa","\u0130kizler","Yenge\u00e7","Aslan","Ba\u015fak","Terazi","Akrep","Yay","O\u011flak","Kova","Bal\u0131k"];
+    const houseSignData = chartData.houses.map((cusp, idx) => {
+        const signIdx = Math.floor((cusp % 360) / 30);
+        const sign = ZODIAC_SIGNS_TR[signIdx];
+        const houseNum = (idx + 1).toString();
+        const houseKB = (housesKB as any)[houseNum];
+        const meaning = houseKB?.[sign] || '';
+        const houseName = houseKB?.name || `${houseNum}. Ev`;
+        return { num: idx + 1, sign, meaning, houseName };
+    });
+
+    // Planet name mapping for aspect KB lookup
+    const PLANET_TR_TO_EN: Record<string, string> = {
+        'G\u00fcne\u015f': 'Sun', 'Ay': 'Moon', 'Merk\u00fcr': 'Mercury',
+        'Ven\u00fcs': 'Venus', 'Mars': 'Mars', 'J\u00fcpiter': 'Jupiter',
+        'Sat\u00fcrn': 'Saturn'
+    };
+    const ASPECT_TYPE_MAP: Record<string, string> = {
+        'Kavusum': 'Kavu\u015fum', 'Ucgen': '\u00dc\u00e7gen', 'Kare': 'Kare', 
+        'Karsit': 'Kar\u015f\u0131t', 'Sekstil': 'Sekstil',
+        'Kavu\u015fum': 'Kavu\u015fum', '\u00dc\u00e7gen': '\u00dc\u00e7gen', 'Kar\u015f\u0131t': 'Kar\u015f\u0131t'
+    };
+
+    function getAspectComment(p1: string, p2: string, aspectType: string): string {
+        const en1 = PLANET_TR_TO_EN[p1];
+        const en2 = PLANET_TR_TO_EN[p2];
+        if (!en1 || !en2) return '';
+        const key = `${en1}-${en2}`;
+        const reverseKey = `${en2}-${en1}`;
+        const typeTR = ASPECT_TYPE_MAP[aspectType] || aspectType;
+        const aspects = (astrologyKB as any).aspects;
+        const entry = aspects?.[key] || aspects?.[reverseKey];
+        return entry?.[typeTR] || '';
+    }
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -159,6 +199,26 @@ export default function ChartScreen() {
                     </View>
                 </View>
 
+                {/* ── House Positions ── */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>EV KONUMLARI</Text>
+                    <View style={{ gap: 6 }}>
+                        {houseSignData.map(h => (
+                            <View key={h.num} style={styles.houseRow}>
+                                <View style={styles.houseNumBadge}>
+                                    <Text style={styles.houseNumText}>{h.num}</Text>
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.houseSign}>{getZodiacEmoji(h.sign)} {h.sign}</Text>
+                                    <Text style={styles.houseMeaning} numberOfLines={2}>{h.meaning}</Text>
+                                </View>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+
+
+
                 {/* ── Aspects ── */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>ONE CIKAN ACILAR</Text>
@@ -166,6 +226,7 @@ export default function ChartScreen() {
                         const nature = asp.nature || 'UYUMLU';
                         const styleKey = Object.keys(ASPECT_STYLES).find(k => nature.includes(k.substring(0, 3))) || 'UYUMLU';
                         const s = ASPECT_STYLES[styleKey] || ASPECT_STYLES['UYUMLU'];
+                        const comment = getAspectComment(asp.planet1, asp.planet2, asp.type);
 
                         return (
                             <View key={idx} style={styles.aspectRow}>
@@ -174,7 +235,11 @@ export default function ChartScreen() {
                                 </View>
                                 <View style={{ flex: 1 }}>
                                     <Text style={styles.aspectText}>{asp.planet1} {asp.type} {asp.planet2}</Text>
-                                    <Text style={styles.aspectOrb}>Orb: {asp.orb.toFixed(2)}\u00b0</Text>
+                                    {comment ? (
+                                        <Text style={styles.aspectComment} numberOfLines={2}>{comment}</Text>
+                                    ) : (
+                                        <Text style={styles.aspectOrb}>Orb: {asp.orb.toFixed(2)}\u00b0</Text>
+                                    )}
                                 </View>
                                 <View style={[styles.natureBadge, { backgroundColor: s.bg }]}>
                                     <Text style={[styles.natureText, { color: s.text }]}>{nature}</Text>
@@ -182,6 +247,7 @@ export default function ChartScreen() {
                             </View>
                         );
                     })}
+
                     {chartData.aspects.length === 0 && (
                         <Text style={styles.emptyText}>Onemli aci bulunamadi.</Text>
                     )}
@@ -287,6 +353,24 @@ const styles = StyleSheet.create({
     natureBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
     natureText:  { fontSize: 9, fontWeight: '800' },
     emptyText:   { fontSize: 13, color: '#9ca3af' },
+
+    // Houses
+    houseRow: {
+        flexDirection: 'row', alignItems: 'center', gap: 10,
+        backgroundColor: '#fff', borderRadius: 14, padding: 12,
+        shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.03, shadowRadius: 3, elevation: 1,
+    },
+    houseNumBadge: {
+        width: 32, height: 32, borderRadius: 16,
+        backgroundColor: '#fdf2f8', alignItems: 'center', justifyContent: 'center',
+    },
+    houseNumText: { fontSize: 13, fontWeight: '800', color: '#c4b5c9' },
+    houseSign:    { fontSize: 13, fontWeight: '600', color: '#111827' },
+    houseMeaning: { fontSize: 11, color: '#6b7280', marginTop: 2 },
+    aspectComment: { fontSize: 11, color: '#6b7280', marginTop: 2, lineHeight: 15 },
+
+
 
     // Planets
     planetGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
