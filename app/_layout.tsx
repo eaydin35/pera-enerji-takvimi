@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useAuthStore, initAuthListener } from '../store/useAuthStore';
 import { initPurchases } from '../utils/purchases';
+import { supabase } from '../utils/supabase';
+import * as Linking from 'expo-linking';
+import { Platform } from 'react-native';
 
 // Initialize Supabase auth session listener once at app startup
 initAuthListener();
@@ -25,6 +28,33 @@ export default function RootLayout() {
             });
         }
     }, [session?.user?.id]);
+
+    // Handle deep links for social authentication (OAuth)
+    useEffect(() => {
+        const handleDeepLink = async (url: string | null) => {
+            if (!url) return;
+            
+            const { queryParams } = Linking.parse(url);
+            
+            if (queryParams?.access_token || queryParams?.refresh_token) {
+                const { error } = await supabase.auth.setSession({
+                    access_token: queryParams.access_token as string,
+                    refresh_token: queryParams.refresh_token as string,
+                });
+                if (error) console.error('[DeepLink] Error setting session:', error.message);
+            }
+        };
+
+        // Handle initial URL
+        Linking.getInitialURL().then(handleDeepLink);
+
+        // Listen for new URLs
+        const subscription = Linking.addEventListener('url', (event) => {
+            handleDeepLink(event.url);
+        });
+
+        return () => subscription.remove();
+    }, []);
 
     useEffect(() => {
         // Wait until everything is loaded before making routing decisions

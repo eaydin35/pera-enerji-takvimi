@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { calculateChart, type ChartData } from './astrology';
+import { getCached, setCached, buildCacheKey, type CacheType } from './cache-manager';
 import astrologyKB from '../data/astrology_kb.json';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -12,6 +13,23 @@ export interface Message {
 export interface ChatHistory {
     messages: Message[];
 }
+
+export type AITask = 
+    | 'natal_analysis'      // gemini-2.0-flash — derin, bir kez
+    | 'daily_panel'         // gemini-2.0-flash-lite — hizli, ucuz
+    | 'weekly_calendar'     // gemini-2.0-flash-lite
+    | 'monthly_calendar'    // gemini-2.0-flash-lite
+    | 'notification_batch'  // gemini-2.0-flash-lite
+    | 'user_chat';          // gemini-2.0-flash — kullanici sorusu
+
+export const MODEL_MAP: Record<AITask, string> = {
+    natal_analysis:     'gemini-2.0-flash',
+    daily_panel:        'gemini-2.0-flash-lite',
+    weekly_calendar:    'gemini-2.0-flash-lite',
+    monthly_calendar:   'gemini-2.0-flash-lite',
+    notification_batch: 'gemini-2.0-flash-lite',
+    user_chat:          'gemini-2.0-flash',
+};
 
 // ─── AI Astrology Service ───────────────────────────────────────────────────
 
@@ -106,6 +124,99 @@ export const logTokenUsage = async (
     }
 };
 
+// ─── Generic AI Caller (Token Economy implementation) ───────────────────────
+
+export async function callAI<T>(
+    userId: string,
+    task: AITask,
+    prompt: string,
+    cacheKey: string,
+    options?: { skipCache?: boolean }
+): Promise<T | null> {
+    // 1. Check Cache first
+    if (!options?.skipCache) {
+        const cached = await getCached<T>(cacheKey);
+        if (cached) {
+            console.log(`[Token Economy] Cache HIT for ${task} (Key: ${cacheKey}) - Cost: $0`);
+            return cached;
+        }
+    }
+
+    const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY;
+    if (!GEMINI_API_KEY) return null;
+
+    const modelToUse = MODEL_MAP[task];
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${GEMINI_API_KEY}`;
+    console.log(`[Token Economy] Cache MISS for ${task}. Routing to cost-effective model: ${modelToUse}`);
+
+    const requestBody = {
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+            temperature: 0.7, // Lower temperature for more consistent JSON/logic
+            maxOutputTokens: 2048,
+        }
+    };
+
+    let lastError = null;
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (!response.ok) {
+                if (RETRYABLE_STATUS_CODES.includes(response.status) && attempt < MAX_RETRIES) {
+                    await sleep(1000 * Math.pow(2, attempt));
+                    continue;
+                }
+                throw new Error(await response.text());
+            }
+
+            const aiData = await response.json();
+            const textResponse = aiData.candidates?.[0]?.content?.parts?.[0]?.text;
+            const usage = aiData.usageMetadata;
+
+            if (textResponse) {
+                if (usage) {
+                    await logTokenUsage(userId, task, modelToUse, usage.promptTokenCount, usage.candidatesTokenCount, usage.totalTokenCount);
+                }
+
+                let parsedPayload: any = textResponse;
+                try {
+                    // Temizle ve JSON parse etmeye çalış (json output bekleyen task'lar icin)
+                    if (textResponse.includes('```json')) {
+                        const jsonStr = textResponse.split('```json')[1].split('```')[0].trim();
+                        parsedPayload = JSON.parse(jsonStr) as T;
+                    } else if (textResponse.trim().startsWith('{') || textResponse.trim().startsWith('[')) {
+                        parsedPayload = JSON.parse(textResponse) as T;
+                    }
+                } catch (e) {
+                    // JSON degil, normal text don.
+                }
+
+                // 2. Write to cache
+                if (task !== 'user_chat') {
+                    // Type assertion to ensure task name aligns with allowed cache types loosely
+                    await setCached(userId, cacheKey, parsedPayload, task as CacheType);
+                }
+
+                return parsedPayload as T;
+            }
+        } catch (error: any) {
+            lastError = error.message;
+            if (attempt < MAX_RETRIES) {
+                await sleep(1000 * Math.pow(2, attempt));
+            }
+        }
+    }
+
+    console.error(`[AI Caller] Failed after ${MAX_RETRIES} retries:`, lastError);
+    return null;
+}
+
 // ─── Main Chat Function ─────────────────────────────────────────────────────
 
 export const chatWithAI = async (
@@ -173,7 +284,8 @@ export const chatWithAI = async (
             ],
         };
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const modelToUse = MODEL_MAP['user_chat'];
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${GEMINI_API_KEY}`;
 
         // ── Retry loop with exponential backoff ──
         let lastError: string | null = null;
@@ -226,7 +338,7 @@ export const chatWithAI = async (
                     logTokenUsage(
                         userId,
                         'chat_with_ai',
-                        'gemini-2.0-flash', // Note: Using the model name from the URL
+                        'gemini-2.0-flash',
                         usage.promptTokenCount || 0,
                         usage.candidatesTokenCount || 0,
                         usage.totalTokenCount || 0

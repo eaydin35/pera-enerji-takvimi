@@ -17,6 +17,7 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../store/useAuthStore';
+import { useSocialAuth, type SocialProvider } from '../hooks/useSocialAuth';
 import { supabase } from '../utils/supabase';
 
 type Mode = 'login' | 'register';
@@ -57,18 +58,10 @@ export default function AuthScreen() {
         useAuthStore.setState({ session: dummySession as any, user: dummySession.user });
     };
 
-    const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
-        try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider,
-                options: {
-                    redirectTo: 'pet://home', // Replace with your app scheme
-                }
-            });
-            if (error) throw error;
-        } catch (e: any) {
-            Alert.alert('Hata', e.message);
-        }
+    const { signInWithSocial, isSocialLoading } = useSocialAuth();
+
+    const handleSocialLogin = async (provider: SocialProvider) => {
+        await signInWithSocial(provider);
     };
 
     return (
@@ -185,21 +178,26 @@ export default function AuthScreen() {
                             <TouchableOpacity 
                                 style={styles.socialBtn}
                                 onPress={() => handleSocialLogin('google')}
+                                disabled={isSocialLoading}
                             >
                                 <FontAwesome name="google" size={24} color="#DB4437" />
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 style={styles.socialBtn}
-                                onPress={() => handleSocialLogin('facebook')}
+                                onPress={() => handleSocialLogin('instagram')}
+                                disabled={isSocialLoading}
                             >
-                                <FontAwesome name="facebook" size={24} color="#4267B2" />
+                                <FontAwesome name="instagram" size={26} color="#E4405F" />
                             </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={styles.socialBtn}
-                                onPress={() => handleSocialLogin('apple')}
-                            >
-                                <FontAwesome name="apple" size={24} color="#000" />
-                            </TouchableOpacity>
+                            {Platform.OS === 'ios' && (
+                                <TouchableOpacity 
+                                    style={styles.socialBtn}
+                                    onPress={() => handleSocialLogin('apple')}
+                                    disabled={isSocialLoading}
+                                >
+                                    <FontAwesome name="apple" size={24} color="#000" />
+                                </TouchableOpacity>
+                            )}
                         </View>
 
                         {/* Dev bypass */}

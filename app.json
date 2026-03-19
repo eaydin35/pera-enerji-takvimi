@@ -3,13 +3,15 @@
     "name": "pera-enerji-takvimi",
     "slug": "pera-enerji-takvimi",
     "version": "1.0.0",
-    "scheme": "peraenerjitakvimi",
+    "scheme": "peraenerji",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "plugins": [
       "expo-router",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-web-browser",
+      "expo-localization"
     ],
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -18,7 +20,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.pera-enerji-takvimi"
+      "bundleIdentifier": "com.peratakvimi.app"
     },
     "android": {
       "adaptiveIcon": {
