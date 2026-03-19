@@ -8,6 +8,7 @@ import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import districtsData from '../data/districts.json';
+import { uploadAvatar } from '../utils/storage';
 
 type Province = {
     id: number;
@@ -64,16 +65,28 @@ export default function OnboardingScreen() {
         setShowDatePicker(false);
     }
 
-    // Birth time auto-colon handler
+    // Birth time auto-colon handler with 24h validation
     const handleBirthTimeChange = (text: string) => {
-        // Allow digits and colon only
-        let cleaned = text.replace(/[^0-9:]/g, '');
-        // Auto-insert colon after 2 digits if user didn't type it
-        if (cleaned.length === 2 && !cleaned.includes(':') && birthTime.length < 2) {
-            cleaned = cleaned + ':';
+        // Extract only digits
+        let digits = text.replace(/[^0-9]/g, '');
+        
+        // Limit to 4 digits (HHMM)
+        if (digits.length > 4) digits = digits.slice(0, 4);
+
+        let formatted = '';
+        if (digits.length >= 3) {
+            formatted = digits.slice(0, 2) + ':' + digits.slice(2);
+        } else if (digits.length === 2 && text.endsWith(':')) {
+            // If user typed 2 digits and then a colon, keep it
+            formatted = digits + ':';
+        } else if (digits.length === 2 && birthTime.length === 1) {
+             // Auto-add colon after 2nd digit if moving forward
+            formatted = digits + ':';
+        } else {
+            formatted = digits;
         }
-        // Clamp to 5 chars max (HH:MM)
-        if (cleaned.length <= 5) setBirthTime(cleaned);
+
+        setBirthTime(formatted);
     };
 
     // Modal data filtering
@@ -106,9 +119,29 @@ export default function OnboardingScreen() {
     };
 
     const handleComplete = async () => {
-        if (!firstName || !birthDate || !birthPlace || birthLat === undefined || birthLng === undefined) return;
+        if (!firstName || !birthDate || !birthPlace || birthLat === undefined || birthLng === undefined) {
+            Alert.alert('Eksik Bilgi', 'Lütfen tüm zorunlu alanları doldurun.');
+            return;
+        }
 
-        const profile = { firstName, lastName, birthDate, birthTime, birthPlace, birthLat, birthLng };
+        let finalAvatarUrl = profileImageUri;
+        
+        // Upload to Supabase if signed in and has local URI
+        if (user && profileImageUri && profileImageUri.startsWith('file://')) {
+            const uploadedUrl = await uploadAvatar(profileImageUri, user.id);
+            if (uploadedUrl) finalAvatarUrl = uploadedUrl;
+        }
+
+        const profile = { 
+            firstName, 
+            lastName, 
+            birthDate, 
+            birthTime, 
+            birthPlace, 
+            birthLat, 
+            birthLng,
+            avatarUrl: finalAvatarUrl || undefined
+        };
         completeOnboarding(profile);
 
         // Save to Supabase if user is already signed in
@@ -122,6 +155,7 @@ export default function OnboardingScreen() {
                 birth_place: birthPlace,
                 birth_lat: birthLat,
                 birth_lng: birthLng,
+                avatar_url: finalAvatarUrl
             });
         }
         // _layout will decide next route (auth or tabs)
@@ -130,15 +164,20 @@ export default function OnboardingScreen() {
 
     // Developer bypass for testing
     const handleDevBypass = () => {
-        completeOnboarding({
-            firstName: 'Emrullah',
-            lastName: 'Aydın',
-            birthDate: '01.01.1990',
-            birthTime: '10:00',
-            birthPlace: 'İstanbul, Kadıköy',
-            birthLat: 40.9816,
-            birthLng: 29.0266,
-        });
+        // ONLY if user explicitly wants to bypass
+        const devProfile = {
+            firstName: 'Misafir',
+            lastName: 'Gezgin',
+            birthDate: '1990-01-01',
+            birthTime: '12:00',
+            birthPlace: 'İstanbul',
+            birthLat: 41.0082,
+            birthLng: 28.9784,
+            sunSign: 'Oğlak',
+            moonSign: 'Kova',
+            ascendant: 'Koç'
+        };
+        completeOnboarding(devProfile);
         router.replace('/(tabs)');
     };
 
@@ -150,7 +189,7 @@ export default function OnboardingScreen() {
             return;
         }
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ['images'],
             allowsEditing: true,
             aspect: [1, 1],
             quality: 0.7,
@@ -165,7 +204,7 @@ export default function OnboardingScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-        <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
+        <SafeAreaView className="flex-1 bg-background-light">
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
                 {/* Header */}
                 <View className="flex-row items-center p-4">
@@ -173,26 +212,26 @@ export default function OnboardingScreen() {
                         <MaterialIcons name="arrow-back" size={24} color="#71717a" />
                     </TouchableOpacity>
                     <View className="flex-1 items-center">
-                        <View className="mx-auto h-1.5 w-24 rounded-full bg-zinc-200 dark:bg-zinc-700 overflow-hidden">
+                        <View className="mx-auto h-1.5 w-24 rounded-full bg-zinc-200 overflow-hidden">
                             <View className="h-full w-1/3 bg-primary" />
                         </View>
                     </View>
                     {/* Dev bypass button - subtle */}
                     <TouchableOpacity
                         onPress={handleDevBypass}
-                        className="flex h-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-3"
+                        className="flex h-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 px-3"
                     >
-                        <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">Test Geç</Text>
+                        <Text className="text-xs font-semibold text-zinc-500">Test Geç</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* Content */}
                 <View className="flex flex-1 flex-col px-4 pt-2 pb-6">
                     <View className="mb-4">
-                        <Text className="text-3xl font-bold leading-tight tracking-tight text-zinc-900 dark:text-white">
+                        <Text className="text-3xl font-bold leading-tight tracking-tight text-zinc-900">
                             Kişisel Rehberin Seni Bekliyor
                         </Text>
-                        <Text className="mt-2 text-base font-normal leading-normal text-zinc-600 dark:text-zinc-400">
+                        <Text className="mt-2 text-base font-normal leading-normal text-zinc-600">
                             Doğru bir analiz için lütfen doğum bilgilerini eksiksiz gir.
                         </Text>
                     </View>
@@ -208,30 +247,30 @@ export default function OnboardingScreen() {
                                     <MaterialIcons name="person" size={26} color="#1f1317" />
                                 )}
                             </View>
-                            <Text className="mt-1 text-xs font-semibold text-zinc-700 dark:text-zinc-300">Sen</Text>
+                            <Text className="mt-1 text-xs font-semibold text-zinc-700">Sen</Text>
                         </View>
                         {/* Eşim */}
                         <View className="items-center opacity-60">
-                            <View className="w-12 h-12 rounded-full border-2 border-zinc-300 dark:border-zinc-600 bg-zinc-100 dark:bg-zinc-800 items-center justify-center">
+                            <View className="w-12 h-12 rounded-full border-2 border-zinc-300 bg-zinc-100 items-center justify-center">
                                 <MaterialIcons name="person" size={22} color="#71717a" />
                             </View>
-                            <Text className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">Eşim</Text>
+                            <Text className="mt-1 text-xs font-medium text-zinc-500">Eşim</Text>
                         </View>
                         {/* Ek Profil */}
                         <View className="items-center">
-                            <View className="w-12 h-12 rounded-full border-2 border-dashed border-zinc-400 dark:border-zinc-600 bg-transparent items-center justify-center">
+                            <View className="w-12 h-12 rounded-full border-2 border-dashed border-zinc-400 bg-transparent items-center justify-center">
                                 <MaterialIcons name="add" size={20} color="#71717a" />
                             </View>
-                            <Text className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">Ekle</Text>
+                            <Text className="mt-1 text-xs font-medium text-zinc-500">Ekle</Text>
                         </View>
                     </View>
 
                     {/* Form */}
                     <View className="flex flex-col gap-y-4">
                         <View className="flex flex-col">
-                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Ad</Text>
+                            <Text className="pb-2 text-base font-medium text-zinc-900">Ad</Text>
                             <TextInput
-                                className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white p-4 text-base font-normal leading-normal text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+                                className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white p-4 text-base font-normal leading-normal text-zinc-900"
                                 placeholder="Adını gir"
                                 placeholderTextColor="#a1a1aa"
                                 value={firstName}
@@ -239,9 +278,9 @@ export default function OnboardingScreen() {
                             />
                         </View>
                         <View className="flex flex-col">
-                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Soyad</Text>
+                            <Text className="pb-2 text-base font-medium text-zinc-900">Soyad</Text>
                             <TextInput
-                                className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white p-4 text-base font-normal leading-normal text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+                                className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white p-4 text-base font-normal leading-normal text-zinc-900"
                                 placeholder="Soyadını gir"
                                 placeholderTextColor="#a1a1aa"
                                 value={lastName}
@@ -251,15 +290,15 @@ export default function OnboardingScreen() {
 
                         {/* Profile Photo Upload */}
                         <View className="flex flex-col">
-                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Profil Fotoğrafı</Text>
+                            <Text className="pb-2 text-base font-medium text-zinc-900">Profil Fotoğrafı</Text>
                             <TouchableOpacity
                                 onPress={handlePickImage}
-                                className="flex-row items-center h-14 w-full rounded-[32px] border border-dashed border-zinc-400 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-4 gap-3"
+                                className="flex-row items-center h-14 w-full rounded-[32px] border border-dashed border-zinc-400 bg-white px-4 gap-3"
                             >
                                 <View className="w-8 h-8 rounded-full bg-primary items-center justify-center">
                                     <MaterialIcons name="add-a-photo" size={16} color="#1f1317" />
                                 </View>
-                                <Text className="text-base text-zinc-400 dark:text-zinc-500">
+                                <Text className="text-base text-zinc-400">
                                     {profileImageUri ? 'Fotoğraf Seçildi' : 'Fotoğraf Yükle (İsteğe Bağlı)'}
                                 </Text>
                             </TouchableOpacity>
@@ -267,12 +306,12 @@ export default function OnboardingScreen() {
 
                         <View className="flex-row gap-4">
                             <View className="flex flex-col flex-1">
-                                <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Doğum Tarihi</Text>
+                                <Text className="pb-2 text-base font-medium text-zinc-900">Doğum Tarihi</Text>
                                 <TouchableOpacity
                                     onPress={() => setShowDatePicker(true)}
-                                    className="relative h-14 w-full justify-center rounded-[32px] border border-zinc-300 bg-white pl-4 pr-12 dark:border-zinc-700 dark:bg-zinc-800"
+                                    className="relative h-14 w-full justify-center rounded-[32px] border border-zinc-300 bg-white pl-4 pr-12"
                                 >
-                                    <Text className={`text-base font-normal leading-normal ${birthDate ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                                    <Text className={`text-base font-normal leading-normal ${birthDate ? 'text-zinc-900' : 'text-zinc-400'}`}>
                                         {birthDate || "GG.AA.YYYY"}
                                     </Text>
                                     <MaterialIcons name="calendar-today" size={20} color="#71717a" style={{ position: 'absolute', right: 16 }} />
@@ -280,12 +319,12 @@ export default function OnboardingScreen() {
                             </View>
                             <View className="flex flex-col flex-1">
                                 <View className="flex-row items-center gap-1.5 pb-2">
-                                    <Text className="text-base font-medium text-zinc-900 dark:text-white">Doğum Saati</Text>
+                                    <Text className="text-base font-medium text-zinc-900">Doğum Saati</Text>
                                     <MaterialIcons name="help-outline" size={16} color="#71717a" />
                                 </View>
                                 <View className="relative justify-center">
                                     <TextInput
-                                        className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white pl-4 pr-12 text-base font-normal leading-normal text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+                                        className="h-14 w-full rounded-[32px] border border-zinc-300 bg-white pl-4 pr-12 text-base font-normal leading-normal text-zinc-900"
                                         placeholder="SS:DD"
                                         placeholderTextColor="#a1a1aa"
                                         value={birthTime}
@@ -300,13 +339,13 @@ export default function OnboardingScreen() {
                         </View>
 
                         <View className="flex flex-col">
-                            <Text className="pb-2 text-base font-medium text-zinc-900 dark:text-white">Doğum Yeri</Text>
+                            <Text className="pb-2 text-base font-medium text-zinc-900">Doğum Yeri</Text>
                             <TouchableOpacity
                                 onPress={() => setShowLocationPicker(true)}
-                                className="relative h-14 w-full justify-center rounded-[32px] border border-zinc-300 bg-white pl-12 pr-4 dark:border-zinc-700 dark:bg-zinc-800"
+                                className="relative h-14 w-full justify-center rounded-[32px] border border-zinc-300 bg-white pl-12 pr-4"
                             >
                                 <MaterialIcons name="search" size={20} color="#71717a" style={{ position: 'absolute', left: 16, zIndex: 1 }} />
-                                <Text className={`text-base font-normal leading-normal ${birthPlace ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                                <Text className={`text-base font-normal leading-normal ${birthPlace ? 'text-zinc-900' : 'text-zinc-400'}`}>
                                     {birthPlace || "Şehir ara"}
                                 </Text>
                             </TouchableOpacity>
@@ -316,13 +355,13 @@ export default function OnboardingScreen() {
                     <View className="mt-8 flex flex-col items-center pt-4">
                         <TouchableOpacity
                             onPress={handleComplete}
-                            className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-900 dark:bg-primary px-8"
+                            className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-900 px-8"
                         >
-                            <Text className="text-base font-bold text-white dark:text-zinc-900">Haritamı Hesapla</Text>
+                            <Text className="text-base font-bold text-white">Haritamı Hesapla</Text>
                         </TouchableOpacity>
-                        <View className="mt-4 flex flex-row items-center gap-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
+                        <View className="mt-4 flex flex-row items-center gap-2 text-center text-xs text-zinc-500">
                             <MaterialIcons name="lock" size={16} color="#71717a" />
-                            <Text className="text-sm text-zinc-500 dark:text-zinc-400">Bilgilerin bizimle güvende.</Text>
+                            <Text className="text-sm text-zinc-500">Bilgilerin bizimle güvende.</Text>
                         </View>
                     </View>
                 </View>
@@ -332,10 +371,10 @@ export default function OnboardingScreen() {
             {Platform.OS === 'ios' && showDatePicker ? (
                 <Modal transparent={true} animationType="fade">
                     <View className="flex-1 justify-end bg-black/50">
-                        <View className="bg-white dark:bg-zinc-900 pb-8 pt-4 rounded-t-3xl">
+                        <View className="bg-white pb-8 pt-4 rounded-t-3xl">
                             <View className="flex-row justify-between px-6 mb-4">
                                 <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                                    <Text className="text-zinc-500 dark:text-zinc-400 text-lg">İptal</Text>
+                                    <Text className="text-zinc-500 text-lg">İptal</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={confirmIOSDate}>
                                     <Text className="text-primary text-lg font-bold">Onayla</Text>
@@ -348,6 +387,7 @@ export default function OnboardingScreen() {
                                 display="spinner"
                                 onChange={onChangeDate}
                                 maximumDate={new Date()}
+                                locale="tr"
                             />
                         </View>
                     </View>
@@ -363,13 +403,14 @@ export default function OnboardingScreen() {
                     display="default"
                     onChange={onChangeDate}
                     maximumDate={new Date()}
+                    locale="tr"
                 />
             )}
 
             {/* Two-Step Location Picker Modal */}
             <Modal visible={showLocationPicker} animationType="slide" transparent={true}>
                 <View className="flex-1 bg-black/50 justify-end">
-                    <View className="bg-white dark:bg-zinc-900 h-[80%] rounded-t-3xl p-4">
+                    <View className="bg-white h-[80%] rounded-t-3xl p-4">
                         <View className="flex-row justify-between items-center mb-4 mt-2">
                             <View className="flex-row items-center">
                                 {selectedProvince && (
@@ -377,7 +418,7 @@ export default function OnboardingScreen() {
                                         <MaterialIcons name="arrow-back" size={24} color="#71717a" />
                                     </TouchableOpacity>
                                 )}
-                                <Text className="text-xl font-bold text-zinc-900 dark:text-white">
+                                <Text className="text-xl font-bold text-zinc-900">
                                     {selectedProvince ? `${selectedProvince.name} İlçeleri` : 'Doğum Yeri Seç'}
                                 </Text>
                             </View>
@@ -393,7 +434,7 @@ export default function OnboardingScreen() {
                                 placeholderTextColor="#a1a1aa"
                                 value={searchQuery}
                                 onChangeText={setSearchQuery}
-                                className="h-12 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-[32px] pl-12 pr-4 text-zinc-900 dark:text-white"
+                                className="h-12 border border-zinc-300 bg-white rounded-[32px] pl-12 pr-4 text-zinc-900"
                             />
                         </View>
 
@@ -403,10 +444,10 @@ export default function OnboardingScreen() {
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item }: { item: any }) => (
                                 <TouchableOpacity
-                                    className="py-4 border-b border-zinc-100 dark:border-zinc-800 flex-row justify-between items-center"
+                                    className="py-4 border-b border-zinc-100 flex-row justify-between items-center"
                                     onPress={() => handleSelectLocation(item)}
                                 >
-                                    <Text className="text-lg text-zinc-900 dark:text-white">{item.name}</Text>
+                                    <Text className="text-lg text-zinc-900">{item.name}</Text>
                                     <MaterialIcons name="chevron-right" size={24} color="#d4d4d8" />
                                 </TouchableOpacity>
                             )}

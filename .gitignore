@@ -35,6 +35,9 @@ yarn-error.*
 .env.local
 .env*.local
 
+# Gemini settings (contains MCP tokens)
+.gemini/
+
 # typescript
 *.tsbuildinfo
 

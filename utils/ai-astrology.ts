@@ -19,67 +19,241 @@ const SYSTEM_PROMPT = `
 Sen "Pera", Pera Enerji Takvimi uygulamasının uzman astroloğu ve ruhsal rehberisin.
 Görevin, kullanıcıların doğum haritaları ve gökyüzü transitleri üzerinden onlara yol göstermek.
 
-Persona Kuralları:
-1. İsim: Pera. Her zaman nazik, bilge ve empatik bir dille konuş.
+Persona & Stil Kuralları (KRİTİK):
+1. Dil: Nazik ama doğrudan. Gereksiz giriş cümlelerinden ("Harika bir soru", "Sana yardımcı olmaktan mutluyum" vb.) ve aşırı nezaket ifadelerinden kaçın.
+2. Öz ve Derin: Cevaplarını öz tut ama astrolojik derinliği koru. Doğrudan konuya (gezegen etkisine) gir.
+3. Bilgi Kaynağı: Kullanıcının doğum haritası verilerini ve anlık transitleri temel al. 
+4. Sınırlar: Tıbbi, hukuki veya kesin gelecek tahmini yapma. "Olasılıklar" ve "enerjiler" üzerinden konuş.
+5. Esma ve Ritüel: Önerilerinde esmalar ve niyet ritüellerine yer ver.
+6. Hitap: Kullanıcıya her zaman adıyla hitap et.
 
-2. Bilgi Kaynağı: Kullanıcının doğum haritası verilerini ve anlık transitleri temel al. 
-3. Stil: Modern, mistik ama ayakları yere basan bir dil kullan. Gereksiz terimlerden kaçın, etkileri günlük hayata uyarla.
-4. Sınırlar: Tıbbi, hukuki veya kesin gelecek tahmini (fal) yapma. "Olasılıklar" ve "enerjiler" üzerinden konuş.
-5. Esma ve Ritüel: Önerilerinde esmalar, doğal taşlar ve niyet ritüellerine (uygulamadaki KB'ye uygun olarak) yer ver.
+═══════════════ KULLANICI PROFİLİ ═══════════════
+- Ad Soyad: {userName}
+- Doğum Tarihi: {birthDate}
+- Doğum Saati: {birthTime}
+- Doğum Yeri: {birthPlace}
 
-Kullanıcı Bilgileri:
-- Doğum Haritası Özeti: {natalSummary}
-- Aktif Transitler: {currentTransits}
+═══════════════ DOĞUM HARİTASI (NATAL) ═══════════════
+{natalSummary}
+
+═══════════════ ELEMENT DAĞILIMI ═══════════════
+{elementBalance}
+
+═══════════════ BUGÜNKÜ TRANSİTLER ═══════════════
+{currentTransits}
+
+═══════════════ GÜNLÜK ÖNERİLER ═══════════════
+{dailyRecommendations}
 `;
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+const RETRYABLE_STATUS_CODES = [429, 500, 503];
+const MAX_RETRIES = 2;
+
+/** Wait for a given number of milliseconds */
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+/** Return a user-friendly Turkish error message based on HTTP status */
+const getErrorMessageForStatus = (status: number, errorBody?: any): string => {
+    switch (status) {
+        case 400:
+            return "İsteğimde bir sorun oluştu. Lütfen tekrar dene. 🔄";
+        case 401:
+        case 403:
+            return "API anahtarı geçersiz veya yetkisiz görünüyor. Lütfen .env dosyasındaki EXPO_PUBLIC_GEMINI_API_KEY değerini kontrol et. 🔑";
+        case 404:
+            return "AI modeli bulunamadı. Lütfen teknik ayarları kontrol et. ⚙️";
+        case 429:
+            return "Gökyüzü trafiği çok yoğun (API kotası doldu). Lütfen birkaç dakika sonra tekrar dene. ⏳";
+        case 500:
+        case 502:
+        case 503:
+            return "Google sunucuları geçici olarak yanıt veremiyor. Birkaç saniye sonra tekrar deneyelim. 🌐";
+        default:
+            return `Beklenmeyen bir hata oluştu (Kod: ${status}). Lütfen tekrar dene.`;
+    }
+};
+
+/** Log Gemini API token usage to Supabase */
+export const logTokenUsage = async (
+    userId: string | undefined,
+    featureName: string,
+    modelId: string,
+    promptTokens: number,
+    completionTokens: number,
+    totalTokens: number
+) => {
+    try {
+        const { error } = await supabase
+            .from('token_usage')
+            .insert({
+                user_id: userId,
+                feature_name: featureName,
+                model_id: modelId,
+                prompt_tokens: promptTokens,
+                completion_tokens: completionTokens,
+                total_tokens: totalTokens
+            });
+
+        if (error) {
+            console.error('[Token Usage] Error logging usage:', error.message);
+        } else {
+            console.log(`[Token Usage] Logged ${totalTokens} tokens for ${featureName}`);
+        }
+    } catch (err) {
+        console.error('[Token Usage] Unexpected error while logging:', err);
+    }
+};
+
+// ─── Main Chat Function ─────────────────────────────────────────────────────
 
 export const chatWithAI = async (
     userId: string | undefined,
     userMessage: string,
     history: Message[],
     natalChart: ChartData,
-    currentTransits: any
+    currentTransits: any,
+    userProfile?: { firstName?: string; lastName?: string; birthDate?: string; birthTime?: string; birthPlace?: string },
+    recommendations?: { stone?: { name: string }; esma?: { name: string; meaning: string }; color?: { name: string }; elementWarning?: { elementTr: string; advice: string } | null }
 ): Promise<string> => {
     try {
-        const natalSummary = natalChart.positions.map(p => `${p.name} ${p.sign} burcunda ${p.degreeInSign.toFixed(1)} derecede`).join(', ');
-        const transitSummary = currentTransits?.aspects?.map((a: any) => `${a.planet1} ve ${a.planet2} arasında ${a.type}`).join(', ') || "Genel gökyüzü etkileri";
+        const natalSummary = natalChart.positions.map(p => `${p.name} ${p.sign} burcunda ${p.degreeInSign.toFixed(1)} derecede`).join('\n');
+        const transitSummary = currentTransits?.activeTransits?.map((a: any) => 
+            `${a.transitPlanet} ${a.aspectType} ${a.natalPlanet} (${a.transitSign} burcunda, ${a.affectedHouse}. ev, ${a.nature})`
+        ).join('\n') || currentTransits?.aspects?.map((a: any) => `${a.planet1} ve ${a.planet2} arasında ${a.type}`).join('\n') || "Genel gökyüzü etkileri";
+
+        const elementBalance = natalChart.elements 
+            ? `Ateş: %${natalChart.elements.fire}, Toprak: %${natalChart.elements.earth}, Hava: %${natalChart.elements.air}, Su: %${natalChart.elements.water}`
+            : "Element bilgisi hesaplanıyor...";
+
+        const dailyRecs = recommendations 
+            ? `Günün Taşı: ${recommendations.stone?.name || '-'}\nGünün Esması: ${recommendations.esma?.name || '-'} (${recommendations.esma?.meaning || ''})\nGünün Rengi: ${recommendations.color?.name || '-'}${recommendations.elementWarning ? `\nElement Uyarısı: ${recommendations.elementWarning.elementTr} elementi zayıf - ${recommendations.elementWarning.advice}` : ''}`
+            : "Öneriler hesaplanıyor...";
 
         const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY;
 
         if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY') {
+            console.error('[AI Chat] Gemini API Key is missing or default.');
             return "Şu an yıldızlarla olan bağlantım zayıf (API Anahtarı eksik). Ama doğum haritana baktığımda harika bir enerji görüyorum! Lütfen teknik ayarları kontrol et.";
         }
 
+        console.log(`[AI Chat] Using Gemini API Key starting with: ${GEMINI_API_KEY.slice(0, 4)}...`);
+
         const fullSystemPrompt = SYSTEM_PROMPT
+            .replace('{userName}', `${userProfile?.firstName || 'Gezgin'} ${userProfile?.lastName || ''}`.trim())
+            .replace('{birthDate}', userProfile?.birthDate || 'Belirtilmemiş')
+            .replace('{birthTime}', userProfile?.birthTime || 'Belirtilmemiş')
+            .replace('{birthPlace}', userProfile?.birthPlace || 'Belirtilmemiş')
             .replace('{natalSummary}', natalSummary)
-            .replace('{currentTransits}', transitSummary);
+            .replace('{elementBalance}', elementBalance)
+            .replace('{currentTransits}', transitSummary)
+            .replace('{dailyRecommendations}', dailyRecs);
 
         const contents = [
             { role: 'user', parts: [{ text: fullSystemPrompt }] },
-            { role: 'model', parts: [{ text: "Anlaşıldı. Ben Pera, kullanıcının doğum haritasına ve gökyüzü etkilerine göre rehberlik etmeye hazırım." }] },
-
+            { role: 'model', parts: [{ text: `Anlaşıldı. Ben Pera, ${userProfile?.firstName || 'sevgili kullanıcı'}'nın doğum haritasına ve güncel transit etkilerine göre kişiselleştirilmiş rehberlik etmeye hazırım. Tüm natal verileri ve günlük önerileri inceledim.` }] },
             ...history,
             { role: 'user', parts: [{ text: userMessage }] }
         ];
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents })
-        });
+        const requestBody = {
+            contents,
+            generationConfig: {
+                temperature: 0.8,
+                maxOutputTokens: 2048, // Reduced for stability
+                topP: 0.95,
+                topK: 40,
+            },
+            safetySettings: [
+                { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
+                { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
+                { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' },
+                { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+            ],
+        };
 
-        const aiData = await response.json();
-        const content = aiData.candidates?.[0]?.content?.parts?.[0]?.text;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-        if (!content) {
-            console.error('Gemini API Error:', aiData);
-            throw new Error('No content from AI');
+        // ── Retry loop with exponential backoff ──
+        let lastError: string | null = null;
+
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody),
+                });
+
+                // ── Check HTTP status BEFORE parsing JSON ──
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    console.error(`[AI Chat] HTTP ${response.status}:`, errorBody);
+
+                    // Retry on transient errors
+                    if (RETRYABLE_STATUS_CODES.includes(response.status) && attempt < MAX_RETRIES) {
+                        const delayMs = 1000 * Math.pow(2, attempt); // 1s, 2s
+                        console.log(`[AI Chat] Retrying in ${delayMs}ms (attempt ${attempt + 1}/${MAX_RETRIES})...`);
+                        await sleep(delayMs);
+                        continue;
+                    }
+
+                    // Non-retryable or exhausted retries
+                    return getErrorMessageForStatus(response.status);
+                }
+
+                // ── Parse successful response ──
+                const aiData = await response.json();
+
+                // Check for content filter block
+                const finishReason = aiData.candidates?.[0]?.finishReason;
+                if (finishReason === 'SAFETY') {
+                    console.warn('[AI Chat] Response blocked by safety filters');
+                    return "Bu konuda yanıt vermem güvenlik filtreleri tarafından engellendi. Lütfen sorunuzu farklı bir şekilde sormayı dene. 🛡️";
+                }
+
+                const content = aiData.candidates?.[0]?.content?.parts?.[0]?.text;
+                const usage = aiData.usageMetadata;
+
+                if (!content) {
+                    console.error('[AI Chat] No content in response:', JSON.stringify(aiData, null, 2));
+                    return "Yıldızlardan bir yanıt alamadım. Lütfen sorunuzu tekrar sormayı dene. 🔄";
+                }
+
+                // Log token usage asynchronously (don't block the UI)
+                if (usage) {
+                    logTokenUsage(
+                        userId,
+                        'chat_with_ai',
+                        'gemini-2.0-flash', // Note: Using the model name from the URL
+                        usage.promptTokenCount || 0,
+                        usage.candidatesTokenCount || 0,
+                        usage.totalTokenCount || 0
+                    ).catch(err => console.error('[AI Chat] Failed to log token usage:', err));
+                }
+
+                return content;
+
+            } catch (fetchError: any) {
+                // Network error (no internet, DNS failure, timeout, etc.)
+                console.error(`[AI Chat] Network error (attempt ${attempt + 1}):`, fetchError.message);
+                lastError = fetchError.message;
+
+                if (attempt < MAX_RETRIES) {
+                    const delayMs = 1000 * Math.pow(2, attempt);
+                    await sleep(delayMs);
+                    continue;
+                }
+            }
         }
 
-        return content;
+        // All retries exhausted with network errors
+        return "İnternet bağlantını kontrol et, gökyüzüne ulaşamıyorum. Bağlantın düzeldiğinde tekrar dene. 📡";
 
-    } catch (error) {
-        console.error('[AI Chat] Error:', error);
-        return "Gökyüzü şu an biraz bulutlu, mesajını tam alamadım. Tekrar sormak ister misin?";
+    } catch (error: any) {
+        console.error('[AI Chat] Unexpected error:', error);
+        return "Beklenmeyen bir hata oluştu. Lütfen uygulamayı yeniden başlatıp tekrar dene.";
     }
 };
 

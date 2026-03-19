@@ -83,7 +83,7 @@
   {
     "date": "2026-02-17",
     "type": "positive",
-    "title": "Ramazan Başlangıcı (Tahmini)",
+    "title": "Ramazan Başlangıcı",
     "description": "Mübarek Ramazan ayı başlıyor. Manevi arınma, oruç ve dua zamanı. İç huzur ve farkındalık artıyor.",
     "dotColor": "#22c55e",
     "category": "special_day",
@@ -155,7 +155,7 @@
   {
     "date": "2026-03-14",
     "type": "positive",
-    "title": "Kadir Gecesi (Tahmini)",
+    "title": "Kadir Gecesi",
     "description": "Bin aydan hayırlı gece. Dua, zikir ve manevi çalışmalar için en güçlü zaman. Niyetlerinizi belirleyin.",
     "dotColor": "#f7e1e8",
     "category": "special_day",
@@ -164,7 +164,7 @@
   {
     "date": "2026-03-19",
     "type": "positive",
-    "title": "Ramazan Bayramı 1. Gün (Tahmini)",
+    "title": "Ramazan Bayramı 1. Gün",
     "description": "Bayram sevinci ve birlik zamanı. Ailelerle buluşma, paylaşım ve şükür. Yeni başlangıçlar için bereketli.",
     "dotColor": "#22c55e",
     "category": "special_day",
@@ -299,7 +299,7 @@
   {
     "date": "2026-05-26",
     "type": "positive",
-    "title": "Kurban Bayramı 1. Gün (Tahmini)",
+    "title": "Kurban Bayramı 1. Gün",
     "description": "Kurban Bayramı başlıyor. Fedakarlık, paylaşım ve aile bağları güçleniyor. Şükür ve teslimiyet zamanı.",
     "dotColor": "#22c55e",
     "category": "special_day",

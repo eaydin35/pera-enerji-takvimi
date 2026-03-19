@@ -66,9 +66,11 @@ const PLANET_NAMES: Record<string, string> = {
  * Parses a "DD.MM.YYYY HH:MM" localized string and converts to UTC Date
  */
 export function parseDateLocal(dateStr: string, timeStr: string, timezoneOffset: number = 3): Date {
+    if (!dateStr || !timeStr) return new Date(1990, 0, 1, 12, 0); // fallback
     const [day, month, year] = dateStr.split('.').map(Number);
     const [hour, minute] = timeStr.split(':').map(Number);
-    return new Date(Date.UTC(year, month - 1, day, hour - timezoneOffset, minute));
+    if (isNaN(day) || isNaN(month) || isNaN(year)) return new Date(1990, 0, 1, 12, 0);
+    return new Date(Date.UTC(year, month - 1, day, (hour || 12) - timezoneOffset, minute || 0));
 }
 
 function getZodiacSign(longitude: number): { sign: string; degree: number } {
@@ -137,6 +139,9 @@ export function calculateChart(dateStr: string, timeStr: string, lat: number, ln
     let elementCounts = { fire: 0, earth: 0, air: 0, water: 0 };
     let totalPlanets = 0;
 
+    const L = Number(lng) || 28.9784; // Default to Istanbul
+    const B = Number(lat) || 41.0082; 
+
     const targetPlanets = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
 
     targetPlanets.forEach(key => {
@@ -180,12 +185,12 @@ export function calculateChart(dateStr: string, timeStr: string, lat: number, ln
     const jd = date.getTime() / 86400000 + 2440587.5;
     const T = (jd - 2451545.0) / 36525;
     const GMST = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T;
-    const LST = (GMST + lng) % 360;
+    const LST = (GMST + L) % 360;
     // Ascendant formula
     const ascRad = Math.atan2(
         Math.cos(LST * Math.PI / 180),
         -(Math.sin(LST * Math.PI / 180) * Math.cos(obliquity * Math.PI / 180)
-          + Math.tan(lat * Math.PI / 180) * Math.sin(obliquity * Math.PI / 180))
+          + Math.tan(B * Math.PI / 180) * Math.sin(obliquity * Math.PI / 180))
     );
     let ascendant = (ascRad * 180 / Math.PI + 360) % 360;
 

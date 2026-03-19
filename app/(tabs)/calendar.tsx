@@ -8,7 +8,7 @@ import astroEvents from '../../data/astro_events_2026.json';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useStore } from '../../store/useStore';
 import { calculateChart } from '../../utils/astrology';
-import { getAstrologyInsight } from '../../utils/ai-astrology';
+import { getAstrologyInsight, chatWithAI } from '../../utils/ai-astrology';
 import AILoading from '../../components/AILoading';
 
 LocaleConfig.locales['tr'] = {
@@ -42,15 +42,15 @@ function CalendarScreen() {
     const [currentMonth, setCurrentMonth] = useState(today.substring(0, 7)); // "2026-03"
 
     // AI Insight State
-    const [aiInsight, setAiInsight] = useState<string | null>(null);
+    const [weeklyInsight, setWeeklyInsight] = useState<string | null>(null);
     const [isAILoading, setIsAILoading] = useState(false);
 
-    // Fetch AI Insight when selected date changes (or button pressed)
-    const fetchAIInsight = async (date: string) => {
+    // Fetch Weekly AI Insight
+    const fetchWeeklyInsight = async () => {
         if (!user) return;
         
         setIsAILoading(true);
-        setAiInsight(null);
+        setWeeklyInsight(null);
 
         // Get user's natal chart for personalization
         const natalChart = calculateChart(
@@ -60,15 +60,16 @@ function CalendarScreen() {
             userProfile?.birthLng || 28.9784
         );
 
-        const insight = await getAstrologyInsight(user.id, date, 'daily_transit', natalChart);
-        setAiInsight(insight);
+        const prompt = `Bu hafta (${currentMonth}) ile ilgili öneri, yorum ve astrolojik içgörüleri alabilir miyim? Haftanın gezegen enerjilerini benim haritama göre yorumla. Emek ve niyet ritüelleri ekle.`;
+        const insight = await chatWithAI(user.id, prompt, [], natalChart, null, userProfile!);
+        setWeeklyInsight(insight);
         setIsAILoading(false);
     };
 
-    // Auto-fetch for today or when date manually selected
+    // Auto-fetch removed as per user request to encourage manual button press (token usage)
     useEffect(() => {
-        fetchAIInsight(selectedDate);
-    }, [selectedDate]);
+        setWeeklyInsight(null); 
+    }, [currentMonth]);
 
     // Build marked dates from events data
     const markedDates = useMemo(() => {
@@ -164,31 +165,31 @@ function CalendarScreen() {
 
                     {isAILoading ? (
                         <AILoading />
-                    ) : aiInsight ? (
+                    ) : weeklyInsight ? (
                         <View className="rounded-[24px] bg-white border border-primary/20 p-6 shadow-sm dark:bg-zinc-900 overflow-hidden">
                             <LinearGradient
                                 colors={['rgba(173, 146, 201, 0.05)', 'transparent']}
                                 className="absolute inset-0"
                             />
                             <Text className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 font-medium">
-                                {aiInsight}
+                                {weeklyInsight}
                             </Text>
                             <View className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex-row items-center justify-between">
                                 <Text className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
                                     Gemini AI Synthesized
                                 </Text>
-                                <TouchableOpacity onPress={() => fetchAIInsight(selectedDate)}>
+                                <TouchableOpacity onPress={fetchWeeklyInsight}>
                                     <MaterialIcons name="refresh" size={16} color="#ad92c9" />
                                 </TouchableOpacity>
                             </View>
                         </View>
                     ) : (
                         <TouchableOpacity 
-                            onPress={() => fetchAIInsight(selectedDate)}
+                            onPress={fetchWeeklyInsight}
                             className="rounded-[20px] bg-primary/10 border border-primary/30 p-5 items-center justify-center flex-row gap-2"
                         >
-                            <MaterialIcons name="psychology" size={20} color="#ad92c9" />
-                            <Text className="text-sm font-bold text-primary-dark">Günün Yorumunu Oluştur</Text>
+                            <MaterialIcons name="auto-awesome" size={20} color="#ad92c9" />
+                            <Text className="text-sm font-bold text-primary-dark">Bu Haftanın İçgörülerini Al</Text>
                         </TouchableOpacity>
                     )}
                 </View>

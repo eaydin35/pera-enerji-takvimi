@@ -4,7 +4,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../utils/supabase';
 import type { Session, User } from '@supabase/supabase-js';
 
-// ─── Types ──────────────────────────────────────────────────────────────────
+// ─── Localization ───────────────────────────────────────────────────────────
+
+function translateAuthError(message: string): string {
+    if (message.includes('Invalid login credentials')) return 'Geçersiz e-posta veya şifre.';
+    if (message.includes('User already registered')) return 'Bu e-posta adresiyle zaten bir hesap mevcut.';
+    if (message.includes('Email not confirmed')) return 'Lütfen e-posta adresinizi doğrulayın.';
+    if (message.includes('Password should be at least 6 characters')) return 'Şifre en az 6 karakter olmalıdır.';
+    if (message.includes('Unable to validate email address')) return 'Geçersiz e-posta adresi.';
+    return message;
+}
 
 interface AuthState {
     session: Session | null;

@@ -3,7 +3,7 @@ import {
     View, Text, ScrollView, TouchableOpacity, SafeAreaView,
     StyleSheet, ActivityIndicator,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import { useStore } from '../../store/useStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { calculateChart, type ChartData, type PlanetPosition } from '../../utils/astrology';
@@ -37,18 +37,19 @@ const ASPECT_STYLES: Record<string, { bg: string; text: string; icon: string }> 
     "G\u00dc\u00c7L\u00dc":     { bg: '#ede9fe', text: '#7c3aed', icon: 'radio-button-checked' },
 };
 
-function getZodiacEmoji(sign: string): string {
+function getZodiacIcon(sign: string): string {
+    if (!sign) return 'star';
     const map: Record<string, string> = {
-        'Koc': '\u2648', 'Boga': '\u2649', 'Ikizler': '\u264A', 'Yengec': '\u264B',
-        'Aslan': '\u264C', 'Basak': '\u264D', 'Terazi': '\u264E', 'Akrep': '\u264F',
-        'Yay': '\u2650', 'Oglak': '\u2651', 'Kova': '\u2652', 'Balik': '\u2653',
+        'Koc': 'zodiac-aries', 'Boga': 'zodiac-taurus', 'Ikizler': 'zodiac-gemini', 'Yengec': 'zodiac-cancer',
+        'Aslan': 'zodiac-leo', 'Basak': 'zodiac-virgo', 'Terazi': 'zodiac-libra', 'Akrep': 'zodiac-scorpio',
+        'Yay': 'zodiac-sagittarius', 'Oglak': 'zodiac-capricorn', 'Kova': 'zodiac-aquarius', 'Balik': 'zodiac-pisces',
     };
-    // Normalize Turkish chars for lookup
-    const norm = sign.replace(/\u015f/g,'s').replace(/\u00e7/g,'c').replace(/\u00fc/g,'u')
-                     .replace(/\u00f6/g,'o').replace(/\u0131/g,'i').replace(/\u011f/g,'g')
-                     .replace(/\u0130/g,'I').replace(/\u00dc/g,'U').replace(/\u00d6/g,'O')
-                     .replace(/\u015e/g,'S').replace(/\u00c7/g,'C').replace(/\u011e/g,'G');
-    return map[norm] || '\u2B50';
+    // Normalize Turkish chars
+    const norm = sign.replace(/ş/g,'s').replace(/ç/g,'c').replace(/ü/g,'u')
+                     .replace(/ö/g,'o').replace(/ı/g,'i').replace(/ğ/g,'g')
+                     .replace(/İ/g,'I').replace(/Ü/g,'U').replace(/Ö/g,'O')
+                     .replace(/Ş/g,'S').replace(/Ç/g,'C').replace(/Ğ/g,'G');
+    return map[norm] || 'star';
 }
 
 // ─── Main Screen ─────────────────────────────────────────────────────────────
@@ -171,8 +172,11 @@ export default function ChartScreen() {
                     {/* Ascendant badge */}
                     <View style={styles.ascBadge}>
                         <Text style={styles.ascLabel}>Yukselen</Text>
-                        <Text style={styles.ascValue}>{getZodiacEmoji(ascSign)} {ascSign}</Text>
-                        <Text style={styles.ascDeg}>{(chartData.ascendant % 30).toFixed(1)}\u00b0</Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+                            <MaterialCommunityIcons name={getZodiacIcon(ascSign) as any} size={20} color="#e11d48" />
+                            <Text style={styles.ascValue}>{ascSign}</Text>
+                        </View>
+                        <Text style={styles.ascDeg}>{(chartData.ascendant % 30).toFixed(1)}°</Text>
                     </View>
                 </View>
 
@@ -181,14 +185,17 @@ export default function ChartScreen() {
                     <Text style={styles.sectionTitle}>ELEMENT ANALIZI</Text>
                     <View style={styles.elemCard}>
                         {[
-                            { emoji: '\uD83D\uDD25', name: 'Ates', pct: chartData.elements.fire,  color: '#f97316' },
-                            { emoji: '\u26F0\uFE0F', name: 'Toprak', pct: chartData.elements.earth, color: '#22c55e' },
-                            { emoji: '\uD83D\uDCA8', name: 'Hava',   pct: chartData.elements.air,   color: '#0ea5e9' },
-                            { emoji: '\uD83D\uDCA7', name: 'Su',     pct: chartData.elements.water, color: '#3b82f6' },
+                            { icon: 'local-fire-department', name: 'Ates', pct: chartData.elements.fire,  color: '#f97316' },
+                            { icon: 'grass', name: 'Toprak', pct: chartData.elements.earth, color: '#22c55e' },
+                            { icon: 'air', name: 'Hava',   pct: chartData.elements.air,   color: '#0ea5e9' },
+                            { icon: 'water', name: 'Su',     pct: chartData.elements.water, color: '#3b82f6' },
                         ].map(e => (
                             <View key={e.name} style={styles.elemRow}>
                                 <View style={styles.elemHeader}>
-                                    <Text style={styles.elemName}>{e.emoji} {e.name}</Text>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+                                        <MaterialIcons name={e.icon as any} size={18} color={e.color} />
+                                        <Text style={styles.elemName}>{e.name}</Text>
+                                    </View>
                                     <Text style={styles.elemPct}>{e.pct}%</Text>
                                 </View>
                                 <View style={styles.elemTrack}>
@@ -209,7 +216,10 @@ export default function ChartScreen() {
                                     <Text style={styles.houseNumText}>{h.num}</Text>
                                 </View>
                                 <View style={{ flex: 1 }}>
-                                    <Text style={styles.houseSign}>{getZodiacEmoji(h.sign)} {h.sign}</Text>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+                                        <MaterialCommunityIcons name={getZodiacIcon(h.sign) as any} size={16} color="#4b5563" />
+                                        <Text style={styles.houseSign}>{h.sign}</Text>
+                                    </View>
                                     <Text style={styles.houseMeaning} numberOfLines={2}>{h.meaning}</Text>
                                 </View>
                             </View>
@@ -274,9 +284,12 @@ export default function ChartScreen() {
                                     </View>
                                     <View>
                                         <Text style={styles.planetName}>{pos.name}</Text>
-                                        <Text style={styles.planetSign}>
-                                            {getZodiacEmoji(pos.sign)} {pos.sign} {Math.floor(pos.degreeInSign)}\u00b0
-                                        </Text>
+                                        <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+                                            <MaterialCommunityIcons name={getZodiacIcon(pos.sign) as any} size={14} color="#6b7280" />
+                                            <Text style={styles.planetSign}>
+                                                {pos.sign} {Math.floor(pos.degreeInSign)}°
+                                            </Text>
+                                        </View>
                                     </View>
                                     {pos.isRetrograde && (
                                         <Text style={styles.retroBadge}>Rx</Text>

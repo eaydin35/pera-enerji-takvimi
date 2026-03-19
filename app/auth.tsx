@@ -11,11 +11,13 @@ import {
     StyleSheet,
     ScrollView,
     ActivityIndicator,
+    StatusBar,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../store/useAuthStore';
+import { supabase } from '../utils/supabase';
 
 type Mode = 'login' | 'register';
 
@@ -44,8 +46,34 @@ export default function AuthScreen() {
         }
     };
 
+    const handleDevBypass = async () => {
+        const dummySession = {
+            access_token: 'dummy',
+            refresh_token: 'dummy',
+            expires_in: 3600,
+            token_type: 'bearer' as const,
+            user: { id: 'dev-user', email: 'test@pera.com' } as any
+        };
+        useAuthStore.setState({ session: dummySession as any, user: dummySession.user });
+    };
+
+    const handleSocialLogin = async (provider: 'google' | 'facebook' | 'apple') => {
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider,
+                options: {
+                    redirectTo: 'pet://home', // Replace with your app scheme
+                }
+            });
+            if (error) throw error;
+        } catch (e: any) {
+            Alert.alert('Hata', e.message);
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar barStyle="dark-content" />
             <LinearGradient colors={['#fdf2f8', '#f8f6f7']} style={StyleSheet.absoluteFill} />
 
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
@@ -145,17 +173,39 @@ export default function AuthScreen() {
                             )}
                         </TouchableOpacity>
 
+                        {/* Social Login Divider */}
+                        <View style={styles.dividerRow}>
+                            <View style={styles.dividerLine} />
+                            <Text style={styles.dividerText}>veya şununla devam et</Text>
+                            <View style={styles.dividerLine} />
+                        </View>
+
+                        {/* Social Buttons */}
+                        <View style={styles.socialRow}>
+                            <TouchableOpacity 
+                                style={styles.socialBtn}
+                                onPress={() => handleSocialLogin('google')}
+                            >
+                                <FontAwesome name="google" size={24} color="#DB4437" />
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={styles.socialBtn}
+                                onPress={() => handleSocialLogin('facebook')}
+                            >
+                                <FontAwesome name="facebook" size={24} color="#4267B2" />
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={styles.socialBtn}
+                                onPress={() => handleSocialLogin('apple')}
+                            >
+                                <FontAwesome name="apple" size={24} color="#000" />
+                            </TouchableOpacity>
+                        </View>
+
                         {/* Dev bypass */}
                         <TouchableOpacity
                             style={styles.devBtn}
-                            onPress={() => {
-                                // Set a fake session so _layout routing guard lets us through
-                                useAuthStore.setState({
-                                    session: { access_token: 'dev-bypass', user: { id: 'dev-user' } } as any,
-                                    user: { id: 'dev-user' } as any,
-                                });
-                                router.replace('/(tabs)');
-                            }}
+                            onPress={handleDevBypass}
                         >
                             <Text style={styles.devText}>Test Hesabiyla Gec →</Text>
                         </TouchableOpacity>
@@ -210,4 +260,17 @@ const styles = StyleSheet.create({
     submitText: { fontSize: 16, fontWeight: '700', color: '#fff' },
     devBtn:  { alignItems: 'center', paddingVertical: 20 },
     devText: { fontSize: 13, color: '#a1a1aa', fontWeight: '500' },
+    dividerRow: {
+        flexDirection: 'row', alignItems: 'center', marginVertical: 24, gap: 12,
+    },
+    dividerLine: { flex: 1, height: 1, backgroundColor: '#e4e4e7' },
+    dividerText: { fontSize: 13, color: '#71717a', fontWeight: '500' },
+    socialRow: { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: 10 },
+    socialBtn: {
+        width: 60, height: 60, borderRadius: 30, backgroundColor: '#fff',
+        alignItems: 'center', justifyContent: 'center',
+        borderWidth: 1, borderColor: '#e4e4e7',
+        shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05, shadowRadius: 8, elevation: 2,
+    },
 });

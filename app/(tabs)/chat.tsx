@@ -16,16 +16,14 @@ import { useStore } from '../../store/useStore';
 import { chatWithAI, getProactiveQuestions, type Message } from '../../utils/ai-astrology';
 import { calculateChart } from '../../utils/astrology';
 import { calculateDailyTransits } from '../../utils/transit-engine';
+import { getDailyRecommendation } from '../../utils/recommendation-engine';
 
 export default function ChatScreen() {
     const { userProfile, tokens, isPremium, useTokens } = useStore();
     const [messages, setMessages] = useState<Message[]>([
-
-
         {
             role: 'model',
             parts: [{ text: "Merhaba, ben Pera. Gökyüzünün rehberliğinde sana nasıl yardımcı olabilirim bugün?" }]
-
         }
     ]);
     const [inputText, setInputText] = useState('');
@@ -42,7 +40,8 @@ export default function ChatScreen() {
         );
         const transit = calculateDailyTransits(chart);
         const questions = getProactiveQuestions(chart, transit);
-        return { chart, transit, questions };
+        const recommendations = getDailyRecommendation(chart);
+        return { chart, transit, questions, recommendations };
     }, [userProfile]);
 
     const handleSend = async (text: string = inputText) => {
@@ -68,14 +67,25 @@ export default function ChatScreen() {
             useTokens(1);
 
             const aiResponse = await chatWithAI(
-
                 undefined, // ID yet to be implemented in Store
                 text,
                 messages,
                 contextData.chart,
-                contextData.transit
+                contextData.transit,
+                userProfile ? {
+                    firstName: userProfile.firstName,
+                    lastName: userProfile.lastName,
+                    birthDate: userProfile.birthDate,
+                    birthTime: userProfile.birthTime,
+                    birthPlace: userProfile.birthPlace,
+                } : undefined,
+                contextData.recommendations ? {
+                    stone: contextData.recommendations.stone,
+                    esma: contextData.recommendations.esma,
+                    color: contextData.recommendations.color,
+                    elementWarning: contextData.recommendations.elementWarning,
+                } : undefined
             );
-
 
             setMessages([...newMessages, { role: 'model', parts: [{ text: aiResponse }] }]);
         } catch (error) {
@@ -108,56 +118,55 @@ export default function ChatScreen() {
             <View style={styles.header}>
                 <View>
                     <Text style={styles.headerTitle}>Pera</Text>
-
                     <Text style={styles.headerSubtitle}>Pera AI Danışmanı</Text>
                 </View>
                 <View style={styles.tokenBadge}>
                     <MaterialIcons name={isPremium ? "all-inclusive" : "stars"} size={16} color="#E91E63" />
                     <Text style={styles.tokenText}>{isPremium ? "Sınırsız" : `${tokens} Jeton`}</Text>
                 </View>
-
-
             </View>
 
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+            >
+                <FlatList
+                    ref={flatListRef}
+                    data={messages}
+                    renderItem={renderMessage}
+                    keyExtractor={(_, index) => index.toString()}
+                    contentContainerStyle={styles.listContent}
+                    onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
+                    keyboardShouldPersistTaps="handled"
+                />
 
-            <FlatList
-                ref={flatListRef}
-                data={messages}
-                renderItem={renderMessage}
-                keyExtractor={(_, index) => index.toString()}
-                contentContainerStyle={styles.listContent}
-                onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
-            />
-
-            {isLoading && (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator color="#E91E63" />
-                </View>
-            )}
-
-            <View style={styles.footer}>
-                {!isLoading && messages.length < 3 && contextData?.questions && (
-                    <View style={styles.suggestions}>
-                        {contextData.questions.map((q, idx) => (
-                            <TouchableOpacity 
-                                key={idx} 
-                                style={styles.suggestionBadge}
-                                onPress={() => handleSend(q)}
-                            >
-                                <Text style={styles.suggestionText}>{q}</Text>
-                            </TouchableOpacity>
-                        ))}
+                {isLoading && (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator color="#E91E63" />
                     </View>
                 )}
 
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                    keyboardVerticalOffset={100}
-                >
+                <View style={styles.footer}>
+                    {!isLoading && messages.length < 3 && contextData?.questions && (
+                        <View style={styles.suggestions}>
+                            {contextData.questions.map((q, idx) => (
+                                <TouchableOpacity 
+                                    key={idx} 
+                                    style={styles.suggestionBadge}
+                                    onPress={() => handleSend(q)}
+                                >
+                                    <Text style={styles.suggestionText}>{q}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
+
                     <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
                             placeholder="Bir şey sor..."
+                            placeholderTextColor="#9ca3af"
                             value={inputText}
                             onChangeText={setInputText}
                             multiline
@@ -169,8 +178,8 @@ export default function ChatScreen() {
                             <MaterialIcons name="send" size={24} color="white" />
                         </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
-            </View>
+                </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
@@ -201,7 +210,7 @@ const styles = StyleSheet.create({
     },
     listContent: {
         padding: 16,
-        paddingBottom: 32,
+        paddingBottom: 8,
     },
     messageRow: {
         flexDirection: 'row',
@@ -257,6 +266,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         padding: 16,
+        paddingBottom: 8,
         backgroundColor: 'white',
         borderTopWidth: 1,
         borderTopColor: '#FFE0E9',
@@ -275,7 +285,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#FFE0E9',
     },
-
     suggestionText: {
         fontSize: 12,
         color: '#E91E63',
@@ -294,6 +303,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         maxHeight: 120,
         fontSize: 16,
+        color: '#333',
         borderWidth: 1,
         borderColor: '#E9ECEF',
     },
@@ -309,7 +319,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#D1D1D1',
     },
     tokenBadge: {
-
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#FFF0F5',
@@ -324,4 +333,3 @@ const styles = StyleSheet.create({
         color: '#E91E63',
     }
 });
-

@@ -3,15 +3,28 @@ import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useAuthStore, initAuthListener } from '../store/useAuthStore';
+import { initPurchases } from '../utils/purchases';
 
 // Initialize Supabase auth session listener once at app startup
 initAuthListener();
 
 export default function RootLayout() {
-    const { hasCompletedOnboarding } = useStore();
+    const { hasCompletedOnboarding, syncProfileFromSupabase, syncPremiumStatus } = useStore();
     const { session, isLoading } = useAuthStore();
     const segments = useSegments();
     const router = useRouter();
+
+    // Auto-sync profile and initiate purchases from Supabase when user logs in
+    useEffect(() => {
+        if (session?.user?.id) {
+            syncProfileFromSupabase(session.user.id);
+            
+            // Initialize RevenueCat and sync premium status
+            initPurchases(session.user.id).then(() => {
+                syncPremiumStatus();
+            });
+        }
+    }, [session?.user?.id]);
 
     useEffect(() => {
         // Wait until everything is loaded before making routing decisions

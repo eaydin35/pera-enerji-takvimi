@@ -12,7 +12,7 @@ import {
     Linking,
     ActivityIndicator,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
 import { useStore } from '../../store/useStore';
@@ -21,6 +21,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { supabase } from '../../utils/supabase';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
+import { uploadAvatar } from '../../utils/storage';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -103,66 +104,63 @@ export default function ProfileScreen() {
 
     // Load saved avatar on mount
     useEffect(() => {
-        if (!user) return;
-        supabase
-            .from('profiles')
-            .select('avatar_url')
-            .eq('id', user.id)
-            .single()
-            .then(({ data }) => {
-                if (data?.avatar_url) {
-                    setAvatarUrl(data.avatar_url);
-                    setStoreAvatar(data.avatar_url);
-                }
-            });
-
-    }, [user]);
+        if (userProfile?.avatarUrl) {
+            setAvatarUrl(userProfile.avatarUrl);
+        }
+    }, [userProfile?.avatarUrl]);
 
     // Upload photo to Supabase Storage
     const handlePickImage = async () => {
-        if (!user) {
-            Alert.alert('Giriş Yapın', 'Fotoğraf yüklemek için giriş yapmanız gerekiyor.');
-            return;
-        }
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('İzin Gerekli', 'Galeri erişimine izin verin.');
+            Alert.alert('İzin Gerekli', 'Fotoğraf seçmek için galeri erişimine izin verin.');
             return;
         }
+
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ['images'],
             allowsEditing: true,
             aspect: [1, 1],
             quality: 0.7,
         });
-        if (result.canceled || !result.assets?.length) return;
 
-        setUploadingPhoto(true);
-        try {
-            const asset = result.assets[0];
-            const ext = asset.uri.split('.').pop() ?? 'jpg';
-            const fileName = `${user.id}.${ext}`;
-            const response = await fetch(asset.uri);
-            const blob = await response.blob();
-            const arrayBuffer = await new Response(blob).arrayBuffer();
-            const { error: uploadError } = await supabase.storage
-                .from('avatars')
-                .upload(fileName, arrayBuffer, {
-                    contentType: `image/${ext}`,
-                    upsert: true,
-                });
-            if (uploadError) throw uploadError;
-            const { data } = supabase.storage.from('avatars').getPublicUrl(fileName);
-            const publicUrl = data.publicUrl;
-            setAvatarUrl(publicUrl);
-            setStoreAvatar(publicUrl);
-            await supabase.from('profiles').upsert({ id: user.id, avatar_url: publicUrl });
+        if (!result.canceled && result.assets.length > 0) {
+            const localUri = result.assets[0].uri;
+            
+            if (user) {
+                setUploadingPhoto(true);
+                try {
+                    const uploadedUrl = await uploadAvatar(localUri, user.id);
+                    
+                    if (uploadedUrl) {
+                        // Update local state and store
+                        setAvatarUrl(uploadedUrl);
+                        setStoreAvatar(uploadedUrl);
 
-            Alert.alert('✨ Başarılı', 'Profil fotoğrafın güncellendi!');
-        } catch (e: any) {
-            Alert.alert('Hata', e.message || 'Yükleme başarısız oldu.');
-        } finally {
-            setUploadingPhoto(false);
+                        // Update Supabase profiles table
+                        const { error: updateError } = await supabase
+                            .from('profiles')
+                            .update({ avatar_url: uploadedUrl })
+                            .eq('id', user.id);
+
+                        if (!updateError) {
+                            Alert.alert('✨ Başarılı', 'Profil fotoğrafın güncellendi!');
+                        } else {
+                            console.error('[Profile] Database update error:', updateError);
+                            Alert.alert('Hata', 'Profil resmi veritabanına kaydedilemedi: ' + updateError.message);
+                        }
+                    } else {
+                        Alert.alert('Hata', 'Fotoğraf yüklenemedi. Supabase Storage "avatars" bucket ayarlarını ve izinlerini kontrol edin.');
+                    }
+                } catch (err) {
+                    Alert.alert('Hata', 'Beklenmeyen bir hata oluştu.');
+                } finally {
+                    setUploadingPhoto(false);
+                }
+            } else {
+                setAvatarUrl(localUri);
+                setStoreAvatar(localUri);
+            }
         }
     };
 
@@ -181,7 +179,7 @@ export default function ProfileScreen() {
     const toggleTheme = () => setColorScheme(isDark ? 'light' : 'dark');
 
     return (
-        <SafeAreaView style={[styles.container, isDark && styles.containerDark]}>
+        <SafeAreaView className="flex-1 bg-background-light">
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity style={styles.headerBtn}>
@@ -201,10 +199,7 @@ export default function ProfileScreen() {
                         <View style={styles.avatarRing}>
                             <View style={styles.avatarInner}>
                                 {avatarUrl ? (
-                                    <Image
-                                        source={{ uri: avatarUrl }}
-                                        style={{ width: '100%', height: '100%', borderRadius: 60 }}
-                                    />
+                                    <Image source={{ uri: avatarUrl }} style={styles.avatarImg} />
                                 ) : (
                                     <MaterialIcons name="person" size={60} color="#c4b5c9" />
                                 )}
@@ -408,16 +403,18 @@ const styles = StyleSheet.create({
     avatarSection: { alignItems: 'center', paddingVertical: 20 },
     avatarWrapper: { position: 'relative', marginBottom: 12 },
     avatarRing: {
-        width: 128, height: 128, borderRadius: 64,
-        borderWidth: 4, borderColor: '#f7e1e8',
-        padding: 4, overflow: 'hidden',
+        width: 130, height: 130, borderRadius: 65,
+        borderWidth: 2, borderColor: 'rgba(247,225,232,0.8)',
+        alignItems: 'center', justifyContent: 'center',
         backgroundColor: '#fff',
-        shadowColor: '#000', shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12, shadowRadius: 12, elevation: 6,
     },
     avatarInner: {
-        flex: 1, borderRadius: 60, backgroundColor: '#fdf2f5',
-        alignItems: 'center', justifyContent: 'center',
+        width: 120, height: 120, borderRadius: 60,
+        backgroundColor: '#f3f4f6', alignItems: 'center', justifyContent: 'center',
+        overflow: 'hidden',
+    },
+    avatarImg: {
+        width: '100%', height: '100%', borderRadius: 60,
     },
     editBtn: {
         position: 'absolute', bottom: 4, right: 4,

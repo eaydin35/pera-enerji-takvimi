@@ -1,0 +1,6 @@
+appId: ${APP_ID} # app.json'daki bundleIdentifier/package name gelecek
+---
+- launchApp
+- assertVisible: "Today's Intention" # Örnek bir UI elemanı
+- tapOn: "Calculate My Chart" # Örnek bir aksiyon
+- back

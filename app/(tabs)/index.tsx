@@ -1,12 +1,15 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView, Linking } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView, Linking, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useStore } from '../../store/useStore';
+import { useAuthStore } from '../../store/useAuthStore';
+import { supabase } from '../../utils/supabase';
 
 import { useRouter } from 'expo-router';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { calculateChart } from '../../utils/astrology';
+import { chatWithAI } from '../../utils/ai-astrology';
 import { getDailyRecommendation, getNatalSummary } from '../../utils/recommendation-engine';
 import { calculateDailyTransits, getWeeklyEvents } from '../../utils/transit-engine';
 
@@ -16,7 +19,11 @@ import staticData from '../../data/staticData.json';
 
 
 export default function DashboardScreen() {
-    const { userProfile } = useStore();
+    const [weeklyInsight, setWeeklyInsight] = useState<string | null>(null);
+    const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
+    const { userProfile, setAvatarUrl } = useStore();
+    const { user } = useAuthStore();
+    const [expandedTransit, setExpandedTransit] = useState<number | null>(null);
     const router = useRouter();
 
     const dashboardData = useMemo(() => {
@@ -36,6 +43,19 @@ export default function DashboardScreen() {
 
         return { chart, recommendations, transit, weekly };
     }, [userProfile]);
+
+    // Fetch avatar from Supabase on mount
+    useEffect(() => {
+        if (!user || userProfile?.avatarUrl) return;
+        supabase
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', user.id)
+            .single()
+            .then(({ data }) => {
+                if (data?.avatar_url) setAvatarUrl(data.avatar_url);
+            });
+    }, [user]);
 
 
     const todayDateStr = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -65,18 +85,38 @@ export default function DashboardScreen() {
                         Günaydın, {userProfile?.firstName || 'Gezgin'}
                     </Text>
                     
-                    {/* User Avatar Circle right under the name */}
+                    {/* Guest Prompt */}
+                    {!user && (
+                        <TouchableOpacity 
+                            onPress={() => router.push('/auth')}
+                            className="mt-4 p-4 rounded-3xl bg-primary/10 border border-primary/20 flex-row items-center justify-between"
+                        >
+                            <View className="flex-1 pr-4">
+                                <Text className="text-lg font-bold text-primary mb-1">Daha Fazlasını Keşfet ✨</Text>
+                                <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                    Profilini kaydetmek, fotoğrafını senkronize etmek ve sosyal giriş yapmak için oturum aç.
+                                </Text>
+                            </View>
+                            <MaterialIcons name="chevron-right" size={24} color="#ec4899" />
+                        </TouchableOpacity>
+                    )}
+
+                    {/* User Avatar Circle */}
                     <TouchableOpacity 
                         onPress={() => router.push('/profile' as any)}
-                        className="mt-3 h-20 w-20 rounded-full border-4 border-white dark:border-zinc-800 shadow-xl overflow-hidden bg-primary/10 items-center justify-center"
+                        className="mt-6 h-24 w-24 rounded-full border-4 border-white dark:border-zinc-800 shadow-xl overflow-hidden bg-primary/10 items-center justify-center"
                     >
                         {userProfile?.avatarUrl ? (
                             <Image
                                 source={{ uri: userProfile.avatarUrl }}
-                                className="flex-1 w-full"
+                                style={{ width: '100%', height: '100%' }}
+                                resizeMode="cover"
                             />
                         ) : (
-                            <MaterialIcons name="person" size={40} color="#c4b5c9" />
+                            <View className="items-center justify-center">
+                                <MaterialIcons name="account-circle" size={80} color="#c4b5c9" />
+                                {!user && <Text style={{ fontSize: 10, color: '#ec4899', fontWeight: 'bold', marginTop: -15 }}>GİRİŞ YAP</Text>}
+                            </View>
                         )}
                     </TouchableOpacity>
 
@@ -90,21 +130,61 @@ export default function DashboardScreen() {
                 {/* Daily Energy Theme */}
                 <View className="px-4 mb-4">
                     <View className="overflow-hidden rounded-[24px] border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark shadow-sm">
-                        <LinearGradient 
-                            colors={['#ad92c9', '#f7e1e8']} 
-                            start={{ x: 0, y: 0 }} 
-                            end={{ x: 1, y: 1 }}
-                            style={{ height: 100, width: '100%', opacity: 0.6 }}
-                        />
-
-                        <View className="p-5">
-                            <Text className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Günün Enerji Teması</Text>
-                            <Text className="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mt-1">{transit.energyTheme}</Text>
-                            <Text className="text-base font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark mt-2">
-                                {transit.energyDescription}
-                            </Text>
+                        <View style={{ height: 120, width: '100%', position: 'relative' }}>
+                            <Image 
+                                source={require('../../assets/images/energy-bg.png')} 
+                                style={{ width: '100%', height: '100%', position: 'absolute' }}
+                                resizeMode="cover"
+                            />
+                            <LinearGradient 
+                                colors={['transparent', 'rgba(0,0,0,0.4)']} 
+                                style={{ width: '100%', height: '100%' }}
+                            />
+                            <View className="absolute bottom-3 left-4">
+                                <Text className="text-white text-xs font-bold uppercase tracking-widest">Enerji Teması</Text>
+                                <Text className="text-white text-xl font-bold mt-0.5">{transit.energyTheme}</Text>
+                            </View>
                         </View>
 
+                        <View className="p-5">
+                            <Text className="text-base font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark">
+                                {transit.energyDescription}
+                            </Text>
+
+                            <TouchableOpacity 
+                                className="mt-4 flex-row items-center justify-center rounded-xl bg-primary/20 py-3 border border-primary/30"
+                                onPress={async () => {
+                                    if (isGeneratingInsight) return;
+                                    setIsGeneratingInsight(true);
+                                    try {
+                                        const res = await chatWithAI(
+                                            user?.id,
+                                            "Bu hafta ile ilgili öneri, yorum ve astrolojik içgörüleri alabilir miyim? Haftanın gezegen enerjilerini benim haritama göre yorumla.",
+                                            [],
+                                            calculateChart(userProfile!.birthDate, userProfile!.birthTime, userProfile!.birthLat!, userProfile!.birthLng!),
+                                            transit,
+                                            userProfile!,
+                                            recommendations
+                                        );
+                                        setWeeklyInsight(res);
+                                    } finally {
+                                        setIsGeneratingInsight(false);
+                                    }
+                                }}
+                            >
+                                <MaterialIcons name="auto-awesome" size={18} color="#ad92c9" />
+                                <Text className="ml-2 text-sm font-bold text-primary">Haftalık İçgörü Al</Text>
+                                {isGeneratingInsight && <ActivityIndicator size="small" color="#ad92c9" className="ml-2" />}
+                            </TouchableOpacity>
+
+                            {weeklyInsight && (
+                                <View className="mt-4 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700">
+                                    <Text className="text-sm italic leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                        {weeklyInsight}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
                     </View>
                 </View>
 
@@ -153,7 +233,6 @@ export default function DashboardScreen() {
 
 
 
-                {/* Alerts */}
                 {/* Alerts & Element Warnings */}
                 <View className="px-4 mb-6 gap-4">
                     {recommendations.elementWarning && (
@@ -167,6 +246,26 @@ export default function DashboardScreen() {
                             </View>
                         </View>
                     )}
+
+                    {/* Günlük Egzersiz Card - MOVED UP */}
+                    <TouchableOpacity
+                        onPress={() => router.push('/workout' as any)}
+                        className="overflow-hidden rounded-[24px] shadow-sm"
+                        style={{ backgroundColor: '#f0fdf4', borderWidth: 1, borderColor: '#bbf7d0' }}
+                    >
+                        <View className="flex-row items-center p-5">
+                            <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: '#22c55e', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
+                                <MaterialIcons name="self-improvement" size={26} color="#fff" />
+                            </View>
+                            <View className="flex-1">
+                                <Text style={{ fontSize: 16, fontWeight: '700', color: '#14532d' }}>Günlük Esneme Rutini</Text>
+                                <Text style={{ fontSize: 13, color: '#16a34a', marginTop: 2 }}>10 adım • ~10 dakika</Text>
+                            </View>
+                            <View style={{ backgroundColor: '#22c55e', borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 }}>
+                                <Text style={{ fontSize: 13, fontWeight: '700', color: '#fff' }}>Başla</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
 
                     {/* Weekly Highlights Horizontal Scroll */}
                     <View>
@@ -196,25 +295,51 @@ export default function DashboardScreen() {
                         </View>
                     </View>
                 </View>
-                {/* Transit Insights */}
+
+                {/* Transit Insights - Limited to 5 with Accordion */}
                 <View className="px-4 mb-6">
                     <Text className="mb-4 text-xl font-bold text-text-primary-light dark:text-text-primary-dark">Günün Öne Çıkan Transitleri</Text>
-                    {transit.activeTransits.map((t, idx) => (
-                        <View key={idx} className="mb-3 flex-row items-center rounded-[24px] border border-border-light bg-card-light p-4 dark:border-border-dark dark:bg-card-dark shadow-sm">
-                            <View className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
-                                <MaterialIcons 
-                                    name={t.nature === 'UYUMLU' ? 'check-circle' : t.nature === 'GERİLİMLİ' ? 'error' : 'flash-on'} 
-                                    size={24} 
-                                    color="#1f1317" 
-                                />
+                    {transit.activeTransits.slice(0, 5).map((t, idx) => (
+                        <TouchableOpacity 
+                            key={idx} 
+                            onPress={() => setExpandedTransit(expandedTransit === idx ? null : idx)}
+                            activeOpacity={0.8}
+                            className="mb-3 rounded-[24px] border border-border-light bg-card-light dark:border-border-dark dark:bg-card-dark shadow-sm overflow-hidden"
+                        >
+                            <View className="flex-row items-center p-4">
+                                <View className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
+                                    <MaterialIcons 
+                                        name={t.nature === 'UYUMLU' ? 'check-circle' : t.nature === 'GERİLİMLİ' ? 'error' : 'flash-on'} 
+                                        size={24} 
+                                        color="#1f1317" 
+                                    />
+                                </View>
+                                <View className="ml-4 flex-1">
+                                    <Text className="text-base font-bold text-text-primary-light dark:text-text-primary-dark">
+                                        {t.transitPlanet} {t.aspectType} {t.natalPlanet}
+                                    </Text>
+                                    <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{t.transitSign} burcunda, {t.affectedHouse}. evinizden geçiyor.</Text>
+                                </View>
+                                <MaterialIcons name={expandedTransit === idx ? 'expand-less' : 'expand-more'} size={24} color="#9ca3af" />
                             </View>
-                            <View className="ml-4 flex-1">
-                                <Text className="text-base font-bold text-text-primary-light dark:text-text-primary-dark">
-                                    {t.transitPlanet} {t.aspectType} {t.natalPlanet}
-                                </Text>
-                                <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{t.transitSign} burcunda, {t.affectedHouse}. evinizden geçiyor.</Text>
-                            </View>
-                        </View>
+                            {expandedTransit === idx && (
+                                <View className="px-4 pb-4 pt-0 border-t border-border-light dark:border-border-dark">
+                                    <Text className="text-sm leading-relaxed text-text-secondary-light dark:text-text-secondary-dark mt-3">
+                                        {t.nature === 'UYUMLU' 
+                                            ? `Bu uyumlu transit, ${t.transitPlanet} enerjisinin ${t.natalPlanet} ile güzel bir dans içinde olduğunu gösterir. ${t.affectedHouse}. ev konularında akıcı ve destekleyici bir dönemdesiniz.`
+                                            : t.nature === 'GERİLİMLİ'
+                                            ? `Bu gerilimli transit dikkat gerektirir. ${t.transitPlanet} ve ${t.natalPlanet} arasındaki enerji ${t.affectedHouse}. ev konularında zorluklara işaret edebilir. Sabırlı olun.`
+                                            : `${t.transitPlanet} ve ${t.natalPlanet} arasındaki bu transit ${t.affectedHouse}. ev konularında farkındalık getiriyor. Enerjinizi bilinçli kullanın.`
+                                        }
+                                    </Text>
+                                    <View className="flex-row items-center mt-2 gap-2">
+                                        <View className="px-3 py-1 rounded-full" style={{ backgroundColor: t.nature === 'UYUMLU' ? '#dcfce7' : t.nature === 'GERİLİMLİ' ? '#fef2f2' : '#fef9c3' }}>
+                                            <Text style={{ fontSize: 11, fontWeight: '600', color: t.nature === 'UYUMLU' ? '#16a34a' : t.nature === 'GERİLİMLİ' ? '#dc2626' : '#ca8a04' }}>{t.nature}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            )}
+                        </TouchableOpacity>
                     ))}
                     
                     <View className="mb-3 flex-row items-center rounded-[24px] border border-border-light bg-card-light p-4 dark:border-border-dark dark:bg-card-dark shadow-sm">
@@ -262,28 +387,6 @@ export default function DashboardScreen() {
                             <Text className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Bugün uygun değil</Text>
                         </View>
                     </View>
-                </View>
-
-                {/* Günlük Egzersiz Card */}
-                <View className="px-4 mb-4">
-                    <TouchableOpacity
-                        onPress={() => router.push('/workout' as any)}
-                        className="overflow-hidden rounded-[24px] shadow-sm"
-                        style={{ backgroundColor: '#f0fdf4', borderWidth: 1, borderColor: '#bbf7d0' }}
-                    >
-                        <View className="flex-row items-center p-5">
-                            <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: '#22c55e', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
-                                <MaterialIcons name="self-improvement" size={26} color="#fff" />
-                            </View>
-                            <View className="flex-1">
-                                <Text style={{ fontSize: 16, fontWeight: '700', color: '#14532d' }}>Günlük Esneme Rutini</Text>
-                                <Text style={{ fontSize: 13, color: '#16a34a', marginTop: 2 }}>10 adım • ~10 dakika</Text>
-                            </View>
-                            <View style={{ backgroundColor: '#22c55e', borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 }}>
-                                <Text style={{ fontSize: 13, fontWeight: '700', color: '#fff' }}>Başla</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
                 </View>
 
                 {/* Personalized Natal Insights - The 15-20 min reading content */}

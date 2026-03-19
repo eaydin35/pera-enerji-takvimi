@@ -44,3 +44,21 @@ create policy "Users can view own sessions"   on zikir_sessions for select using
 create policy "Users can update own sessions" on zikir_sessions for update using (auth.uid() = user_id);
 create policy "Users can insert own sessions" on zikir_sessions for insert with check (auth.uid() = user_id);
 
+-- 5. Token Kullanim Analitigi
+create table if not exists token_usage (
+  id           uuid default gen_random_uuid() primary key,
+  user_id      uuid references auth.users on delete cascade,
+  feature_name text not null,
+  model_id     text not null,
+  prompt_tokens int not null,
+  completion_tokens int not null,
+  total_tokens int not null,
+  created_at   timestamptz default now()
+);
+
+alter table token_usage enable row level security;
+
+drop policy if exists "Own token usage" on token_usage;
+create policy "Users can view own token usage"   on token_usage for select using (auth.uid() = user_id);
+create policy "Users can insert own token usage" on token_usage for insert with check (auth.uid() = user_id);
+

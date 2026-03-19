@@ -18,6 +18,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { useZikirStore, ESMA_LIST, Esma } from '../../store/useZikirStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useRef, useState, useEffect } from 'react';
+import { useLocalSearchParams } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -91,11 +92,34 @@ function StoneBead({ stone, size, onPress, opacity = 1 }: {
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function ZikirmatikScreen() {
+    const params = useLocalSearchParams<{ esma?: string }>();
     const { activeEsmaId, sessions, setActiveEsma, increment, resetActive } = useZikirStore();
     const { user } = useAuthStore();
     const [selectedStone, setSelectedStone] = useState(STONES[0]);
     const [vibrationOn, setVibrationOn]     = useState(true);
     const [showModal, setShowModal]          = useState(false);
+
+    // Initial load from params
+    useEffect(() => {
+        if (params.esma) {
+            const normalize = (s: string) => s.toLowerCase()
+                .replace(/i̇/g, 'i')
+                .replace(/ı/g, 'i')
+                .replace(/ö/g, 'o')
+                .replace(/ü/g, 'u')
+                .replace(/ç/g, 'c')
+                .replace(/ş/g, 's')
+                .replace(/ğ/g, 'g')
+                .replace(/[îâû]/g, (match) => ({'î':'i', 'â':'a', 'û':'u'}[match as 'î'|'â'|'û'] || match));
+
+            const target = normalize(params.esma);
+            const found = ESMA_LIST.find(e => 
+                normalize(e.tr) === target || 
+                normalize(e.id) === target
+            );
+            if (found) setActiveEsma(found.id);
+        }
+    }, [params.esma]);
 
     const activeEsma = ESMA_LIST.find(e => e.id === activeEsmaId) ?? ESMA_LIST[0];
     const currentSession = sessions[activeEsmaId];

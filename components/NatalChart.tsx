@@ -14,31 +14,31 @@ const INNER_R       = ZODIAC_R - 50;  // inner circle (aspect space)
 const ASPECT_R      = INNER_R - 8;    // aspect line endpoints
 
 const ZODIAC_SIGNS = [
-    { symbol: '\u2648', name: 'Koc',      color: '#ef4444' },
-    { symbol: '\u2649', name: 'Boga',     color: '#22c55e' },
-    { symbol: '\u264A', name: 'Ikizler',  color: '#eab308' },
-    { symbol: '\u264B', name: 'Yengec',   color: '#3b82f6' },
-    { symbol: '\u264C', name: 'Aslan',    color: '#f97316' },
-    { symbol: '\u264D', name: 'Basak',    color: '#84cc16' },
-    { symbol: '\u264E', name: 'Terazi',   color: '#ec4899' },
-    { symbol: '\u264F', name: 'Akrep',    color: '#991b1b' },
-    { symbol: '\u2650', name: 'Yay',      color: '#a855f7' },
-    { symbol: '\u2651', name: 'Oglak',    color: '#6b7280' },
-    { symbol: '\u2652', name: 'Kova',     color: '#06b6d4' },
-    { symbol: '\u2653', name: 'Balik',    color: '#2563eb' },
+    { symbol: '♈', name: 'Koc',      color: '#ef4444' },
+    { symbol: '♉', name: 'Boga',     color: '#22c55e' },
+    { symbol: '♊', name: 'Ikizler',  color: '#eab308' },
+    { symbol: '♋', name: 'Yengec',   color: '#3b82f6' },
+    { symbol: '♌', name: 'Aslan',    color: '#f97316' },
+    { symbol: '♍', name: 'Basak',    color: '#84cc16' },
+    { symbol: '♎', name: 'Terazi',   color: '#ec4899' },
+    { symbol: '♏', name: 'Akrep',    color: '#991b1b' },
+    { symbol: '♐', name: 'Yay',      color: '#a855f7' },
+    { symbol: '♑', name: 'Oglak',    color: '#6b7280' },
+    { symbol: '♒', name: 'Kova',     color: '#06b6d4' },
+    { symbol: '♓', name: 'Balik',    color: '#2563eb' },
 ];
 
 const PLANET_SYMBOLS: Record<string, string> = {
-    'sun':     '\u2609',
-    'moon':    '\u263D',
-    'mercury': '\u263F',
-    'venus':   '\u2640',
-    'mars':    '\u2642',
-    'jupiter': '\u2643',
-    'saturn':  '\u2644',
-    'uranus':  '\u2645',
-    'neptune': '\u2646',
-    'pluto':   '\u2647',
+    'sun':     '☉',
+    'moon':    '☽',
+    'mercury': '☿',
+    'venus':   '♀',
+    'mars':    '♂',
+    'jupiter': '♃',
+    'saturn':  '♄',
+    'uranus':  '⛢',
+    'neptune': '♆',
+    'pluto':   '♇',
 };
 
 const PLANET_COLORS: Record<string, string> = {
@@ -59,6 +59,7 @@ const PLANET_COLORS: Record<string, string> = {
 function toRad(deg: number) { return (deg * Math.PI) / 180; }
 
 function polarToXY(cx: number, cy: number, radius: number, angleDeg: number) {
+    if (isNaN(angleDeg)) return { x: cx, y: cy };
     // 0° = Aries = left (9 o'clock position), going counter-clockwise
     const rad = toRad(angleDeg);
     return {
@@ -106,15 +107,15 @@ export default function NatalChart({
     ascendant = 0,
     size = SIZE,
 }: NatalChartProps) {
-    const scale = size / SIZE;
-    const cx = CENTER;
-    const cy = CENTER;
+    const safeSize = isNaN(size) || size <= 0 ? SIZE : size;
+    const cx = safeSize / 2;
+    const cy = safeSize / 2;
 
     const spreadPos = spreadPositions(positions, ascendant);
 
     return (
-        <View style={[styles.container, { width: size, height: size }]}>
-            <Svg width={size} height={size} viewBox={`0 0 ${SIZE} ${SIZE}`}>
+        <View style={[styles.container, { width: safeSize, height: safeSize }]}>
+            <Svg width={safeSize} height={safeSize} viewBox={`0 0 ${SIZE} ${SIZE}`}>
                 {/* ── Outer ring bg ── */}
                 <Circle cx={cx} cy={cy} r={OUTER_R} fill="none" stroke="#e5e7eb" strokeWidth={1} />
                 <Circle cx={cx} cy={cy} r={ZODIAC_R} fill="none" stroke="#d1d5db" strokeWidth={0.5} />
@@ -142,9 +143,9 @@ export default function NatalChart({
                             <Text
                                 x={pSym.x} y={pSym.y + 5}
                                 fontSize={14}
-                                fill={sign.color}
+                                fontFamily="System"
+                                fill="#4b5563"
                                 textAnchor="middle"
-                                fontWeight="bold"
                             >
                                 {sign.symbol}
                             </Text>
@@ -205,10 +206,10 @@ export default function NatalChart({
                             <Circle cx={pt.x} cy={pt.y} r={12} fill="#fff" stroke={col} strokeWidth={1.5} />
                             <Text
                                 x={pt.x} y={pt.y + 5}
-                                fontSize={13}
+                                fontSize={14}
+                                fontFamily="System"
                                 fill={col}
                                 textAnchor="middle"
-                                fontWeight="bold"
                             >
                                 {sym}
                             </Text>
