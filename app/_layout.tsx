@@ -85,7 +85,12 @@ export default function RootLayout() {
 
             // --- USER-REQUESTED STRICT ROUTING LOGIC ---
             // If the user has an active session, NEVER show onboarding. Go straight to tabs.
+            // EXCEPTION: If the user signed up but lacks birth details, permit them to enter onboarding.
             if (session) {
+                if (!profile?.birthDate && inOnboarding) {
+                    return; // Allow users missing birth data to stay in onboarding
+                }
+
                 if (!inTabsGroup) {
                     router.replace('/(tabs)');
                 }

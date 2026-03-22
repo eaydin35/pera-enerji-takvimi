@@ -11,6 +11,8 @@ import {
     Alert,
     Linking,
     ActivityIndicator,
+    Modal,
+    TextInput,
 } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -106,6 +108,15 @@ export default function ProfileScreen() {
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const [birthEditorVisible, setBirthEditorVisible] = useState(false);
+    const [nameEditorVisible, setNameEditorVisible] = useState(false);
+    const [editFirstName, setEditFirstName] = useState(userProfile?.firstName ?? '');
+    const [editLastName, setEditLastName] = useState(userProfile?.lastName ?? '');
+
+    // Reset name edit state whenever it opens or profile changes
+    useEffect(() => {
+        setEditFirstName(userProfile?.firstName ?? '');
+        setEditLastName(userProfile?.lastName ?? '');
+    }, [userProfile?.firstName, userProfile?.lastName, nameEditorVisible]);
 
     const sunSign = getSunSign(userProfile?.birthDate ?? '');
     const totalZikir = Object.values(sessions).reduce((sum, s) => sum + (s.count ?? 0), 0);
@@ -171,6 +182,22 @@ export default function ProfileScreen() {
                 useProfileStore.getState().updateProfile({ avatarUrl: localUri });
                 setStoreAvatar(localUri);
             }
+        }
+    };
+
+    const handleSaveName = async () => {
+        if (!editFirstName.trim()) {
+            Alert.alert('Eksik Bilgi', 'Lütfen adınızı girin.');
+            return;
+        }
+        try {
+            await useProfileStore.getState().updateProfile({ 
+                firstName: editFirstName.trim(), 
+                lastName: editLastName.trim() 
+            });
+            setNameEditorVisible(false);
+        } catch (e: any) {
+            Alert.alert('Hata', 'İsim güncellenirken bir hata oluştu: ' + e.message);
         }
     };
 
@@ -335,7 +362,7 @@ export default function ProfileScreen() {
                         <InfoRow 
                             label="AD SOYAD" 
                             value={`${userProfile?.firstName ?? '—'} ${userProfile?.lastName ?? ''}`} 
-                            onPress={() => setBirthEditorVisible(true)} 
+                            onPress={() => setNameEditorVisible(true)} 
                         />
                         <InfoRow 
                             label="DOĞUM TARİHİ" 
@@ -440,6 +467,42 @@ export default function ProfileScreen() {
                 visible={birthEditorVisible} 
                 onClose={() => setBirthEditorVisible(false)} 
             />
+
+            {/* Name Editor Modal */}
+            <Modal visible={nameEditorVisible} transparent animationType="fade">
+                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+                    <View style={{ backgroundColor: '#fff', borderRadius: 24, padding: 24, width: '100%', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12, elevation: 8 }}>
+                        <Text style={{ fontSize: 18, fontWeight: '700', color: '#111827', marginBottom: 16 }}>Ad ve Soyadını Güncelle</Text>
+                        
+                        <Text style={{ fontSize: 13, fontWeight: '600', color: '#374151', marginBottom: 6 }}>Ad</Text>
+                        <TextInput 
+                            style={{ height: 50, borderRadius: 12, borderWidth: 1, borderColor: '#d1d5db', paddingHorizontal: 16, fontSize: 15, marginBottom: 16, color: '#111827' }}
+                            value={editFirstName}
+                            onChangeText={setEditFirstName}
+                            placeholder="Adını gir"
+                            placeholderTextColor="#9ca3af"
+                        />
+
+                        <Text style={{ fontSize: 13, fontWeight: '600', color: '#374151', marginBottom: 6 }}>Soyad</Text>
+                        <TextInput 
+                            style={{ height: 50, borderRadius: 12, borderWidth: 1, borderColor: '#d1d5db', paddingHorizontal: 16, fontSize: 15, marginBottom: 24, color: '#111827' }}
+                            value={editLastName}
+                            onChangeText={setEditLastName}
+                            placeholder="Soyadını gir"
+                            placeholderTextColor="#9ca3af"
+                        />
+
+                        <View style={{ flexDirection: 'row', gap: 12 }}>
+                            <TouchableOpacity onPress={() => setNameEditorVisible(false)} style={{ flex: 1, height: 50, borderRadius: 12, backgroundColor: '#f3f4f6', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 15, fontWeight: '600', color: '#374151' }}>İptal</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleSaveName} style={{ flex: 1, height: 50, borderRadius: 12, backgroundColor: '#ad92c9', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 15, fontWeight: '700', color: '#fff' }}>Kaydet</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }

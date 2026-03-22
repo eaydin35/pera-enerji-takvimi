@@ -59,18 +59,18 @@ export default function DashboardScreen() {
                     <MaterialIcons name="auto-awesome" size={48} color="#ad92c9" />
                 </View>
                 <Text className="text-3xl font-extrabold text-center text-text-primary-light dark:text-text-primary-dark mb-4 tracking-tight">
-                    Kozmik Yolculuğuna Başla
+                    Haritanı Oluştur
                 </Text>
                 <Text className="text-base text-center text-text-secondary-light dark:text-text-secondary-dark mb-10 leading-relaxed font-medium">
                     Yıldız haritanı, sana özel günlük enerjileri ve ritüelleri görebilmek için doğum bilgilerini tamamlaman gerekiyor.
                 </Text>
                 <TouchableOpacity 
-                    onPress={() => router.push('/profile' as any)}
+                    onPress={() => router.push('/onboarding')}
                     className="w-full flex-row items-center justify-center rounded-[20px] bg-[#ad92c9] py-4 shadow-sm"
                     style={{ shadowColor: '#ad92c9', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 }}
                 >
-                    <MaterialIcons name="person-add-alt-1" size={22} color="#fff" />
-                    <Text className="ml-3 text-lg font-bold text-white tracking-wide">Profilini Tamamla</Text>
+                    <MaterialIcons name="auto-awesome" size={22} color="#fff" />
+                    <Text className="ml-3 text-lg font-bold text-white tracking-wide">Haritanı Oluştur</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         );
