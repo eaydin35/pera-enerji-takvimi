@@ -6,7 +6,7 @@ import { useColorScheme } from 'nativewind';
 import { LinearGradient } from 'expo-linear-gradient';
 import astroEvents from '../../data/astro_events_2026.json';
 import { useAuthStore } from '../../store/useAuthStore';
-import { useStore } from '../../store/useStore';
+import { useProfileStore } from '../../store/profileStore';
 import { calculateChart } from '../../utils/astrology';
 import { getAstrologyInsight, chatWithAI } from '../../utils/ai-astrology';
 import AILoading from '../../components/AILoading';
@@ -35,7 +35,7 @@ function CalendarScreen() {
     const { colorScheme } = useColorScheme();
     const isDark = colorScheme === 'dark';
     const { user } = useAuthStore();
-    const { userProfile } = useStore();
+    const { profile: userProfile } = useProfileStore();
     
     const today = new Date().toISOString().split('T')[0];
     const [selectedDate, setSelectedDate] = useState(today);

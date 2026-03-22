@@ -17,9 +17,14 @@ import { chatWithAI, getProactiveQuestions, type Message } from '../../utils/ai-
 import { calculateChart } from '../../utils/astrology';
 import { calculateDailyTransits } from '../../utils/transit-engine';
 import { getDailyRecommendation } from '../../utils/recommendation-engine';
+import { supabase } from '../../utils/supabase';
+import { useAuthStore } from '../../store/useAuthStore';
+import { useProfileStore } from '../../store/profileStore';
 
 export default function ChatScreen() {
-    const { userProfile, tokens, isPremium, useTokens } = useStore();
+    const { tokens, isPremium, useTokens } = useStore();
+    const { user } = useAuthStore();
+    const { profile: userProfile } = useProfileStore();
     const [messages, setMessages] = useState<Message[]>([
         {
             role: 'model',
@@ -28,7 +33,35 @@ export default function ChatScreen() {
     ]);
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
     const flatListRef = useRef<FlatList>(null);
+
+    useEffect(() => {
+        let isMounted = true;
+        const loadHistory = async () => {
+            if (!user) return;
+            const { data, error } = await supabase
+                .from('chat_history')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false })
+                .limit(10);
+            
+            if (error) {
+                console.error("Error loading chat history:", error);
+                return;
+            }
+            if (data && data.length > 0 && isMounted) {
+                const historyMessages: Message[] = data.reverse().map(row => ({
+                    role: (row.role === 'assistant' ? 'model' : 'user') as 'model' | 'user',
+                    parts: [{ text: row.content }]
+                }));
+                setMessages(prev => [...prev, ...historyMessages]);
+            }
+        };
+        loadHistory();
+        return () => { isMounted = false; };
+    }, [user]);
 
     const contextData = useMemo(() => {
         if (!userProfile?.birthDate) return null;
@@ -44,15 +77,22 @@ export default function ChatScreen() {
         return { chart, transit, questions, recommendations };
     }, [userProfile]);
 
+    useEffect(() => {
+        if (messages.length === 1 && contextData?.questions) {
+            setSuggestedQuestions(contextData.questions);
+        }
+    }, [contextData, messages.length]);
+
     const handleSend = async (text: string = inputText) => {
         if (!text.trim() || isLoading || !contextData) return;
 
         // Token check
         if (tokens <= 0) {
-            setMessages([...messages, { 
+            const tokenErrorMsg: Message = { 
                 role: 'model', 
                 parts: [{ text: "Üzgünüm, jetonun bitmiş görünüyor. Sohbetine devam etmek için yeni jeton alabilir veya abonelik modellerimizi inceleyebilirsin. ✨" }] 
-            }]);
+            };
+            setMessages([...messages, tokenErrorMsg]);
             return;
         }
 
@@ -61,6 +101,20 @@ export default function ChatScreen() {
         setMessages(newMessages);
         setInputText('');
         setIsLoading(true);
+        setSuggestedQuestions([]); // Clear suggestions while thinking
+
+        // Save to Supabase (non-blocking)
+        if (user) {
+            const saveUserMsg = async () => {
+                const { error } = await supabase.from('chat_history').insert({
+                    user_id: user.id,
+                    role: 'user',
+                    content: text
+                });
+                if (error) console.error("Error saving user message", error);
+            };
+            saveUserMsg();
+        }
 
         try {
             // Deduct token
@@ -87,7 +141,38 @@ export default function ChatScreen() {
                 } : undefined
             );
 
-            setMessages([...newMessages, { role: 'model', parts: [{ text: aiResponse }] }]);
+            let finalAiText = aiResponse;
+            let newSuggestions: string[] | null = null;
+            const regex = /\[SUGGESTED_QUESTIONS:\s*(\[.*?\])\]/s;
+            const match = aiResponse.match(regex);
+            
+            if (match && match[1]) {
+                try {
+                    newSuggestions = JSON.parse(match[1]);
+                    finalAiText = aiResponse.replace(regex, '').trim();
+                } catch(e) {
+                    console.log('Failed to parse suggestions:', e);
+                }
+            }
+
+            const modelMsg: Message = { role: 'model', parts: [{ text: finalAiText }] };
+            setMessages([...newMessages, modelMsg]);
+
+            if (newSuggestions && newSuggestions.length > 0) {
+                setSuggestedQuestions(newSuggestions);
+            }
+
+            if (user) {
+                const saveAssistantMsg = async () => {
+                    const { error } = await supabase.from('chat_history').insert({
+                        user_id: user.id,
+                        role: 'assistant',
+                        content: finalAiText
+                    });
+                    if (error) console.error("Error saving assistant message", error);
+                };
+                saveAssistantMsg();
+            }
         } catch (error) {
             console.error(error);
         } finally {
@@ -148,9 +233,9 @@ export default function ChatScreen() {
                 )}
 
                 <View style={styles.footer}>
-                    {!isLoading && messages.length < 3 && contextData?.questions && (
+                    {!isLoading && suggestedQuestions.length > 0 && (
                         <View style={styles.suggestions}>
-                            {contextData.questions.map((q, idx) => (
+                            {suggestedQuestions.map((q, idx) => (
                                 <TouchableOpacity 
                                     key={idx} 
                                     style={styles.suggestionBadge}

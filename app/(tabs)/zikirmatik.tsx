@@ -93,14 +93,18 @@ function StoneBead({ stone, size, onPress, opacity = 1 }: {
 
 export default function ZikirmatikScreen() {
     const params = useLocalSearchParams<{ esma?: string }>();
-    const { activeEsmaId, sessions, setActiveEsma, increment, resetActive } = useZikirStore();
+    const { activeEsmaId, sessions, setActiveEsma, increment, resetActive, syncFromSupabase } = useZikirStore();
     const { user } = useAuthStore();
     const [selectedStone, setSelectedStone] = useState(STONES[0]);
     const [vibrationOn, setVibrationOn]     = useState(true);
     const [showModal, setShowModal]          = useState(false);
 
-    // Initial load from params
+    // Initial load from params and sync from Supabase
     useEffect(() => {
+        if (user) {
+            syncFromSupabase(user.id).catch(console.error);
+        }
+        
         if (params.esma) {
             const normalize = (s: string) => s.toLowerCase()
                 .replace(/i̇/g, 'i')

@@ -1,0 +1,15 @@
+appId: com.peratakvimi.app
+---
+- launchApp
+- assertVisible: "Kişisel Rehberin Seni Bekliyor"
+- tapOn: "SS:DD"
+- inputText: "3232"
+- assertVisible: "" # Since logic blocks 3, the input should remain empty or only contains permitted digits
+- tapOn: "Adını gir"
+- inputText: "Test"
+- tapOn: "GG.AA.YYYY"
+- tapOn: "Onayla" # Assuming iOS date picker
+- tapOn: "Şehir ara"
+- tapOn: "İstanbul"
+- tapOn: "Haritamı Hesapla"
+- assertVisible: "Eksik Bilgi" # If time is mandatory or validation fails

@@ -11,7 +11,8 @@
       "expo-router",
       "@react-native-community/datetimepicker",
       "expo-web-browser",
-      "expo-localization"
+      "expo-localization",
+      "expo-secure-store"
     ],
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -23,6 +24,7 @@
       "bundleIdentifier": "com.peratakvimi.app"
     },
     "android": {
+      "package": "com.peratakvimi.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",

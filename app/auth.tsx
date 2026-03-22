@@ -1,24 +1,14 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    SafeAreaView,
-    KeyboardAvoidingView,
-    Platform,
-    Alert,
-    StyleSheet,
-    ScrollView,
-    ActivityIndicator,
-    StatusBar,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, Alert, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../store/useAuthStore';
+import { useProfileStore } from '../store/profileStore';
 import { useSocialAuth, type SocialProvider } from '../hooks/useSocialAuth';
 import { supabase } from '../utils/supabase';
+import WooCommerceLoginModal from '../components/WooCommerceLoginModal';
 
 type Mode = 'login' | 'register';
 
@@ -31,31 +21,28 @@ export default function AuthScreen() {
     const [password, setPassword]   = useState('');
     const [fullName, setFullName]   = useState('');
     const [showPass, setShowPass]   = useState(false);
+    const [wooModalVisible, setWooModalVisible] = useState(false);
 
     const handleSubmit = async () => {
         clearError();
         if (mode === 'login') {
             await signIn(email.trim(), password);
             const state = useAuthStore.getState();
-            if (state.session) router.replace('/(tabs)');
+            if (state.session) {
+                // Link any guest data map to the newly logged in user
+                await useProfileStore.getState().migrateToRegistered();
+                router.replace('/(tabs)');
+            }
         } else {
             if (!fullName.trim()) { Alert.alert('Ad Soyad gerekli'); return; }
             await signUp(email.trim(), password, fullName.trim());
             const state = useAuthStore.getState();
-            if (state.session) router.replace('/(tabs)');
+            if (state.session) {
+                await useProfileStore.getState().migrateToRegistered();
+                router.replace('/(tabs)');
+            }
             else if (!state.error) Alert.alert('✅ Kayıt Başarılı', 'E-postaınızı doğrulayın, ardından giriş yapın.', [{ text: 'Tamam', onPress: () => setMode('login') }]);
         }
-    };
-
-    const handleDevBypass = async () => {
-        const dummySession = {
-            access_token: 'dummy',
-            refresh_token: 'dummy',
-            expires_in: 3600,
-            token_type: 'bearer' as const,
-            user: { id: 'dev-user', email: 'test@pera.com' } as any
-        };
-        useAuthStore.setState({ session: dummySession as any, user: dummySession.user });
     };
 
     const { signInWithSocial, isSocialLoading } = useSocialAuth();
@@ -64,13 +51,27 @@ export default function AuthScreen() {
         await signInWithSocial(provider);
     };
 
+    const handleWooCommerceSuccess = () => {
+        setWooModalVisible(false);
+        router.replace('/(tabs)');
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" />
-            <LinearGradient colors={['#fdf2f8', '#f8f6f7']} style={StyleSheet.absoluteFill} />
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: '#ffffff' }]} />
 
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, backgroundColor: '#ffffff' }}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff', paddingTop: 10 }} keyboardShouldPersistTaps="handled">
+                    {/* Back Button */}
+                    <TouchableOpacity 
+                        style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 24, marginTop: 10 }}
+                        onPress={() => router.replace('/onboarding')}
+                    >
+                        <MaterialIcons name="arrow-back-ios" size={18} color="#ad92c9" />
+                        <Text style={{ fontSize: 16, fontWeight: '600', color: '#ad92c9', marginLeft: 4 }}>Geri Dön</Text>
+                    </TouchableOpacity>
+
                     {/* Logo */}
                     <View style={styles.logoSection}>
                         <View style={styles.logoCircle}>
@@ -200,29 +201,36 @@ export default function AuthScreen() {
                             )}
                         </View>
 
-                        {/* Dev bypass */}
                         <TouchableOpacity
-                            style={styles.devBtn}
-                            onPress={handleDevBypass}
+                            style={[styles.wooBtn, { opacity: 0.5 }]}
+                            onPress={() => {}}
+                            disabled={true}
                         >
-                            <Text style={styles.devText}>Test Hesabiyla Gec →</Text>
+                            <MaterialIcons name="storefront" size={20} color="#ad92c9" />
+                            <Text style={styles.wooBtnText}>Stones of Pera ile Giriş (Yakında)</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            <WooCommerceLoginModal 
+                visible={wooModalVisible}
+                onClose={() => setWooModalVisible(false)}
+                onSuccess={handleWooCommerceSuccess}
+            />
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f8f6f7' },
+    container: { flex: 1, backgroundColor: '#ffffff' },
     logoSection: { alignItems: 'center', paddingTop: 60, paddingBottom: 32 },
     logoCircle: {
         width: 80, height: 80, borderRadius: 40,
-        backgroundColor: '#fdf2f8', borderWidth: 2, borderColor: '#f7e1e8',
+        backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e4e4e7',
         alignItems: 'center', justifyContent: 'center', marginBottom: 16,
-        shadowColor: '#ad92c9', shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2, shadowRadius: 12, elevation: 6,
+        shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05, shadowRadius: 10, elevation: 4,
     },
     logoTitle: { fontSize: 24, fontWeight: '800', color: '#1f1317', letterSpacing: -0.5 },
     logoSub:   { fontSize: 14, color: '#71717a', marginTop: 6 },
@@ -256,8 +264,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3, shadowRadius: 12, elevation: 6,
     },
     submitText: { fontSize: 16, fontWeight: '700', color: '#fff' },
-    devBtn:  { alignItems: 'center', paddingVertical: 20 },
-    devText: { fontSize: 13, color: '#a1a1aa', fontWeight: '500' },
     dividerRow: {
         flexDirection: 'row', alignItems: 'center', marginVertical: 24, gap: 12,
     },
@@ -270,5 +276,14 @@ const styles = StyleSheet.create({
         borderWidth: 1, borderColor: '#e4e4e7',
         shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.05, shadowRadius: 8, elevation: 2,
+    },
+    wooBtn: {
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+        gap: 8, height: 48, borderRadius: 16,
+        backgroundColor: '#fff', borderWidth: 1, borderColor: '#ad92c9',
+        marginHorizontal: 20, marginBottom: 16,
+    },
+    wooBtnText: {
+        fontSize: 14, fontWeight: '600', color: '#ad92c9',
     },
 });

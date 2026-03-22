@@ -6,19 +6,18 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { BlurView } from 'expo-blur';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-  const theme = Colors[isDark ? 'dark' : 'light'];
+  const isDark = false; // Forced Light Theme per guidelines
+  const theme = Colors.light;
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#ec4899',
-        tabBarInactiveTintColor: isDark ? '#9ca3af' : '#6b7280',
+        tabBarInactiveTintColor: '#6b7280',
         tabBarStyle: {
-          backgroundColor: isDark ? '#1f2937' : '#ffffff',
-          borderTopColor: isDark ? '#374151' : '#e5e7eb',
+          backgroundColor: '#ffffff',
+          borderTopColor: '#e5e7eb',
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -36,11 +35,29 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="chart"
+        options={{
+          title: 'Haritam',
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="track-changes" size={26} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="calendar"
         options={{
           title: 'Takvim',
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="calendar-today" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: 'Danış',
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="chat-bubble-outline" size={24} color={color} />
           ),
         }}
       />
@@ -59,33 +76,6 @@ export default function TabLayout() {
           title: 'Profil',
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="person" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="workout"
-        options={{
-          title: 'Egzersiz',
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="fitness-center" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="chat"
-        options={{
-          title: 'Danış',
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="chat-bubble-outline" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="chart"
-        options={{
-          title: 'Haritam',
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="track-changes" size={26} color={color} />
           ),
         }}
       />

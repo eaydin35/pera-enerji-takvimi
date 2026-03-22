@@ -23,12 +23,12 @@ export type AITask =
     | 'user_chat';          // gemini-2.0-flash — kullanici sorusu
 
 export const MODEL_MAP: Record<AITask, string> = {
-    natal_analysis:     'gemini-2.0-flash',
-    daily_panel:        'gemini-2.0-flash-lite',
-    weekly_calendar:    'gemini-2.0-flash-lite',
-    monthly_calendar:   'gemini-2.0-flash-lite',
-    notification_batch: 'gemini-2.0-flash-lite',
-    user_chat:          'gemini-2.0-flash',
+    natal_analysis:     'gemini-flash-latest',
+    daily_panel:        'gemini-flash-latest',
+    weekly_calendar:    'gemini-flash-latest',
+    monthly_calendar:   'gemini-flash-latest',
+    notification_batch: 'gemini-flash-latest',
+    user_chat:          'gemini-flash-latest',
 };
 
 // ─── AI Astrology Service ───────────────────────────────────────────────────
@@ -44,6 +44,8 @@ Persona & Stil Kuralları (KRİTİK):
 4. Sınırlar: Tıbbi, hukuki veya kesin gelecek tahmini yapma. "Olasılıklar" ve "enerjiler" üzerinden konuş.
 5. Esma ve Ritüel: Önerilerinde esmalar ve niyet ritüellerine yer ver.
 6. Hitap: Kullanıcıya her zaman adıyla hitap et.
+7. Önerilen Sorular (ÇOK ÖNEMLİ): Cevabının EN SONUNA kullanıcının sana sorabileceği, sohbeti derinleştirecek 2 veya 3 adet kısa ve ilgi çekici devam sorusu üret. Bunları cevabının EN ALTINA mutlaka şu formatta (satır arası boşluk bırakarak) ekle:
+[SUGGESTED_QUESTIONS: ["Soru 1?", "Soru 2?"]]
 
 ═══════════════ KULLANICI PROFİLİ ═══════════════
 - Ad Soyad: {userName}
@@ -67,7 +69,7 @@ Persona & Stil Kuralları (KRİTİK):
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const RETRYABLE_STATUS_CODES = [429, 500, 503];
-const MAX_RETRIES = 2;
+const MAX_RETRIES = 5;
 
 /** Wait for a given number of milliseconds */
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -102,6 +104,11 @@ export const logTokenUsage = async (
     completionTokens: number,
     totalTokens: number
 ) => {
+    if (!userId) {
+        console.log(`[Token Usage] Bypassed logging for guest. ${totalTokens} tokens for ${featureName}`);
+        return;
+    }
+    
     try {
         const { error } = await supabase
             .from('token_usage')
@@ -154,6 +161,7 @@ export async function callAI<T>(
         generationConfig: {
             temperature: 0.7, // Lower temperature for more consistent JSON/logic
             maxOutputTokens: 2048,
+            responseMimeType: 'application/json',
         }
     };
 
@@ -163,7 +171,11 @@ export async function callAI<T>(
         try {
             const response = await fetch(apiUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Ios-Bundle-Identifier': 'com.peratakvimi.app',
+                    'X-Android-Package': 'com.peratakvimi.app'
+                },
                 body: JSON.stringify(requestBody),
             });
 
@@ -208,7 +220,7 @@ export async function callAI<T>(
         } catch (error: any) {
             lastError = error.message;
             if (attempt < MAX_RETRIES) {
-                await sleep(1000 * Math.pow(2, attempt));
+                await sleep(2000 * Math.pow(2, attempt));
             }
         }
     }
@@ -294,7 +306,11 @@ export const chatWithAI = async (
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-Ios-Bundle-Identifier': 'com.peratakvimi.app',
+                        'X-Android-Package': 'com.peratakvimi.app'
+                    },
                     body: JSON.stringify(requestBody),
                 });
 
@@ -305,7 +321,7 @@ export const chatWithAI = async (
 
                     // Retry on transient errors
                     if (RETRYABLE_STATUS_CODES.includes(response.status) && attempt < MAX_RETRIES) {
-                        const delayMs = 1000 * Math.pow(2, attempt); // 1s, 2s
+                        const delayMs = 2000 * Math.pow(2, attempt); // 2s, 4s, 8s...
                         console.log(`[AI Chat] Retrying in ${delayMs}ms (attempt ${attempt + 1}/${MAX_RETRIES})...`);
                         await sleep(delayMs);
                         continue;

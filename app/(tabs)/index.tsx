@@ -3,6 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useStore } from '../../store/useStore';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useProfileStore } from '../../store/profileStore';
 import { supabase } from '../../utils/supabase';
 
 import { useRouter } from 'expo-router';
@@ -21,7 +22,7 @@ import staticData from '../../data/staticData.json';
 export default function DashboardScreen() {
     const [weeklyInsight, setWeeklyInsight] = useState<string | null>(null);
     const [isGeneratingInsight, setIsGeneratingInsight] = useState(false);
-    const { userProfile, setAvatarUrl } = useStore();
+    const { profile: userProfile } = useProfileStore();
     const { user } = useAuthStore();
     const [expandedTransit, setExpandedTransit] = useState<number | null>(null);
     const router = useRouter();
@@ -44,28 +45,41 @@ export default function DashboardScreen() {
         return { chart, recommendations, transit, weekly };
     }, [userProfile]);
 
-    // Fetch avatar from Supabase on mount
-    useEffect(() => {
-        if (!user || userProfile?.avatarUrl) return;
-        supabase
-            .from('profiles')
-            .select('avatar_url')
-            .eq('id', user.id)
-            .single()
-            .then(({ data }) => {
-                if (data?.avatar_url) setAvatarUrl(data.avatar_url);
-            });
-    }, [user]);
+    // _layout.tsx already handles profile fetching and initialization now.
+
 
 
     const todayDateStr = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
 
-    if (!dashboardData) return null;
+    if (!dashboardData) {
+        return (
+            <SafeAreaView className="flex-1 bg-white items-center justify-center px-8 relative">
+                <View className="absolute inset-0 bg-primary/5" />
+                <View className="h-32 w-32 rounded-full bg-primary/10 items-center justify-center mb-8 border border-primary/20">
+                    <MaterialIcons name="auto-awesome" size={48} color="#ad92c9" />
+                </View>
+                <Text className="text-3xl font-extrabold text-center text-text-primary-light dark:text-text-primary-dark mb-4 tracking-tight">
+                    Kozmik Yolculuğuna Başla
+                </Text>
+                <Text className="text-base text-center text-text-secondary-light dark:text-text-secondary-dark mb-10 leading-relaxed font-medium">
+                    Yıldız haritanı, sana özel günlük enerjileri ve ritüelleri görebilmek için doğum bilgilerini tamamlaman gerekiyor.
+                </Text>
+                <TouchableOpacity 
+                    onPress={() => router.push('/profile' as any)}
+                    className="w-full flex-row items-center justify-center rounded-[20px] bg-[#ad92c9] py-4 shadow-sm"
+                    style={{ shadowColor: '#ad92c9', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 }}
+                >
+                    <MaterialIcons name="person-add-alt-1" size={22} color="#fff" />
+                    <Text className="ml-3 text-lg font-bold text-white tracking-wide">Profilini Tamamla</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
+        );
+    }
 
     const { recommendations, transit, weekly } = dashboardData;
 
     return (
-        <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark">
+        <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
             <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
                 <View className="flex-row items-center gap-2">

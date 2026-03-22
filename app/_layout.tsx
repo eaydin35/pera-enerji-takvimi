@@ -3,6 +3,7 @@ import { Slot, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useAuthStore, initAuthListener } from '../store/useAuthStore';
+import { useProfileStore } from '../store/profileStore';
 import { initPurchases } from '../utils/purchases';
 import { supabase } from '../utils/supabase';
 import * as Linking from 'expo-linking';
@@ -12,16 +13,27 @@ import { Platform } from 'react-native';
 initAuthListener();
 
 export default function RootLayout() {
-    const { hasCompletedOnboarding, syncProfileFromSupabase, syncPremiumStatus } = useStore();
-    const { session, isLoading } = useAuthStore();
+    const { syncPremiumStatus } = useStore();
+    const { session, isLoading: isAuthLoading } = useAuthStore();
+    const { profile, isGuest, isLoading: isProfileLoading, initialize } = useProfileStore();
     const segments = useSegments();
     const router = useRouter();
 
-    // Auto-sync profile and initiate purchases from Supabase when user logs in
+    // 1. Initialize Profile Store when Auth is ready or changes
+    useEffect(() => {
+        if (!isAuthLoading) {
+            initialize();
+        }
+    }, [isAuthLoading, session?.user?.id]);
+
+    // 1.5. Sync new profile store to legacy useStore 
+    useEffect(() => {
+        useStore.setState({ userProfile: profile as any });
+    }, [profile]);
+
+    // 2. Auto-sync premium status and initiate purchases when user logs in
     useEffect(() => {
         if (session?.user?.id) {
-            syncProfileFromSupabase(session.user.id);
-            
             // Initialize RevenueCat and sync premium status
             initPurchases(session.user.id).then(() => {
                 syncPremiumStatus();
@@ -56,9 +68,10 @@ export default function RootLayout() {
         return () => subscription.remove();
     }, []);
 
+    // 4. Routing Logic
     useEffect(() => {
         // Wait until everything is loaded before making routing decisions
-        if (isLoading) return;
+        if (isAuthLoading || isProfileLoading) return;
 
         // Check for navigation within a timeout to ensure layout is mounted
         const timeout = setTimeout(() => {
@@ -70,19 +83,35 @@ export default function RootLayout() {
             // Allow standalone screens (workout etc.) to stay open
             if (inWorkout) return;
 
-            if (!hasCompletedOnboarding) {
-                if (!inOnboarding) router.replace('/onboarding');
-            } else if (!session) {
-                if (!inAuthScreen) router.replace('/auth');
+            // --- USER-REQUESTED STRICT ROUTING LOGIC ---
+            // If the user has an active session, NEVER show onboarding. Go straight to tabs.
+            if (session) {
+                if (!inTabsGroup) {
+                    router.replace('/(tabs)');
+                }
+                return;
+            }
+
+            // User is NOT logged in.
+            // Check if they are a guest who already completed the map.
+            if (isGuest && profile) {
+                // Guests with a profile can access the app or go to auth to register
+                if (!inTabsGroup && !inAuthScreen) {
+                    router.replace('/(tabs)');
+                }
             } else {
-                if (!inTabsGroup) router.replace('/(tabs)');
+                // No session and no guest profile. 
+                // They belong either in onboarding or auth.
+                if (!inOnboarding && !inAuthScreen) {
+                    router.replace('/onboarding');
+                }
             }
         }, 100);
 
         return () => clearTimeout(timeout);
-    }, [hasCompletedOnboarding, session, segments, isLoading]);
+    }, [profile, isGuest, session, isAuthLoading, isProfileLoading, segments]);
 
-    if (isLoading) return null; // Or a splash screen
+    if (isAuthLoading || isProfileLoading) return null; // Or a splash screen
 
     return <Slot />;
 }

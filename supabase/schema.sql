@@ -62,3 +62,33 @@ drop policy if exists "Own token usage" on token_usage;
 create policy "Users can view own token usage"   on token_usage for select using (auth.uid() = user_id);
 create policy "Users can insert own token usage" on token_usage for insert with check (auth.uid() = user_id);
 
+-- ============================================================
+-- 6. Profile & Auth Epic v1 - Schema Extensions
+-- ============================================================
+
+-- Add new columns to existing profiles table
+alter table profiles add column if not exists email text;
+alter table profiles add column if not exists chart_updates_remaining integer default 1;
+alter table profiles add column if not exists chart_last_updated_at timestamptz;
+alter table profiles add column if not exists wp_user_id integer;
+alter table profiles add column if not exists wp_linked_at timestamptz;
+alter table profiles add column if not exists migrated_from_guest boolean default false;
+alter table profiles add column if not exists guest_migrated_at timestamptz;
+
+-- Otomatik profil oluşturma (kayıt olunca)
+create or replace function handle_new_user()
+returns trigger as $$
+begin
+  insert into profiles (id, email)
+  values (new.id, new.email)
+  on conflict (id) do update set email = excluded.email;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Mevcut trigger'ı düşür ve yeniden oluştur (hata almamak için)
+drop trigger if exists on_auth_user_created on auth.users;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure handle_new_user();

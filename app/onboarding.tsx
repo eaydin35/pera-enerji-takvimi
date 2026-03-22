@@ -3,12 +3,14 @@ import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useStore } from '../store/useStore';
 import { useAuthStore } from '../store/useAuthStore';
+import { useProfileStore } from '../store/profileStore';
 import { supabase } from '../utils/supabase';
 import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import districtsData from '../data/districts.json';
 import { uploadAvatar } from '../utils/storage';
+import { normalizeTurkishSearch } from '../utils/stringUtils';
 
 type Province = {
     id: number;
@@ -24,7 +26,6 @@ type District = {
 
 export default function OnboardingScreen() {
     const router = useRouter();
-    const { completeOnboarding } = useStore();
     const { user } = useAuthStore();
 
     const [firstName, setFirstName] = useState('');
@@ -65,7 +66,8 @@ export default function OnboardingScreen() {
         setShowDatePicker(false);
     }
 
-    // Birth time auto-colon handler with 24h validation
+    // 🛡️ REGRESSION GUARD: This function strictly validates 24h format (00:00-23:59).
+    // DO NOT remove the digit-by-digit validation loop below. It prevents invalid hours (like 32:32).
     const handleBirthTimeChange = (text: string) => {
         // Extract only digits
         let digits = text.replace(/[^0-9]/g, '');
@@ -73,26 +75,69 @@ export default function OnboardingScreen() {
         // Limit to 4 digits (HHMM)
         if (digits.length > 4) digits = digits.slice(0, 4);
 
+        // Validation logic for each digit as typed
+        let validatedDigits = '';
+        for (let i = 0; i < digits.length; i++) {
+            const digit = digits[i];
+            const val = parseInt(digit);
+
+            if (i === 0) {
+                // First digit of hour: 0, 1, or 2
+                if (val <= 2) validatedDigits += digit;
+            } else if (i === 1) {
+                // Second digit of hour: if first was 2, max is 3 (23:59)
+                const firstDigit = parseInt(validatedDigits[0]);
+                if (firstDigit === 2) {
+                    if (val <= 3) validatedDigits += digit;
+                } else {
+                    validatedDigits += digit;
+                }
+            } else if (i === 2) {
+                // First digit of minute: 0 to 5
+                if (val <= 5) validatedDigits += digit;
+            } else if (i === 3) {
+                // Second digit of minute: 0 to 9
+                validatedDigits += digit;
+            }
+        }
+
         let formatted = '';
-        if (digits.length >= 3) {
-            formatted = digits.slice(0, 2) + ':' + digits.slice(2);
-        } else if (digits.length === 2 && text.endsWith(':')) {
-            // If user typed 2 digits and then a colon, keep it
-            formatted = digits + ':';
-        } else if (digits.length === 2 && birthTime.length === 1) {
+        if (validatedDigits.length >= 3) {
+            formatted = validatedDigits.slice(0, 2) + ':' + validatedDigits.slice(2);
+        } else if (validatedDigits.length === 2 && text.endsWith(':')) {
+            // Keep colon if user typed 2 digits and then explicitly a colon
+            formatted = validatedDigits + ':';
+        } else if (validatedDigits.length === 2 && birthTime.length === 1) {
              // Auto-add colon after 2nd digit if moving forward
-            formatted = digits + ':';
+            formatted = validatedDigits + ':';
         } else {
-            formatted = digits;
+            formatted = validatedDigits;
         }
 
         setBirthTime(formatted);
     };
 
     // Modal data filtering
-    const displayData = selectedProvince
-        ? selectedProvince.districts.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()))
-        : districtsData.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const normalizedQuery = normalizeTurkishSearch(searchQuery);
+
+    let displayData: any[] = [];
+    if (selectedProvince) {
+        displayData = selectedProvince.districts.filter(d => 
+            normalizeTurkishSearch(d.name).includes(normalizedQuery)
+        );
+    } else {
+        const filteredProvinces = districtsData.filter(p => 
+            normalizeTurkishSearch(p.name).includes(normalizedQuery)
+        );
+        if (!searchQuery) {
+            const priorityCityNames = ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya'];
+            const priorityCities = filteredProvinces.filter(p => priorityCityNames.includes(p.name));
+            const otherCities = filteredProvinces.filter(p => !priorityCityNames.includes(p.name));
+            displayData = [...priorityCities, ...otherCities];
+        } else {
+            displayData = filteredProvinces;
+        }
+    }
 
     const handleSelectLocation = (item: any) => {
         if (!selectedProvince) {
@@ -124,6 +169,15 @@ export default function OnboardingScreen() {
             return;
         }
 
+        // 🛡️ REGRESSION GUARD: Final validation for birth time data integrity.
+        if (birthTime && birthTime.length > 0) {
+            const timePattern = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+            if (!timePattern.test(birthTime)) {
+                Alert.alert('Hatalı Saat', 'Lütfen geçerli bir doğum saati girin (Örn: 17:34). Saat formatı 00:00 ile 23:59 arasında olmalıdır.');
+                return;
+            }
+        }
+
         let finalAvatarUrl = profileImageUri;
         
         // Upload to Supabase if signed in and has local URI
@@ -132,52 +186,66 @@ export default function OnboardingScreen() {
             if (uploadedUrl) finalAvatarUrl = uploadedUrl;
         }
 
-        const profile = { 
-            firstName, 
-            lastName, 
-            birthDate, 
-            birthTime, 
-            birthPlace, 
-            birthLat, 
-            birthLng,
-            avatarUrl: finalAvatarUrl || undefined
-        };
-        completeOnboarding(profile);
+        const profileStore = useProfileStore.getState();
+        const currentProfile = profileStore.profile;
 
-        // Save to Supabase if user is already signed in
         if (user) {
-            await supabase.from('profiles').upsert({
-                id: user.id,
-                first_name: firstName,
-                last_name: lastName,
-                birth_date: birthDate,
-                birth_time: birthTime,
-                birth_place: birthPlace,
-                birth_lat: birthLat,
-                birth_lng: birthLng,
-                avatar_url: finalAvatarUrl
+            // If user is logged in but profile is null (from db discrepancy or trigger failure), we should insert the missing profile first
+            if (!currentProfile) {
+                try {
+                    const { error: insertError } = await supabase.from('profiles').insert({
+                        id: user.id,
+                        first_name: firstName,
+                        last_name: lastName,
+                        birth_date: birthDate,
+                        birth_time: birthTime,
+                        birth_place: birthPlace,
+                        birth_lat: birthLat,
+                        birth_lng: birthLng,
+                        avatar_url: finalAvatarUrl || null,
+                        chart_updates_remaining: 1 // Default start tokens
+                    });
+                    
+                    if (insertError) {
+                        console.error('[Onboarding] Profile insert error:', insertError);
+                        Alert.alert('Hata', 'Kayıtlı profiliniz bulunamadı ve oluşturulamadı. Lütfen çıkış yapıp tekrar giriş yapmayı deneyin.');
+                        return;
+                    }
+                    
+                    // Force the profileStore to reload the newly inserted profile
+                    await profileStore.initialize();
+                } catch (err) {
+                    console.error('[Onboarding] Fallback profile creation failed', err);
+                }
+            } else {
+                // Normal flow: Already signed in and profile exists
+                await profileStore.updateProfile({ 
+                    firstName, 
+                    lastName, 
+                    avatarUrl: finalAvatarUrl || undefined 
+                });
+                await profileStore.updateBirthDataInfo({ 
+                    date: birthDate, 
+                    time: birthTime, 
+                    place: birthPlace, 
+                    lat: birthLat, 
+                    lng: birthLng 
+                });
+            }
+        } else {
+            // Guest mode
+            await profileStore.createGuestProfile({
+                firstName,
+                lastName,
+                birthDate,
+                birthTime,
+                birthPlace,
+                birthLat,
+                birthLng,
             });
         }
-        // _layout will decide next route (auth or tabs)
-        router.replace(user ? '/(tabs)' : '/auth');
-    };
 
-    // Developer bypass for testing
-    const handleDevBypass = () => {
-        // ONLY if user explicitly wants to bypass
-        const devProfile = {
-            firstName: 'Misafir',
-            lastName: 'Gezgin',
-            birthDate: '1990-01-01',
-            birthTime: '12:00',
-            birthPlace: 'İstanbul',
-            birthLat: 41.0082,
-            birthLng: 28.9784,
-            sunSign: 'Oğlak',
-            moonSign: 'Kova',
-            ascendant: 'Koç'
-        };
-        completeOnboarding(devProfile);
+        // Direct routing fallback in case root layout listener delays
         router.replace('/(tabs)');
     };
 
@@ -204,10 +272,10 @@ export default function OnboardingScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-        <SafeAreaView className="flex-1 bg-background-light">
+        <SafeAreaView className="flex-1 bg-white">
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
                 {/* Header */}
-                <View className="flex-row items-center p-4">
+                <View className="flex-row items-center justify-between p-4">
                     <TouchableOpacity className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
                         <MaterialIcons name="arrow-back" size={24} color="#71717a" />
                     </TouchableOpacity>
@@ -216,53 +284,22 @@ export default function OnboardingScreen() {
                             <View className="h-full w-1/3 bg-primary" />
                         </View>
                     </View>
-                    {/* Dev bypass button - subtle */}
-                    <TouchableOpacity
-                        onPress={handleDevBypass}
-                        className="flex h-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 px-3"
-                    >
-                        <Text className="text-xs font-semibold text-zinc-500">Test Geç</Text>
-                    </TouchableOpacity>
+                    {!user && (
+                        <TouchableOpacity onPress={() => router.push('/auth')} className="bg-primary/20 px-4 py-2 rounded-full border border-primary/30">
+                            <Text className="text-sm font-bold text-primary">Kayıt Ol / Giriş</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
 
                 {/* Content */}
                 <View className="flex flex-1 flex-col px-4 pt-2 pb-6">
-                    <View className="mb-4">
+                    <View className="mb-6">
                         <Text className="text-3xl font-bold leading-tight tracking-tight text-zinc-900">
                             Kişisel Rehberin Seni Bekliyor
                         </Text>
                         <Text className="mt-2 text-base font-normal leading-normal text-zinc-600">
                             Doğru bir analiz için lütfen doğum bilgilerini eksiksiz gir.
                         </Text>
-                    </View>
-
-                    {/* Profile Chips – Compact Round Avatars */}
-                    <View className="flex-row items-center gap-3 mb-6">
-                        {/* Sen – Active */}
-                        <View className="items-center">
-                            <View className="w-14 h-14 rounded-full bg-primary border-2 border-primary items-center justify-center">
-                                {profileImageUri ? (
-                                    <Image source={{ uri: profileImageUri }} className="w-full h-full rounded-full" />
-                                ) : (
-                                    <MaterialIcons name="person" size={26} color="#1f1317" />
-                                )}
-                            </View>
-                            <Text className="mt-1 text-xs font-semibold text-zinc-700">Sen</Text>
-                        </View>
-                        {/* Eşim */}
-                        <View className="items-center opacity-60">
-                            <View className="w-12 h-12 rounded-full border-2 border-zinc-300 bg-zinc-100 items-center justify-center">
-                                <MaterialIcons name="person" size={22} color="#71717a" />
-                            </View>
-                            <Text className="mt-1 text-xs font-medium text-zinc-500">Eşim</Text>
-                        </View>
-                        {/* Ek Profil */}
-                        <View className="items-center">
-                            <View className="w-12 h-12 rounded-full border-2 border-dashed border-zinc-400 bg-transparent items-center justify-center">
-                                <MaterialIcons name="add" size={20} color="#71717a" />
-                            </View>
-                            <Text className="mt-1 text-xs font-medium text-zinc-500">Ekle</Text>
-                        </View>
                     </View>
 
                     {/* Form */}

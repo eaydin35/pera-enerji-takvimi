@@ -16,12 +16,14 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
 import { useStore } from '../../store/useStore';
+import { useProfileStore } from '../../store/profileStore';
 import { useZikirStore } from '../../store/useZikirStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { supabase } from '../../utils/supabase';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadAvatar } from '../../utils/storage';
+import BirthDataEditorModal from '../../components/BirthDataEditorModal';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -52,9 +54,13 @@ function SectionCard({ children }: { children: React.ReactNode }) {
     );
 }
 
-function InfoRow({ label, value, isLast }: { label: string; value: string; isLast?: boolean }) {
+function InfoRow({ label, value, isLast, onPress }: { label: string; value: string; isLast?: boolean; onPress?: () => void; }) {
     return (
-        <TouchableOpacity style={[styles.infoRow, isLast && { borderBottomWidth: 0 }]}>
+        <TouchableOpacity 
+            style={[styles.infoRow, isLast && { borderBottomWidth: 0 }]}
+            onPress={onPress}
+            disabled={!onPress}
+        >
             <View style={{ flex: 1 }}>
                 <Text style={styles.infoLabel}>{label}</Text>
                 <Text style={styles.infoValue}>{value}</Text>
@@ -85,7 +91,8 @@ function SettingsRow({
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
-    const { userProfile, tokens, isPremium, setPremiumStatus, setAvatarUrl: setStoreAvatar, resetOnboarding } = useStore();
+    const { tokens, isPremium, setPremiumStatus, setAvatarUrl: setStoreAvatar, resetOnboarding } = useStore();
+    const { profile: userProfile, isGuest } = useProfileStore();
     const { sessions, resetAll: resetZikir } = useZikirStore();
 
 
@@ -98,6 +105,7 @@ export default function ProfileScreen() {
     const [notificationsOn, setNotificationsOn] = useState(true);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
+    const [birthEditorVisible, setBirthEditorVisible] = useState(false);
 
     const sunSign = getSunSign(userProfile?.birthDate ?? '');
     const totalZikir = Object.values(sessions).reduce((sum, s) => sum + (s.count ?? 0), 0);
@@ -135,6 +143,7 @@ export default function ProfileScreen() {
                     if (uploadedUrl) {
                         // Update local state and store
                         setAvatarUrl(uploadedUrl);
+                        useProfileStore.getState().updateProfile({ avatarUrl: uploadedUrl });
                         setStoreAvatar(uploadedUrl);
 
                         // Update Supabase profiles table
@@ -159,6 +168,7 @@ export default function ProfileScreen() {
                 }
             } else {
                 setAvatarUrl(localUri);
+                useProfileStore.getState().updateProfile({ avatarUrl: localUri });
                 setStoreAvatar(localUri);
             }
         }
@@ -168,9 +178,12 @@ export default function ProfileScreen() {
         Alert.alert('Oturumu Kapat', 'Çıkmak istediğinize emin misiniz?', [
             { text: 'İptal', style: 'cancel' },
             {
-                text: 'Çıkış Yap', style: 'destructive', onPress: () => {
+                text: 'Çıkış Yap', style: 'destructive', onPress: async () => {
                     resetZikir();
                     resetOnboarding();
+                    useProfileStore.getState().clearProfile();
+                    await useAuthStore.getState().signOut();
+                    router.replace('/onboarding');
                 }
             },
         ]);
@@ -179,7 +192,7 @@ export default function ProfileScreen() {
     const toggleTheme = () => setColorScheme(isDark ? 'light' : 'dark');
 
     return (
-        <SafeAreaView className="flex-1 bg-background-light">
+        <SafeAreaView style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity style={styles.headerBtn}>
@@ -193,7 +206,7 @@ export default function ProfileScreen() {
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
 
-                {/* Avatar + Name */}
+                {/* Header (Avatar & Name) */}
                 <View style={styles.avatarSection}>
                     <View style={styles.avatarWrapper}>
                         <View style={styles.avatarRing}>
@@ -205,15 +218,32 @@ export default function ProfileScreen() {
                                 )}
                             </View>
                         </View>
-                        <TouchableOpacity style={styles.editBtn} onPress={handlePickImage}>
-                            {uploadingPhoto
-                                ? <ActivityIndicator size="small" color="#fff" />
-                                : <MaterialIcons name="edit" size={14} color="#fff" />}
+                        <TouchableOpacity style={styles.editBtn} onPress={handlePickImage} disabled={uploadingPhoto}>
+                            {uploadingPhoto ? (
+                                <ActivityIndicator color="#fff" size="small" />
+                            ) : (
+                                <MaterialIcons name="edit" size={14} color="#fff" />
+                            )}
                         </TouchableOpacity>
                     </View>
                     <Text style={[styles.profileName, isDark && { color: '#f1f5f9' }]}>
                         {userProfile?.firstName ?? 'Misafir'} {userProfile?.lastName ?? ''}
                     </Text>
+                    
+                    {isGuest && (
+                        <View style={styles.guestBadgeContainer}>
+                            <View style={styles.guestBadge}>
+                                <Text style={styles.guestBadgeText}>Misafir Kullanıcı</Text>
+                            </View>
+                            <TouchableOpacity 
+                                style={styles.registerBtn}
+                                onPress={() => router.push('/auth')}
+                            >
+                                <MaterialIcons name="person-add" size={16} color="#fff" />
+                                <Text style={styles.registerBtnText}>Hemen Üye Ol</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                     <View style={styles.badgeRow}>
                         <View style={styles.badge}>
                             <Text style={styles.badgeText}>{sunSign} Burcu</Text>
@@ -302,10 +332,35 @@ export default function ProfileScreen() {
                         Kişisel Bilgiler
                     </Text>
                     <SectionCard>
-                        <InfoRow label="AD SOYAD" value={`${userProfile?.firstName ?? '—'} ${userProfile?.lastName ?? ''}`} />
-                        <InfoRow label="DOĞUM TARİHİ" value={userProfile?.birthDate ?? '—'} />
-                        <InfoRow label="DOĞUM SAATİ" value={userProfile?.birthTime || '—'} />
-                        <InfoRow label="DOĞUM YERİ" value={userProfile?.birthPlace ?? '—'} isLast />
+                        <InfoRow 
+                            label="AD SOYAD" 
+                            value={`${userProfile?.firstName ?? '—'} ${userProfile?.lastName ?? ''}`} 
+                            onPress={() => setBirthEditorVisible(true)} 
+                        />
+                        <InfoRow 
+                            label="DOĞUM TARİHİ" 
+                            value={userProfile?.birthDate ?? '—'} 
+                            onPress={() => setBirthEditorVisible(true)} 
+                        />
+                        <InfoRow 
+                            label="DOĞUM SAATİ" 
+                            value={userProfile?.birthTime || '—'} 
+                            onPress={() => setBirthEditorVisible(true)} 
+                        />
+                        <InfoRow 
+                            label="DOĞUM YERİ" 
+                            value={userProfile?.birthPlace ?? '—'} 
+                            onPress={() => setBirthEditorVisible(true)} 
+                        />
+                        <TouchableOpacity 
+                            style={styles.editBirthDataBtn}
+                            onPress={() => setBirthEditorVisible(true)}
+                        >
+                            <Text style={styles.editBirthDataBtnText}>
+                                {(userProfile && !('isGuest' in userProfile) && !isPremium) ? "Doğum Bilgilerimi Güncelle (1 Jeton)" : "Doğum Bilgilerimi Güncelle"}
+                            </Text>
+                            <MaterialIcons name="edit" size={16} color="#ad92c9" />
+                        </TouchableOpacity>
                     </SectionCard>
                 </View>
 
@@ -380,6 +435,11 @@ export default function ProfileScreen() {
                 </View>
 
             </ScrollView>
+
+            <BirthDataEditorModal 
+                visible={birthEditorVisible} 
+                onClose={() => setBirthEditorVisible(false)} 
+            />
         </SafeAreaView>
     );
 }
@@ -387,7 +447,7 @@ export default function ProfileScreen() {
 // ─── Styles ──────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-    container:     { flex: 1, backgroundColor: '#f8f6f7' },
+    container: { flex: 1, backgroundColor: '#ffffff' },
     containerDark: { backgroundColor: '#1f1317' },
     header: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
@@ -464,7 +524,7 @@ const styles = StyleSheet.create({
     },
     premiumHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 },
     tokenRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 },
-    premiumLabel:  { fontSize: 10, fontWeight: '600', color: '#9ca3af', letterSpacing: 1.5 },
+    premiumLabel:  { fontSize: 10, fontWeight: '600', color: '#9ca3af', letterSpacing: 1, marginBottom: 3 },
     premiumTitle:  { fontSize: 18, fontWeight: '700', color: '#f7e1e8' },
 
     premiumDesc:   { fontSize: 13, color: '#94a3b8', lineHeight: 18, marginBottom: 16 },
@@ -498,6 +558,11 @@ const styles = StyleSheet.create({
     },
     infoLabel: { fontSize: 10, fontWeight: '600', color: '#9ca3af', letterSpacing: 1, marginBottom: 3 },
     infoValue: { fontSize: 15, fontWeight: '500', color: '#111827' },
+    editBirthDataBtn: {
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6,
+        paddingVertical: 14, borderTopWidth: 1, borderTopColor: '#f3f4f6', backgroundColor: '#faf5ff'
+    },
+    editBirthDataBtnText: { fontSize: 13, fontWeight: '600', color: '#ad92c9' },
     // Settings rows
     settingsRow: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
@@ -524,4 +589,15 @@ const styles = StyleSheet.create({
     },
     logoutText:   { fontSize: 15, fontWeight: '700', color: '#dc2626' },
     versionText:  { textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 16 },
+    userName: { fontSize: 24, fontWeight: '700', color: '#111827' },
+    guestBadgeContainer: { alignItems: 'center', marginTop: 8, gap: 12 },
+    guestBadge: { backgroundColor: '#f1f5f9', paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 },
+    guestBadgeText: { fontSize: 13, color: '#64748b', fontWeight: '500' },
+    registerBtn: {
+        flexDirection: 'row', alignItems: 'center', backgroundColor: '#ad92c9',
+        paddingHorizontal: 20, paddingVertical: 10, borderRadius: 24, gap: 6,
+        shadowColor: '#ad92c9', shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3, shadowRadius: 8, elevation: 4,
+    },
+    registerBtnText: { color: '#fff', fontSize: 14, fontWeight: '600' },
 });
