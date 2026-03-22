@@ -206,7 +206,12 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         set({ isLoading: true, error: null });
         try {
             // Attempt to migrate guest data if it exists
-            await migrateGuestToRegistered(userId);
+            const migrated = await migrateGuestToRegistered(userId);
+            
+            // Failsafe: Guarantee the profile row exists in case migration was skipped
+            if (!migrated) {
+                await supabase.from('profiles').upsert({ id: userId });
+            }
             
             // Always reload profile from DB after login/signup
             const userProfile = await loadUserProfile(userId);
@@ -215,7 +220,8 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
                 return true;
             }
             
-            // If Supabase profile trigger takes time or failed, fallback gracefully
+            // Deep fallback to clear old stuck states
+            set({ profile: null, isGuest: false });
             return false;
         } catch (e: any) {
             set({ error: e.message });

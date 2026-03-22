@@ -54,8 +54,7 @@ export async function saveProfileInfo(userId: string, updates: Partial<UserProfi
         
         const { error } = await supabase
             .from('profiles')
-            .update(dbUpdates)
-            .eq('id', userId);
+            .upsert({ id: userId, ...dbUpdates });
 
         if (error) throw error;
         return true;
@@ -95,8 +94,7 @@ export async function updateBirthData(
 
         const { error } = await supabase
             .from('profiles')
-            .update(updates)
-            .eq('id', userId);
+            .upsert({ id: userId, ...updates });
 
         if (error) throw error;
 
@@ -140,8 +138,7 @@ export async function migrateGuestToRegistered(userId: string): Promise<boolean>
 
         const { error } = await supabase
             .from('profiles')
-            .update(updates)
-            .eq('id', userId);
+            .upsert({ id: userId, ...updates });
 
         if (error) throw error;
         return true;
@@ -158,11 +155,11 @@ export async function linkWooCommerceAccount(userId: string, wpUserId: number): 
     try {
         const { error } = await supabase
             .from('profiles')
-            .update({
+            .upsert({
+                id: userId,
                 wp_user_id: wpUserId,
                 wp_linked_at: new Date().toISOString(),
-            })
-            .eq('id', userId);
+            });
 
         if (error) throw error;
         return true;
