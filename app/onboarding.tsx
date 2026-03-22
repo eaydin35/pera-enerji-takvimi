@@ -1,4 +1,5 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, Modal, FlatList, Platform, Image, Alert, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, FlatList, Platform, Image, Alert, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useStore } from '../store/useStore';
@@ -271,10 +272,10 @@ export default function OnboardingScreen() {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{ flex: 1 }}
+            style={{ flex: 1, backgroundColor: '#ffffff' }}
         >
-        <SafeAreaView className="flex-1 bg-white">
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
                 {/* Header */}
                 <View className="flex-row items-center justify-between p-4">
                     <TouchableOpacity className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
