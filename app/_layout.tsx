@@ -7,7 +7,7 @@ import { useProfileStore } from '../store/profileStore';
 import { initPurchases } from '../utils/purchases';
 import { supabase } from '../utils/supabase';
 import * as Linking from 'expo-linking';
-import { Platform } from 'react-native';
+import { Platform, View, ActivityIndicator } from 'react-native';
 
 // Initialize Supabase auth session listener once at app startup
 initAuthListener();
@@ -111,7 +111,13 @@ export default function RootLayout() {
         return () => clearTimeout(timeout);
     }, [profile, isGuest, session, isAuthLoading, isProfileLoading, segments]);
 
-    if (isAuthLoading || isProfileLoading) return null; // Or a splash screen
+    if (isAuthLoading || isProfileLoading) {
+        return (
+            <View style={{ flex: 1, backgroundColor: '#ffffff', justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#ad92c9" />
+            </View>
+        );
+    }
 
     return <Slot />;
 }

@@ -132,8 +132,21 @@ export async function migrateGuestToRegistered(userId: string): Promise<boolean>
             birth_lng: guestData.birthLng,
         };
 
-        if (guestData.avatarUrl) {
-            updates.avatar_url = guestData.avatarUrl;
+        let finalAvatarUrl = guestData.avatarUrl;
+
+        // If guest uploaded photo locally before signing up, migrate it to Supabase Storage
+        if (finalAvatarUrl && finalAvatarUrl.startsWith('file://')) {
+            try {
+                const { uploadAvatar } = await import('./storage');
+                const uploadedUrl = await uploadAvatar(finalAvatarUrl, userId);
+                if (uploadedUrl) finalAvatarUrl = uploadedUrl;
+            } catch (err) {
+                console.error('[ProfileService] Failed to upload local guest avatar during migration', err);
+            }
+        }
+
+        if (finalAvatarUrl) {
+            updates.avatar_url = finalAvatarUrl;
         }
 
         const { error } = await supabase

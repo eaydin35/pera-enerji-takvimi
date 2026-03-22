@@ -242,6 +242,7 @@ export default function OnboardingScreen() {
                 birthPlace,
                 birthLat,
                 birthLng,
+                avatarUrl: finalAvatarUrl || undefined,
             });
         }
 
