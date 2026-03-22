@@ -26,6 +26,7 @@ import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadAvatar } from '../../utils/storage';
 import BirthDataEditorModal from '../../components/BirthDataEditorModal';
+import { calculateChart, getZodiacSign } from '../../utils/astrology';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -119,6 +120,19 @@ export default function ProfileScreen() {
     }, [userProfile?.firstName, userProfile?.lastName, nameEditorVisible]);
 
     const sunSign = getSunSign(userProfile?.birthDate ?? '');
+    
+    const ascendantSign = React.useMemo(() => {
+        if (userProfile?.birthDate && userProfile?.birthTime && userProfile?.birthLat && userProfile?.birthLng) {
+            try {
+                const chart = calculateChart(userProfile.birthDate, userProfile.birthTime, userProfile.birthLat, userProfile.birthLng);
+                return getZodiacSign(chart.ascendant).sign + ' Yükselen';
+            } catch (e) {
+                return 'Yükselen Belirsiz';
+            }
+        }
+        return 'Yükselen Belirsiz';
+    }, [userProfile?.birthDate, userProfile?.birthTime, userProfile?.birthLat, userProfile?.birthLng]);
+
     const totalZikir = Object.values(sessions).reduce((sum, s) => sum + (s.count ?? 0), 0);
 
     // Load saved avatar on mount
@@ -277,7 +291,7 @@ export default function ProfileScreen() {
                         </View>
                         <View style={styles.dot} />
                         <View style={styles.badge}>
-                            <Text style={styles.badgeText}>Yükselen Belirsiz</Text>
+                            <Text style={styles.badgeText}>{ascendantSign}</Text>
                         </View>
                     </View>
                     {userProfile?.birthPlace ? (

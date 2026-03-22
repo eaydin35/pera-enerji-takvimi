@@ -73,7 +73,7 @@ export function parseDateLocal(dateStr: string, timeStr: string, timezoneOffset:
     return new Date(Date.UTC(year, month - 1, day, (hour || 12) - timezoneOffset, minute || 0));
 }
 
-function getZodiacSign(longitude: number): { sign: string; degree: number } {
+export function getZodiacSign(longitude: number): { sign: string; degree: number } {
     const norm = longitude % 360;
     const signIndex = Math.floor(norm / 30);
     const degree = norm % 30;
