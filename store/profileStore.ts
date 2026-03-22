@@ -71,8 +71,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         if (!targetProfile && authUser) {
             try {
                 const { error: insertError } = await supabase.from('profiles').insert({
-                    id: authUser.id,
-                    chart_updates_remaining: 1
+                    id: authUser.id
                 });
                 if (!insertError) {
                     const p = await loadUserProfile(authUser.id);
@@ -116,7 +115,6 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             try {
                 const { error: insertError } = await supabase.from('profiles').insert({
                     id: authUser.id,
-                    chart_updates_remaining: 1,
                     first_name: authUser.user_metadata?.full_name || 'Misafir'
                 });
                 if (!insertError) {
@@ -217,6 +215,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             const userProfile = await loadUserProfile(userId);
             if (userProfile) {
                 set({ profile: userProfile, isGuest: false });
+                await clearGuestProfile(); // Prevent race conditions where initialize() pulls stale guest data
                 return true;
             }
             

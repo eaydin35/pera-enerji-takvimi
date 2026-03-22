@@ -88,7 +88,6 @@ export async function updateBirthData(
             birth_place: newBirthData.place,
             birth_lat: newBirthData.lat,
             birth_lng: newBirthData.lng,
-            chart_updates_remaining: isPremium ? currentUpdatesRemaining : currentUpdatesRemaining - 1,
         };
 
         const { error } = await supabase
