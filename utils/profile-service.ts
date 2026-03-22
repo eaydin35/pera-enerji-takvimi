@@ -122,6 +122,20 @@ export async function migrateGuestToRegistered(userId: string): Promise<boolean>
         const guestData = await getGuestProfileForMigration();
         if (!guestData) return false;
 
+        // SECURITY: Fetch existing profile first to prevent blind overwrites during an unintended login
+        const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('birth_date')
+            .eq('id', userId)
+            .single();
+
+        // If the Supabase account already possesses birth data, it is an established profile.
+        // DO NOT overwrite their established charts with transient local testing data!
+        if (existingProfile && existingProfile.birth_date) {
+            console.warn('[ProfileService] Target account already possesses a birth map. Aborting guest migration to prevent data loss.');
+            return false;
+        }
+
         const updates: any = {
             first_name: guestData.firstName,
             last_name: guestData.lastName,

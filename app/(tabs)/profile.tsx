@@ -365,6 +365,11 @@ export default function ProfileScreen() {
                             onPress={() => setNameEditorVisible(true)} 
                         />
                         <InfoRow 
+                            label="E-POSTA" 
+                            value={(userProfile as any)?.email ?? '—'} 
+                            onPress={() => Alert.alert('Bilgi', 'Güvenliğiniz için hesap E-posta değişimleri destek paneli üzerinden yürütülmektedir.')} 
+                        />
+                        <InfoRow 
                             label="DOĞUM TARİHİ" 
                             value={userProfile?.birthDate ?? '—'} 
                             onPress={() => setBirthEditorVisible(true)} 
