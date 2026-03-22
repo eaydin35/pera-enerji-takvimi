@@ -151,8 +151,22 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             }
 
             // Registered user
-            const p = targetProfile as UserProfile;
+            let p = targetProfile as UserProfile;
             const isPremium = useStore.getState().isPremium;
+
+            // If user is basic and has 0 free chart updates left, see if they have 'Jeton' (tokens)
+            if (!isPremium && p.chartUpdatesRemaining <= 0) {
+                const currentTokens = useStore.getState().tokens;
+                if (currentTokens >= 1) {
+                    // Deduct 1 Jeton to authorize this map update map
+                    useStore.getState().useTokens(1);
+                    // Temporarily boost the payload remaining updates to 1 so the service layer executes it
+                    p = { ...p, chartUpdatesRemaining: 1 };
+                } else {
+                    return { success: false, error: 'Harita güncellemek için jetonunuz bulunmuyor. Lütfen mağazadan jeton temin ediniz.' };
+                }
+            }
+
             const res = await updateBirthData(p.id, p.chartUpdatesRemaining, newData, isPremium);
             if (res.success) {
                 set({

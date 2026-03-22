@@ -32,6 +32,8 @@ export default function AuthScreen() {
                 // Link any guest data map to the newly logged in user
                 await useProfileStore.getState().migrateToRegistered();
                 router.replace('/(tabs)');
+            } else if (state.error) {
+                Alert.alert('Hata', state.error);
             }
         } else {
             if (!fullName.trim()) { Alert.alert('Ad Soyad gerekli'); return; }
@@ -40,8 +42,11 @@ export default function AuthScreen() {
             if (state.session) {
                 await useProfileStore.getState().migrateToRegistered();
                 router.replace('/(tabs)');
+            } else if (state.error) {
+                Alert.alert('Hata', state.error);
+            } else {
+                Alert.alert('✅ Kayıt Başarılı', 'E-postaınızı doğrulayın, ardından giriş yapın.', [{ text: 'Tamam', onPress: () => setMode('login') }]);
             }
-            else if (!state.error) Alert.alert('✅ Kayıt Başarılı', 'E-postaınızı doğrulayın, ardından giriş yapın.', [{ text: 'Tamam', onPress: () => setMode('login') }]);
         }
     };
 

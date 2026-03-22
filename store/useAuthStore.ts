@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
             if (error) throw error;
             set({ session: data.session, user: data.user, isLoading: false });
         } catch (e: any) {
-            set({ error: e.message, isLoading: false });
+            set({ error: translateAuthError(e.message), isLoading: false });
         }
     },
 
@@ -65,7 +65,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
             if (error) throw error;
             set({ session: data.session, user: data.user, isLoading: false });
         } catch (e: any) {
-            set({ error: e.message, isLoading: false });
+            set({ error: translateAuthError(e.message), isLoading: false });
         }
     },
 
