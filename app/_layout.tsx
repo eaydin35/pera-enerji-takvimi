@@ -8,12 +8,16 @@ import { initPurchases } from '../utils/purchases';
 import { supabase } from '../utils/supabase';
 import * as Linking from 'expo-linking';
 import { Platform, View, ActivityIndicator } from 'react-native';
+import { ErrorBoundary } from '../components/ErrorBoundary';
+import { initErrorReporting, setUserContext, clearUserContext, captureError, addBreadcrumb } from '../utils/error-reporter';
+
+// Initialize error reporting (Sentry) as early as possible
+initErrorReporting();
 
 // Initialize Supabase auth session listener once at app startup
 initAuthListener();
 
 export default function RootLayout() {
-    const { syncPremiumStatus } = useStore();
     const { session, isLoading: isAuthLoading } = useAuthStore();
     const { profile, isGuest, isLoading: isProfileLoading, initialize } = useProfileStore();
     const segments = useSegments();
@@ -34,10 +38,15 @@ export default function RootLayout() {
     // 2. Auto-sync premium status and initiate purchases when user logs in
     useEffect(() => {
         if (session?.user?.id) {
-            // Initialize RevenueCat and sync premium status
-            initPurchases(session.user.id).then(() => {
-                syncPremiumStatus();
-            });
+            // Set user context for error reporting (Sentry)
+            setUserContext(session.user.id, session.user.email);
+            addBreadcrumb('auth', 'User logged in', { userId: session.user.id });
+
+            // Initialize RevenueCat
+            initPurchases(session.user.id).catch(console.error);
+        } else {
+            // Clear user context when logged out
+            clearUserContext();
         }
     }, [session?.user?.id]);
 
@@ -53,7 +62,7 @@ export default function RootLayout() {
                     access_token: queryParams.access_token as string,
                     refresh_token: queryParams.refresh_token as string,
                 });
-                if (error) console.error('[DeepLink] Error setting session:', error.message);
+                if (error) captureError(new Error(error.message), { screen: 'RootLayout', action: 'DeepLink setSession' });
             }
         };
 
@@ -79,9 +88,10 @@ export default function RootLayout() {
             const inAuthScreen  = segments[0] === 'auth';
             const inOnboarding  = segments[0] === 'onboarding';
             const inWorkout     = segments[0] === 'workout';
+            const inPaywall     = segments[0] === 'paywall';
 
-            // Allow standalone screens (workout etc.) to stay open
-            if (inWorkout) return;
+            // Allow standalone screens (workout, paywall etc.) to stay open
+            if (inWorkout || inPaywall) return;
 
             // --- USER-REQUESTED STRICT ROUTING LOGIC ---
             // If the user has an active session, NEVER show onboarding. Go straight to tabs.
@@ -124,5 +134,9 @@ export default function RootLayout() {
         );
     }
 
-    return <Slot />;
+    return (
+        <ErrorBoundary>
+            <Slot />
+        </ErrorBoundary>
+    );
 }

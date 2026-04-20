@@ -21,14 +21,10 @@ interface AppState {
     hasCompletedOnboarding: boolean;
     userProfile: UserProfile | null;
     tokens: number;
-    isPremium: boolean;
-    completeOnboarding: (profile: UserProfile) => void;
-    resetOnboarding: () => void;
     useTokens: (amount: number) => boolean;
+    setTokens: (amount: number) => void;
     addTokens: (amount: number) => void;
-    setPremiumStatus: (status: boolean) => void;
     setAvatarUrl: (url: string) => void;
-    syncPremiumStatus: () => Promise<void>;
     syncProfileFromSupabase: (userId: string) => Promise<void>;
 }
 
@@ -37,11 +33,11 @@ export const useStore = create<AppState>((set, get) => ({
     hasCompletedOnboarding: false,
     userProfile: null,
     tokens: 10,
-    isPremium: false,
     completeOnboarding: (profile) => set({ hasCompletedOnboarding: true, userProfile: profile }),
     resetOnboarding: () => set({ hasCompletedOnboarding: false, userProfile: null }),
     useTokens: (amount) => {
-        if (get().isPremium) return true; // Unlimited for premium
+        // Keep standard UI deductions locally. 
+        // Actual server-side sync is handled in profile store or chat service natively.
         const currentTokens = get().tokens;
         if (currentTokens >= amount) {
             set({ tokens: currentTokens - amount });
@@ -49,23 +45,11 @@ export const useStore = create<AppState>((set, get) => ({
         }
         return false;
     },
+    setTokens: (amount) => set({ tokens: amount }),
     addTokens: (amount) => set((state) => ({ tokens: state.tokens + amount })),
-    setPremiumStatus: (status) => set({ isPremium: status }),
     setAvatarUrl: (url) => set((state) => ({
         userProfile: state.userProfile ? { ...state.userProfile, avatarUrl: url } : null
     })),
-    syncPremiumStatus: async () => {
-        try {
-            const customerInfo = await getCustomerInfo();
-            if (customerInfo && customerInfo.entitlements.active['Premium']) {
-                set({ isPremium: true });
-            } else {
-                set({ isPremium: false });
-            }
-        } catch (e) {
-            console.error('[Store] Premium sync failed:', e);
-        }
-    },
     syncProfileFromSupabase: async (userId: string) => {
         try {
             const { data, error } = await supabase
@@ -77,6 +61,7 @@ export const useStore = create<AppState>((set, get) => ({
             if (error || !data) return;
 
             const profile: UserProfile = {
+                id: data.id,
                 firstName: data.first_name || '',
                 lastName: data.last_name || '',
                 birthDate: data.birth_date || '',
@@ -85,9 +70,12 @@ export const useStore = create<AppState>((set, get) => ({
                 birthLat: data.birth_lat,
                 birthLng: data.birth_lng,
                 avatarUrl: data.avatar_url || undefined,
+                tokens: data.tokens || 5,
+                chartUpdatesRemaining: data.chart_updates_remaining || 1,
+                migratedFromGuest: data.migrated_from_guest || false
             };
 
-            set({ hasCompletedOnboarding: true, userProfile: profile });
+            set({ hasCompletedOnboarding: true, userProfile: profile, tokens: profile.tokens });
         } catch (e) {
             console.error('[Store] Profile sync failed:', e);
         }

@@ -1,0 +1,10 @@
+appId: com.peratakvimi.app
+---
+# Requires user to be logged in
+- launchApp
+- waitForAnimationToEnd
+- tapOn: "Profil"
+- assertVisible: "Profil"
+- waitForAnimationToEnd
+# Verify profile information is visible
+- assertVisible: "Çıkış Yap"

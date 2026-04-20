@@ -21,6 +21,8 @@ export async function loadUserProfile(userId: string): Promise<UserProfile | nul
             email: data.email,
             firstName: data.first_name || '',
             lastName: data.last_name || '',
+            gender: data.gender || undefined,
+            lifeFocus: data.life_focus || undefined,
             birthDate: data.birth_date || '',
             birthTime: data.birth_time || '',
             birthPlace: data.birth_place || '',
@@ -28,6 +30,7 @@ export async function loadUserProfile(userId: string): Promise<UserProfile | nul
             birthLng: data.birth_lng,
             avatarUrl: data.avatar_url,
             chartUpdatesRemaining: data.chart_updates_remaining ?? 1,
+            tokens: data.tokens ?? 5,
             chartLastUpdatedAt: data.chart_last_updated_at,
             wpUserId: data.wp_user_id,
             wpLinkedAt: data.wp_linked_at,
@@ -51,6 +54,8 @@ export async function saveProfileInfo(userId: string, updates: Partial<UserProfi
         if (updates.firstName !== undefined) dbUpdates.first_name = updates.firstName;
         if (updates.lastName !== undefined) dbUpdates.last_name = updates.lastName;
         if (updates.avatarUrl !== undefined) dbUpdates.avatar_url = updates.avatarUrl;
+        if (updates.gender !== undefined) dbUpdates.gender = updates.gender;
+        if (updates.lifeFocus !== undefined) dbUpdates.life_focus = updates.lifeFocus;
         
         const { error } = await supabase
             .from('profiles')
@@ -65,20 +70,20 @@ export async function saveProfileInfo(userId: string, updates: Partial<UserProfi
 }
 
 /**
- * Updates birth data and manages the chart updates token logic.
+ * Updates birth data and manages the token logic.
+ * Cost for map recalculation is 3 Tokens.
  */
 export async function updateBirthData(
     userId: string,
-    currentUpdatesRemaining: number,
-    newBirthData: { date: string; time: string; place: string; lat: number; lng: number },
-    isPremium: boolean = false
-): Promise<{ success: boolean; remainingUpdates: number; error?: string }> {
+    currentTokens: number,
+    newBirthData: { date: string; time: string; place: string; lat: number; lng: number }
+): Promise<{ success: boolean; remainingTokens: number; error?: string }> {
     try {
-        if (!isPremium && currentUpdatesRemaining <= 0) {
+        if (currentTokens < 3) {
             return {
                 success: false,
-                remainingUpdates: 0,
-                error: 'Güncelleme hakkınız bulunmamaktadır.',
+                remainingTokens: currentTokens,
+                error: 'Harita güncellemek için 3 jeton gereklidir.',
             };
         }
 
@@ -88,7 +93,7 @@ export async function updateBirthData(
             birth_place: newBirthData.place,
             birth_lat: newBirthData.lat,
             birth_lng: newBirthData.lng,
-            chart_updates_remaining: isPremium ? currentUpdatesRemaining : Math.max(0, currentUpdatesRemaining - 1),
+            tokens: Math.max(0, currentTokens - 3),
             chart_last_updated_at: new Date().toISOString(),
         };
 
@@ -106,11 +111,40 @@ export async function updateBirthData(
 
         return {
             success: true,
-            remainingUpdates: isPremium ? currentUpdatesRemaining : currentUpdatesRemaining - 1,
+            remainingTokens: Math.max(0, currentTokens - 3),
         };
     } catch (e) {
         console.error('[ProfileService] Error updating birth data:', e);
-        return { success: false, remainingUpdates: currentUpdatesRemaining, error: 'Bir hata oluştu.' };
+        return { success: false, remainingTokens: currentTokens, error: 'Bir hata oluştu.' };
+    }
+}
+
+/**
+ * Deducts specified amount of tokens from user profile.
+ */
+export async function deductTokens(userId: string, amount: number, currentTokens: number): Promise<boolean> {
+    if (currentTokens < amount) return false;
+    try {
+        const { data, error } = await supabase.rpc('deduct_stars', { user_id: userId, amount: amount });
+        if (error || data === false) throw error || new Error('Yetersiz bakiye veya yetkisiz işlem.');
+        return true;
+    } catch (e) {
+        console.error('[ProfileService] Error deducting tokens:', e);
+        return false;
+    }
+}
+
+/**
+ * Adds specified amount of tokens to user profile (e.g. after purchase).
+ */
+export async function addTokens(userId: string, amount: number, currentTokens: number): Promise<boolean> {
+    try {
+        const { data, error } = await supabase.rpc('add_bonus_stars', { user_id: userId, amount: amount });
+        if (error || data === false) throw error || new Error('Yıldızlar eklenemedi.');
+        return true;
+    } catch (e) {
+        console.error('[ProfileService] Error adding tokens:', e);
+        return false;
     }
 }
 
@@ -139,11 +173,14 @@ export async function migrateGuestToRegistered(userId: string): Promise<boolean>
         const updates: any = {
             first_name: guestData.firstName,
             last_name: guestData.lastName,
+            gender: guestData.gender || null,
+            life_focus: guestData.lifeFocus || null,
             birth_date: guestData.birthDate,
             birth_time: guestData.birthTime,
             birth_place: guestData.birthPlace,
             birth_lat: guestData.birthLat,
             birth_lng: guestData.birthLng,
+            tokens: guestData.tokens || 5,
         };
 
         let finalAvatarUrl = guestData.avatarUrl;

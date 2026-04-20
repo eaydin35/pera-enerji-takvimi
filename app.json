@@ -12,7 +12,12 @@
       "@react-native-community/datetimepicker",
       "expo-web-browser",
       "expo-localization",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font",
+      ["@sentry/react-native", {
+        "organization": "ea-jans",
+        "project": "react-native"
+      }]
     ],
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -21,7 +26,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.peratakvimi.app"
+      "bundleIdentifier": "com.peratakvimi.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.peratakvimi.app",
@@ -35,6 +43,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "10bae7cb-8483-4968-b276-bcd303fdc4a8"
+      }
     }
   }
 }

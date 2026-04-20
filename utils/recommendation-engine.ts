@@ -15,6 +15,7 @@ export interface StoneRecommendation {
 }
 
 export interface EsmaRecommendation {
+  id: string;
   name: string;
   meaning: string;
   reason: string;
@@ -156,6 +157,7 @@ export function getDailyRecommendation(
     ? (gemstoneKB as any).by_weak_planet[weakPlanet]
     : dayData;
   const esma: EsmaRecommendation = {
+    id: esmaSource.esma_id,
     name: esmaSource.esma,
     meaning: esmaSource.esma_meaning,
     reason: weakPlanet

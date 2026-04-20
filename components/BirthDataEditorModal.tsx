@@ -17,6 +17,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useProfileStore } from '../store/profileStore';
 import { useStore } from '../store/useStore';
+import { useRouter } from 'expo-router';
 import districtsData from '../data/districts.json';
 
 interface Props {
@@ -38,7 +39,8 @@ type District = {
 
 export default function BirthDataEditorModal({ visible, onClose }: Props) {
     const { profile, updateBirthDataInfo } = useProfileStore();
-    const { tokens, useTokens, isPremium } = useStore();
+    const { tokens } = useStore();
+    const router = useRouter();
 
     // Initial values
     const [birthDate, setBirthDate] = useState(profile?.birthDate || '');
@@ -159,25 +161,23 @@ export default function BirthDataEditorModal({ visible, onClose }: Props) {
         }
 
         const isGuest = profile && 'isGuest' in profile ? profile.isGuest : false;
-        const needsPayment = !isGuest && !isPremium;
-
-        if (needsPayment && tokens < 1) {
-            Alert.alert('Yetersiz Jeton', 'Doğum bilgilerini güncellemek ve haritayı yeniden hesaplamak 1 jeton gerektirir.');
+        
+        // Cost is 3 tokens. Guests are free to edit since they don't use the DB/AI cache.
+        if (!isGuest && tokens < 3) {
+            Alert.alert(
+                'Yetersiz Yıldız',
+                'Haritanızı yeniden hesaplamak için 3 Yıldız gereklidir. Lütfen cüzdanınıza yıldız yükleyin.',
+                [
+                    { text: 'İptal', style: 'cancel' },
+                    { text: 'Yıldız Al', onPress: () => { onClose(); router.push('/paywall'); } }
+                ]
+            );
             return;
         }
 
         setIsLoading(true);
         try {
-            if (needsPayment) {
-                const deducted = await useTokens(1);
-                if (!deducted) {
-                    Alert.alert('Hata', 'Jeton bakiyeniz düşülemedi.');
-                    setIsLoading(false);
-                    return;
-                }
-            }
-
-            // Update profile using proper birth data service
+            // Update profile using proper birth data service. DB transaction for 3 tokens is handled inside here.
             const res = await updateBirthDataInfo({
                 date: birthDate,
                 time: birthTime,
@@ -220,8 +220,8 @@ export default function BirthDataEditorModal({ visible, onClose }: Props) {
                     </View>
 
                     <Text style={styles.subtitle}>
-                        {(profile && !('isGuest' in profile) && !isPremium)
-                            ? "Doğum bilgilerini güncellemek ve haritayı yeniden hesaplatmak 1 jeton harcayacaktır." 
+                        {(profile && !('isGuest' in profile))
+                            ? "Doğum bilgilerini güncelleyip haritayı yeniden hesaplatmak 3 yıldız harcayacaktır." 
                             : "Yıldız haritanızı daha doğru hesaplamak için lütfen doğum bilgilerinizi girin/güncelleyin."}
                     </Text>
 

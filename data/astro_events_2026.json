@@ -1,650 +1,935 @@
 [
   {
-    "date": "2026-01-08",
+    "date": "2026-01-01",
     "type": "positive",
-    "title": "Venüs Balık Burcuna Geçiyor",
-    "description": "Venüs yüceldiği burçta. Aşk, sanat ve maneviyatta güçlü dönem. Romantizm ve şefkat artıyor.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 4
+    "title": "Yılbaşı – Resmi Tatil",
+    "description": "Yeni yıl kutlamaları. Niyetlerinizi belirlemek ve yılın planını yapmak için güzel bir gün.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 2,
+    "guidance": {
+      "beauty": "Yeni yıl yeni başlangıçlar: cilt bakım rutininizi yenileyin.",
+      "health": "Yeni yıl hedeflerinizi belirleyin, detoks programına başlayabilirsiniz.",
+      "finance": "Yıllık bütçe planlaması yapın.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-01-11",
+    "date": "2026-01-03",
     "type": "positive",
-    "title": "Yeni Ay – Oğlak Burcu",
-    "description": "Kariyer ve uzun vadeli hedefler için güçlü bir başlangıç enerjisi var. Yeni bir iş kurmak veya hedef belirlemek için ideal zaman.",
-    "dotColor": "#a8c5da",
+    "title": "Dolunay – Yengeç Burcu (Süper Ay)",
+    "description": "Yılın ilk Dolunay'ı ve Süper Ay. Duygular yoğun, aile bağları güçleniyor. Ev ve aile konularında farkındalık artıyor.",
+    "dotColor": "#22c55e",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Dolunay enerjisi cilt emiciliğini artırır. Nemlendirici maskeler için ideal gün.",
+      "health": "Duygusal yeme eğilimi artabilir, bilinçli beslenin.",
+      "finance": "Mevcut yatırımlarınızı değerlendirin, yeni yatırım yapmayın.",
+      "avoid": ["Saç kesimi (Su burcu günü)", "Radikal değişiklikler"]
+    }
+  },
+  {
+    "date": "2026-01-10",
+    "type": "positive",
+    "title": "Jüpiter Karşıtlığı (Opozisyon)",
+    "description": "Jüpiter Dünya'ya en yakın ve en parlak konumunda. Bolluk, şans ve genişleme enerjisi güçlü.",
+    "dotColor": "#f97316",
+    "category": "aspect",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Güzellik yatırımları için olumlu gün.",
+      "health": "Enerji yüksek, spor ve fiziksel aktiviteler için harika.",
+      "finance": "Büyük fırsatlar kapıda olabilir, araştırma yapın.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-01-15",
+    "type": "positive",
+    "title": "Miraç Kandili",
+    "description": "Hz. Muhammed'in miraca yükselişinin anıldığı mübarek gece. Dua, zikir ve manevi çalışmalar için güçlü zaman.",
+    "dotColor": "#f7e1e8",
+    "category": "special_day",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "İç güzelliğe odaklanın, sakinleştirici bakım ritüelleri.",
+      "health": "Oruç tutulabilir, manevi arınma zamanı.",
+      "finance": "Sadaka ve hayır işleri için bereketli gün.",
+      "avoid": ["Gereksiz harcamalar"]
+    }
   },
   {
     "date": "2026-01-18",
     "type": "positive",
-    "title": "Mars Terazi Burcuna Geçiyor",
-    "description": "Enerji diplomasi ve ilişkilere yöneliyor. Ortaklıklarda aktif dönem. Adalet duygusu güçleniyor.",
-    "dotColor": "#ef4444",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-01-20",
-    "type": "positive",
-    "title": "Güneş-Plüton Kavuşumu – Kova",
-    "description": "Güçlü dönüşüm enerjisi. Kişisel güç ve otoriteyle ilgili derin farkındalık. Köklü değişim zamanı.",
-    "dotColor": "#7c3aed",
-    "category": "conjunction",
-    "intensity": 4
+    "title": "Yeni Ay – Oğlak Burcu",
+    "description": "Kariyer ve uzun vadeli hedefler için güçlü başlangıç enerjisi. Disiplinli planlar yapmak için ideal.",
+    "dotColor": "#a8c5da",
+    "category": "lunar_phase",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Yeni Ay detoks zamanı: cilt temizliği ve arındırma maskeleri uygulayın.",
+      "health": "Yeni sağlık rutini başlatmak için en uygun gün.",
+      "finance": "Yeni finansal hedefler koyun, birikim planı oluşturun.",
+      "avoid": []
+    }
   },
   {
     "date": "2026-01-26",
-    "type": "negative",
-    "title": "Dolunay – Aslan Burcu (Ay Tutulması)",
-    "description": "İlişkilerde ve kişisel kimlikte gerginlik yaşanabilir. Ego çatışmalarından uzak durun, büyük kararlar almaktan kaçının.",
-    "dotColor": "#f97316",
+    "type": "positive",
+    "title": "Neptün Koç Burcuna Geçiyor",
+    "description": "Neptün 14 yıl sonra burç değiştiriyor! Kolektif hayaller ve idealler yeni bir döneme giriyor. Cesur vizyonlar zamanı.",
+    "dotColor": "#3b82f6",
+    "category": "planet_ingress",
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Yeni bir imaj denemek için ilham alın.",
+      "health": "Meditasyon ve nefes çalışmaları için harika dönem.",
+      "finance": "Uzun vadeli vizyonlarınızı gözden geçirin.",
+      "avoid": ["Gerçeklikten kopmak", "Hayalperest yatırımlar"]
+    }
+  },
+  {
+    "date": "2026-02-01",
+    "type": "positive",
+    "title": "Dolunay – Aslan Burcu",
+    "description": "Yaratıcılık ve kendini ifade etme alanında zirve. Özgüven artıyor, sahneye çıkma zamanı.",
+    "dotColor": "#22c55e",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Saç kesimi için çok uygun! Aslan Dolunay'ı saçlara hacim ve canlılık verir.",
+      "health": "Kalp sağlığına dikkat edin, cardio egzersizleri yapın.",
+      "finance": "Yaratıcı projelerden gelir elde etme fırsatı.",
+      "avoid": []
+    }
   },
   {
     "date": "2026-02-02",
     "type": "positive",
-    "title": "Venüs Koç Burcuna Geçiyor",
-    "description": "Aşkta cesaret ve spontanlık. Yeni ilişkiler için güçlü enerji. Bağımsızlık arzusu artıyor.",
-    "dotColor": "#ec4899",
+    "title": "Berat Kandili",
+    "description": "Günahların affedildiği, duaların kabul olduğu mübarek gece. Tövbe, istiğfar ve manevi muhasebe zamanı.",
+    "dotColor": "#f7e1e8",
+    "category": "special_day",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "İç huzur ve dinginlik yansır dışa. Arındırıcı banyo ritüeli.",
+      "health": "Oruç tutulabilir, beden ve ruh arınması.",
+      "finance": "Borçlarınızı gözden geçirin, sadaka verin.",
+      "avoid": ["Günah sayılabilecek eğlenceler"]
+    }
+  },
+  {
+    "date": "2026-02-13",
+    "type": "positive",
+    "title": "Satürn Koç Burcuna Geçiyor",
+    "description": "Satürn 2.5 yıllık yeni dönemine başlıyor. Bireysel sorumluluk, liderlik ve cesaret test ediliyor.",
+    "dotColor": "#78716c",
     "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-02-09",
-    "type": "negative",
-    "title": "Merkür Geriye Gidiş Başlangıcı – Balık",
-    "description": "Merkür geri gidişi başlıyor. Sözleşmeler imzalamaktan, yeni teknoloji satın almaktan ve büyük iletişim kararlarından kaçının. Eski konular gün yüzüne çıkabilir.",
-    "dotColor": "#ef4444",
-    "category": "retrograde",
-    "intensity": 3
-  },
-  {
-    "date": "2026-02-10",
-    "type": "positive",
-    "title": "Yeni Ay – Kova Burcu",
-    "description": "Topluluk, arkadaşlık ve yenilikçi fikirler için güçlü Yeni Ay. Gelecek planları yapmak için harika.",
-    "dotColor": "#a8c5da",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-02-15",
-    "type": "positive",
-    "title": "Venüs-Neptün Kavuşumu – Balık",
-    "description": "Ruhani aşk ve ilahi güzellik enerjisi. Sanat ve müzik ilhamı dorukta. Romantik hayaller gerçekleşebilir.",
-    "dotColor": "#3b82f6",
-    "category": "conjunction",
-    "intensity": 4
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Disiplinli bakım rutinleri oluşturun, uzun vadeli düşünün.",
+      "health": "Kemik ve diş sağlığı kontrolü yaptırın.",
+      "finance": "Borç ödeme planı yapın, mali disiplin zamanı.",
+      "avoid": ["Dürtüsel harcamalar", "Sorumluluktan kaçmak"]
+    }
   },
   {
     "date": "2026-02-17",
+    "type": "negative",
+    "title": "Yeni Ay – Kova Burcu (Halkalı Güneş Tutulması)",
+    "description": "Tutulma ile gelen Yeni Ay çok güçlü. Topluluk, teknoloji ve gelecek vizyonu alanında sarsıcı yeni başlangıçlar.",
+    "dotColor": "#7c3aed",
+    "category": "lunar_phase",
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Tutulma günü estetik işlemlerden kaçının! Saç kesimi, botoks, lazer yapmayın.",
+      "health": "Sinir sistemi hassas olabilir, sakin kalın.",
+      "finance": "Büyük yatırım ve sözleşmelerden kaçının.",
+      "avoid": ["Saç kesimi/boyama", "Estetik operasyonlar", "Sözleşme imzalama", "Büyük alışverişler"]
+    }
+  },
+  {
+    "date": "2026-02-19",
     "type": "positive",
     "title": "Ramazan Başlangıcı",
     "description": "Mübarek Ramazan ayı başlıyor. Manevi arınma, oruç ve dua zamanı. İç huzur ve farkındalık artıyor.",
     "dotColor": "#22c55e",
     "category": "special_day",
-    "intensity": 3
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Cilt kuruluğuna dikkat edin, bol su için (iftar-sahur arası).",
+      "health": "Sahurda protein ağırlıklı beslenin, iftarda aşırı yemeyin.",
+      "finance": "Zekat hesabı yapın, sadaka verin.",
+      "avoid": ["Aşırı fiziksel efor"]
+    }
   },
   {
-    "date": "2026-02-25",
+    "date": "2026-02-20",
     "type": "positive",
-    "title": "Dolunay – Başak Burcu",
-    "description": "Sağlık ve rutin alanında farkındalık artıyor. Sağlıklı alışkanlıkları pekiştirmek için güçlü zaman.",
-    "dotColor": "#22c55e",
-    "category": "lunar_phase",
-    "intensity": 3
+    "title": "Satürn-Neptün Kavuşumu – Koç 0°",
+    "description": "36 yılda bir gerçekleşen nadir kavuşum! Hayaller ile gerçeklik birleşiyor. Nesil değişimi ve yeni toplumsal idealler.",
+    "dotColor": "#7c3aed",
+    "category": "conjunction",
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Büyük güzellik kararları için bekleyin, enerji çok yoğun.",
+      "health": "Bağışıklık sisteminizi destekleyin.",
+      "finance": "Uzun vadeli vizyonunuzu yeniden tanımlayın ama acele etmeyin.",
+      "avoid": ["Dürtüsel kararlar", "Büyük taahhütler"]
+    }
   },
   {
-    "date": "2026-02-27",
-    "type": "positive",
-    "title": "Venüs Boğa Burcuna Geçiyor",
-    "description": "Venüs kendi evine dönüyor. Konfor, güzellik ve maddi zevklerde altın dönem başlıyor.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 4
-  },
-  {
-    "date": "2026-03-01",
-    "type": "positive",
-    "title": "Mars Akrep Burcuna Geçiyor",
-    "description": "Mars kendi evinde çok güçlü. Dönüşüm enerjisi yüksek. Stratejik hamleler için ideal zaman.",
-    "dotColor": "#ef4444",
-    "category": "planet_ingress",
-    "intensity": 5
-  },
-  {
-    "date": "2026-03-02",
+    "date": "2026-02-26",
     "type": "negative",
-    "title": "Venüs Geriye Gidiş Başlangıcı – Koç",
-    "description": "Venüs retrosu başlıyor. Eski aşklar geri dönebilir. Estetik değişikliklerden (saç, dövme) kaçının. İlişki kararlarını erteleyin.",
+    "title": "Merkür Retrosu Başlangıcı – Balık",
+    "description": "2026'nın ilk Merkür retrosu. İletişim, teknoloji ve seyahatte aksaklıklar. Sezgiler güçlü ama kafa karışıklığı olabilir.",
     "dotColor": "#ef4444",
     "category": "retrograde",
-    "intensity": 4
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Yeni bir kuaföre gitmeyin, radikal saç değişikliği yapmayın.",
+      "health": "Eski sağlık sorunları nüksetebilir, kontrole gidin.",
+      "finance": "Sözleşme imzalamayın, yeni yatırım yapmayın.",
+      "avoid": ["Sözleşme imzalama", "Yeni teknoloji satın alma", "Saç kesimi/boyama", "Yeni iş başvurusu"]
+    }
   },
   {
     "date": "2026-03-03",
     "type": "negative",
-    "title": "Merkür Geri Dönüş Sonu",
-    "description": "Merkür tekrar ileri gidiyor. Geri gidiş döneminde askıya alınan kararlar ve iletişimler yeniden değerlendirilebilir.",
-    "dotColor": "#f59e0b",
-    "category": "retrograde",
-    "intensity": 3
-  },
-  {
-    "date": "2026-03-08",
-    "type": "negative",
-    "title": "Venüs-Satürn Kavuşumu",
-    "description": "İlişkilerde ciddiyet ve sorumluluk. Duygusal sınırlar netleşiyor. Olgun aşk kararları zamanı.",
-    "dotColor": "#78716c",
-    "category": "conjunction",
-    "intensity": 3
-  },
-  {
-    "date": "2026-03-11",
-    "type": "positive",
-    "title": "Yeni Ay – Balık Burcu",
-    "description": "Maneviyat, sezgi ve şifa için güçlü enerji. Meditasyon, yaratıcılık ve ruhsal çalışmalar için ideal.",
-    "dotColor": "#a8c5da",
+    "title": "Dolunay – Başak Burcu (Tam Ay Tutulması)",
+    "description": "Güçlü bir Tam Ay Tutulması. Sağlık, rutin ve hizmet alanında büyük farkındalıklar. Kan Ay'ı görülecek.",
+    "dotColor": "#f97316",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Tutulma günü kesinlikle estetik işlem yapmayın!",
+      "health": "Sağlık kontrollerinizi erteleyin, vücudunuzu dinlendirin.",
+      "finance": "Büyük harcama ve yatırımlardan uzak durun.",
+      "avoid": ["Saç kesimi/boyama", "Estetik operasyonlar", "Ameliyat", "Önemli kararlar", "Sözleşme imzalama"]
+    }
   },
   {
-    "date": "2026-03-14",
+    "date": "2026-03-16",
     "type": "positive",
     "title": "Kadir Gecesi",
     "description": "Bin aydan hayırlı gece. Dua, zikir ve manevi çalışmalar için en güçlü zaman. Niyetlerinizi belirleyin.",
     "dotColor": "#f7e1e8",
     "category": "special_day",
-    "intensity": 5
+    "intensity": 5,
+    "guidance": {
+      "beauty": "İç güzellik odaklı gün. Gül suyu ile yüz temizliği.",
+      "health": "Manevi şifa zamanı, meditasyon ve dua.",
+      "finance": "Sadaka ve zekat için en bereketli gece.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-03-19",
+    "date": "2026-03-18",
     "type": "positive",
-    "title": "Ramazan Bayramı 1. Gün",
-    "description": "Bayram sevinci ve birlik zamanı. Ailelerle buluşma, paylaşım ve şükür. Yeni başlangıçlar için bereketli.",
-    "dotColor": "#22c55e",
-    "category": "special_day",
-    "intensity": 3
+    "title": "Yeni Ay – Balık Burcu",
+    "description": "Maneviyat, sezgi ve şifa için güçlü enerji. Meditasyon, yaratıcılık ve ruhsal çalışmalar için ideal.",
+    "dotColor": "#a8c5da",
+    "category": "lunar_phase",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Arındırıcı cilt bakımı ve detoks maskeleri uygulayın.",
+      "health": "Ruhsal şifa çalışmaları için mükemmel gün.",
+      "finance": "Niyet belirleyin ama büyük işlem yapmayın.",
+      "avoid": ["Saç kesimi (Balık burcu Yeni Ay'ı)"]
+    }
   },
   {
     "date": "2026-03-20",
     "type": "positive",
-    "title": "Bahar Ekinoksu – İlkbahar Başlangıcı",
-    "description": "Güneş Koç burcuna giriyor. Yeni başlangıçlar, yenilenme ve taze enerji dönemi. Yıldızlar harekete geçmenizi destekliyor.",
+    "title": "Bahar Ekinoksu – Merkür Retrosu Sonu",
+    "description": "Güneş Koç'a giriyor, ilkbahar başlıyor. Merkür de ileri harekete geçiyor. Çift kutlama: Yenilenme zamanı!",
     "dotColor": "#22c55e",
     "category": "seasonal",
-    "intensity": 3
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Bahar temizliği yapın: cilt ve saç bakım rutinlerini yenileyin.",
+      "health": "Bahar yorgunluğuna karşı vitamin takviyesi alın.",
+      "finance": "Retro bitti, ertelenen kararları artık uygulayabilirsiniz.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-03-25",
-    "type": "negative",
-    "title": "Dolunay – Terazi Burcu (Ay Tutulması)",
-    "description": "Tutulma günü – ilişkiler ve denge alanında ani gelişmeler olabilir. Bugün için önemli anlaşmalar ve tartışmalardan kaçının.",
-    "dotColor": "#f97316",
+    "date": "2026-03-20",
+    "type": "positive",
+    "title": "Ramazan Bayramı 1. Gün – Resmi Tatil",
+    "description": "Bayram sevinci ve birlik zamanı. Ailelerle buluşma, paylaşım ve şükür.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Bayram için özel bakım rutini: maske, manikür.",
+      "health": "Oruçtan çıkışta mideyi yavaş yavaş alıştırın.",
+      "finance": "Bayramda aile yatırımlarını konuşabilirsiniz.",
+      "avoid": ["İftar sonrası aşırı yemek"]
+    }
+  },
+  {
+    "date": "2026-03-21",
+    "type": "positive",
+    "title": "Ramazan Bayramı 2. Gün – Resmi Tatil",
+    "description": "Bayramın ikinci günü. Akraba ziyaretleri ve sosyal bağları güçlendirme zamanı.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 2
+  },
+  {
+    "date": "2026-03-22",
+    "type": "positive",
+    "title": "Ramazan Bayramı 3. Gün – Resmi Tatil",
+    "description": "Bayramın son günü. Dinlenme ve yeni döneme hazırlık.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 2
+  },
+  {
+    "date": "2026-04-01",
+    "type": "positive",
+    "title": "Dolunay – Terazi Burcu",
+    "description": "İlişkiler, denge ve estetik alanında zirve enerjisi. Güzellik ve uyum her yerde.",
+    "dotColor": "#22c55e",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Dolunay Terazi'de: güzellik rutinleri, saç bakımı ve maske için harika!",
+      "health": "Böbrek ve bel sağlığına dikkat edin.",
+      "finance": "Ortaklık değerlendirmeleri için uygun.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-03-27",
-    "type": "positive",
-    "title": "Venüs İkizler Burcuna Geçiyor",
-    "description": "İletişimde çekicilik artıyor. Sosyal hayat canlanıyor. Entelektüel bağlantılar güçleniyor.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-04-07",
-    "type": "positive",
-    "title": "Venüs Direkt – İleri Harekete Geçiyor",
-    "description": "Venüs geri gidişini tamamlıyor. Aşk, güzellik ve finansal konularda donmuş enerji çözülüyor. İlişkilerde tıkanan kapılar açılabilir.",
-    "dotColor": "#ec4899",
-    "category": "general",
-    "intensity": 3
-  },
-  {
-    "date": "2026-04-10",
+    "date": "2026-04-17",
     "type": "positive",
     "title": "Yeni Ay – Koç Burcu",
-    "description": "Yılın en güçlü 'yeni başlangıç' Yeni Ay'ı. Cesaret gerektiren adımlar atmak, girişimler ve kişisel hedefler için ideal.",
+    "description": "Yılın en güçlü 'yeni başlangıç' Yeni Ay'ı. Cesaret gerektiren adımlar için ideal.",
     "dotColor": "#a8c5da",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Yeni bir görünüm denemek için harika gün!",
+      "health": "Yeni egzersiz rutini başlatmak için en iyi zaman.",
+      "finance": "Yeni girişimler ve projeler için niyet belirleyin.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-04-15",
+    "date": "2026-04-23",
     "type": "positive",
-    "title": "Mars Yay Burcuna Geçiyor",
-    "description": "Enerji macera ve keşfe yöneliyor. Seyahat planları ve büyük hedefler için güçlü motivasyon.",
-    "dotColor": "#ef4444",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-04-18",
-    "type": "positive",
-    "title": "Jüpiter Üçgen Satürn",
-    "description": "Büyüme ile disiplin mükemmel dengede. İş kurma, uzun vadeli projeler için yılın en güçlü açılarından biri.",
-    "dotColor": "#22c55e",
-    "category": "aspect",
-    "intensity": 5
-  },
-  {
-    "date": "2026-04-21",
-    "type": "positive",
-    "title": "Venüs Yengeç Burcuna Geçiyor",
-    "description": "Aile ve yuva sevgisi derinleşiyor. Duygusal bağlar güçleniyor. Ev süsleme zamanı.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-04-24",
-    "type": "positive",
-    "title": "Dolunay – Akrep Burcu",
-    "description": "Derin dönüşüm ve serbest bırakma vakti. İçsel çalışma, şifa ve bağı kesilmesi gereken şeyleri bırakmak için güçlü enerji.",
-    "dotColor": "#22c55e",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-05-05",
-    "type": "positive",
-    "title": "Güneş-Jüpiter Kavuşumu – Boğa",
-    "description": "Bolluk ve şans enerjisi. Maddi fırsatlar, iyimserlik ve genişleme. Büyük kararlar için güçlü gün.",
-    "dotColor": "#f97316",
-    "category": "conjunction",
-    "intensity": 4
-  },
-  {
-    "date": "2026-05-09",
-    "type": "positive",
-    "title": "Yeni Ay – Boğa Burcu",
-    "description": "Maddi güvenlik, konfor ve değerler üzerine odaklanmak için güçlü Yeni Ay. Finansal hedefler belirlemek için uygun.",
-    "dotColor": "#a8c5da",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-05-13",
-    "type": "negative",
-    "title": "Merkür Geriye Gidiş Başlangıcı – İkizler",
-    "description": "İkinci Merkür retrosu başlıyor. Seyahat, iletişim ve sözleşmelerde dikkatli olun. Eski bağlantılar tekrar gündeme gelebilir.",
-    "dotColor": "#ef4444",
-    "category": "retrograde",
-    "intensity": 3
-  },
-  {
-    "date": "2026-05-16",
-    "type": "positive",
-    "title": "Venüs Aslan Burcuna Geçiyor",
-    "description": "Aşkta dramatizm ve gösteriş. Yaratıcılık ve romantizm dorukta. Cömert jestler zamanı.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-05-23",
-    "type": "positive",
-    "title": "Dolunay – Yay Burcu",
-    "description": "Özgürlük, yüksek öğrenim ve seyahat konularında doruk noktası. Bir hedef veya arzunuzun meyvelerini toplayabilirsiniz.",
-    "dotColor": "#22c55e",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-05-26",
-    "type": "positive",
-    "title": "Kurban Bayramı 1. Gün",
-    "description": "Kurban Bayramı başlıyor. Fedakarlık, paylaşım ve aile bağları güçleniyor. Şükür ve teslimiyet zamanı.",
+    "title": "23 Nisan Ulusal Egemenlik ve Çocuk Bayramı",
+    "description": "Milli bayram. Çocuklara ve geleceğe yatırım yapmanın önemini hatırlatan gün.",
     "dotColor": "#22c55e",
     "category": "special_day",
     "intensity": 3
   },
   {
-    "date": "2026-05-28",
+    "date": "2026-04-25",
     "type": "positive",
-    "title": "Mars Oğlak Burcuna Geçiyor",
-    "description": "Mars yüceldiği burçta. Kariyer hamleleri için en güçlü dönem. Disiplin ve kararlılık zirvede.",
-    "dotColor": "#ef4444",
+    "title": "Uranüs İkizler Burcuna Geçiyor",
+    "description": "Uranüs 7 yıllık yeni dönemine başlıyor! İletişim, teknoloji ve eğitimde devrim zamanı.",
+    "dotColor": "#06b6d4",
     "category": "planet_ingress",
-    "intensity": 5
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Yenilikçi güzellik teknolojilerini deneyin.",
+      "health": "Sinir sistemi ve eller/kollar hassas olabilir.",
+      "finance": "Teknoloji yatırımlarında büyük fırsatlar mümkün.",
+      "avoid": ["Değişime direnç göstermek"]
+    }
   },
   {
-    "date": "2026-06-05",
+    "date": "2026-05-01",
     "type": "negative",
-    "title": "Merkür Geri Dönüş Sonu",
-    "description": "Merkür İkizler'de ileri harekete geçiyor. Mayıs ortasından bu yana askıya alınan kararlar netlik kazanıyor.",
-    "dotColor": "#f59e0b",
-    "category": "retrograde",
-    "intensity": 3
+    "title": "Dolunay – Akrep Burcu / 1 Mayıs İşçi Bayramı",
+    "description": "Derin dönüşüm enerjisi ve resmi tatil bir arada. İçsel çalışma ve serbest bırakma zamanı.",
+    "dotColor": "#f97316",
+    "category": "lunar_phase",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Akrep Dolunay'ı: derinden temizleyen maskeler uygun, ama saç kestirmeyin.",
+      "health": "Üreme sistemi sağlığına dikkat.",
+      "finance": "Borç ödeme ve ortak mali konuları çözme zamanı.",
+      "avoid": ["Saç kesimi (Su burcu)", "Güç çatışmaları"]
+    }
   },
   {
-    "date": "2026-06-08",
+    "date": "2026-05-16",
     "type": "positive",
-    "title": "Yeni Ay – İkizler Burcu",
-    "description": "İletişim, öğrenme ve kısa seyahatler için taze enerji. Yeni bir ders, kurs ya da sosyal çevre için başlangıç zamanı.",
+    "title": "Yeni Ay – Boğa Burcu (Süper Yeni Ay)",
+    "description": "Maddi güvenlik, konfor ve değerler üzerine güçlü enerji. Finansal hedefler belirlemek için ideal.",
     "dotColor": "#a8c5da",
     "category": "lunar_phase",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Boğa enerjisi: lüks bakım ürünleri, SPA günü yapın.",
+      "health": "Boğaz ve tiroid sağlığına dikkat.",
+      "finance": "Uzun vadeli birikim ve yatırım planı oluşturun.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-05-19",
+    "type": "positive",
+    "title": "19 Mayıs Atatürk'ü Anma, Gençlik ve Spor Bayramı",
+    "description": "Milli bayram. Gençliğin ve sporun kutlandığı özel gün.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
     "intensity": 3
   },
   {
-    "date": "2026-06-10",
+    "date": "2026-05-27",
     "type": "positive",
-    "title": "Venüs Başak Burcuna Geçiyor",
-    "description": "Pratik sevgi ve hizmet dönemi. Küçük jestler büyük anlam taşıyor. Sağlık ve güzellik rutinleri.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
+    "title": "Kurban Bayramı 1. Gün – Resmi Tatil",
+    "description": "Kurban Bayramı başlıyor. Fedakarlık, paylaşım ve aile bağları güçleniyor.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Bayram hazırlığı: el ve yüz bakımı.",
+      "health": "Et tüketiminde ölçülü olun.",
+      "finance": "Sadaka ve kurban bağışı zamanı.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-05-28",
+    "type": "positive",
+    "title": "Kurban Bayramı 2. Gün",
+    "description": "Bayramın ikinci günü.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
     "intensity": 2
   },
   {
-    "date": "2026-06-15",
-    "type": "negative",
-    "title": "Mars Kare Satürn",
-    "description": "Enerji engelleri, gecikmeler, sabır testi. Dürtüsel hareket etmeyin. Planlı ve disiplinli ilerleyin.",
-    "dotColor": "#ef4444",
-    "category": "aspect",
-    "intensity": 4
+    "date": "2026-05-29",
+    "type": "positive",
+    "title": "Kurban Bayramı 3. Gün",
+    "description": "Bayramın üçüncü günü.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 2
+  },
+  {
+    "date": "2026-05-30",
+    "type": "positive",
+    "title": "Kurban Bayramı 4. Gün",
+    "description": "Bayramın son günü.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 2
+  },
+  {
+    "date": "2026-05-31",
+    "type": "positive",
+    "title": "Mavi Ay (Blue Moon) – Yay Burcu",
+    "description": "Ayda ikinci Dolunay! Nadir enerji. Özgürlük, seyahat ve yüksek hedeflerde doruk.",
+    "dotColor": "#3b82f6",
+    "category": "lunar_phase",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Saç kestirmek için olumlu gün (Ateş burcu).",
+      "health": "Bacak ve kalça bölgesine dikkat.",
+      "finance": "Uluslararası fırsatları değerlendirin.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-06-09",
+    "type": "positive",
+    "title": "Venüs-Jüpiter Kavuşumu",
+    "description": "Yılın en şanslı kavuşumu! Aşk, güzellik ve bolluk bir arada. Sosyal hayat parlıyor.",
+    "dotColor": "#ec4899",
+    "category": "conjunction",
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Güzellik işlemleri için yılın en iyi günlerinden biri! Kuaför, bakım, estetik.",
+      "health": "Keyif ve mutluluk hormonları yüksek.",
+      "finance": "Şans kapıları açık, yatırım fırsatlarını değerlendirin.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-06-14",
+    "type": "positive",
+    "title": "Yeni Ay – İkizler Burcu (Süper Yeni Ay)",
+    "description": "İletişim, öğrenme ve sosyal bağlantılar için taze enerji.",
+    "dotColor": "#a8c5da",
+    "category": "lunar_phase",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Yeni bir bakım ürünü veya rutin denemek için uygun.",
+      "health": "Solunum sistemi ve kollar-ellere dikkat.",
+      "finance": "Yeni kurslar, eğitim yatırımları yapın.",
+      "avoid": []
+    }
   },
   {
     "date": "2026-06-21",
     "type": "positive",
     "title": "Yaz Gündönümü",
-    "description": "Güneş Yengeç burcuna giriyor ve yılın en uzun günü. Aile, kökleri ve iç dünyayı beslemek için özel bir zaman.",
+    "description": "Yılın en uzun günü. Güneş Yengeç burcuna giriyor. Aile ve kökleri beslemek için özel zaman.",
     "dotColor": "#22c55e",
     "category": "seasonal",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Güneş koruması artırın. SPF'i yükseltin.",
+      "health": "D vitamini depolama zamanı, ama güneş yanığına dikkat.",
+      "finance": "Ev ve aile yatırımları için düşünmeye başlayın.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-06-22",
-    "type": "positive",
-    "title": "Dolunay – Oğlak Burcu",
-    "description": "Kariyer ve kişisel hedeflerde zirve enerjisi. Uzun vadeli çalışmalarınızın karşılığını almaya başlayabilirsiniz.",
-    "dotColor": "#22c55e",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-07-05",
-    "type": "positive",
-    "title": "Venüs Terazi Burcuna Geçiyor",
-    "description": "Venüs kendi evinde. İlişkiler, estetik ve uyum altın çağını yaşıyor. Evlilik teklifleri için ideal.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 5
-  },
-  {
-    "date": "2026-07-07",
-    "type": "positive",
-    "title": "Yeni Ay – Yengeç Burcu",
-    "description": "Ev, aile, duygusal güvenlik alanında güçlü başlangıçlar. Ev taşınması veya aile planları için olumlu enerji.",
-    "dotColor": "#a8c5da",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-07-10",
-    "type": "positive",
-    "title": "Mars Kova Burcuna Geçiyor",
-    "description": "Toplumsal projeler ve yenilikçi girişimler için enerji yükseliyor. Grup çalışmaları verimli.",
-    "dotColor": "#ef4444",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-07-21",
+    "date": "2026-06-29",
     "type": "negative",
-    "title": "Dolunay – Kova Burcu (Ay Tutulması)",
-    "description": "Tutulma enerji güçlü ve bazen sarsıcı. Topluluk ve bireysellik arasındaki gerilim dorukta. Beklenmedik gelişmelere hazırlıklı olun.",
-    "dotColor": "#f97316",
+    "title": "Dolunay – Oğlak Burcu / Merkür Retrosu Başlangıcı",
+    "description": "Dolunay ile Merkür retrosu aynı güne denk geliyor! Kariyer gerilimleri ve iletişim kazaları. Çok dikkatli olun.",
+    "dotColor": "#ef4444",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Kuaföre gitmeyin, yeni ürün denemeyin.",
+      "health": "Kemik ve eklem ağrıları artabilir.",
+      "finance": "Kesinlikle sözleşme imzalamayın, yeni yatırım yapmayın.",
+      "avoid": ["Saç kesimi/boyama", "Sözleşme imzalama", "Yeni teknoloji alımı", "Önemli sunumlar"]
+    }
   },
   {
-    "date": "2026-08-01",
+    "date": "2026-06-30",
     "type": "positive",
-    "title": "Venüs Üçgen Jüpiter",
-    "description": "Aşk ve bolluğun buluşması. İlişkiler ve finansta şanslı dönem. Güzellik ve zarafet artıyor.",
-    "dotColor": "#22c55e",
-    "category": "aspect",
-    "intensity": 4
+    "title": "Jüpiter Aslan Burcuna Geçiyor",
+    "description": "Jüpiter 12 yıl sonra Aslan'da! Yaratıcılık, liderlik ve gösteriş enerjisi 1 yıl boyunca güçlü.",
+    "dotColor": "#f97316",
+    "category": "planet_ingress",
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Gösterişli ve cesur tarzları keşfedin.",
+      "health": "Kalp sağlığına önem verin.",
+      "finance": "Yaratıcı projelere yatırım yapın ama retro bitmesini bekleyin.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-08-05",
+    "date": "2026-07-04",
     "type": "positive",
-    "title": "Yeni Ay – Aslan Burcu (Güneş Tutulması)",
-    "description": "Güçlü bir Güneş Tutulması. Yaratıcılık, liderlik ve özgün ifade alanında köklü yeni başlangıçlar mümkün.",
+    "title": "Mars-Uranüs Kavuşumu – İkizler",
+    "description": "Beklenmedik eylemler ve ani değişimler. Devrimci enerji çok güçlü. Teknolojik atılımlar.",
+    "dotColor": "#06b6d4",
+    "category": "conjunction",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Alışılmadık stiller deneyebilirsiniz ama retro'ya dikkat!",
+      "health": "Kaza riski yüksek, dikkatli olun.",
+      "finance": "Teknoloji yatırımlarında fırsatlar olabilir.",
+      "avoid": ["Dürtüsel davranışlar", "Tehlikeli sporlar"]
+    }
+  },
+  {
+    "date": "2026-07-14",
+    "type": "positive",
+    "title": "Yeni Ay – Yengeç Burcu (Süper Yeni Ay)",
+    "description": "Ev, aile ve duygusal güvenlik alanında güçlü başlangıçlar.",
     "dotColor": "#a8c5da",
     "category": "lunar_phase",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Nemlendirici bakımlar ve SPA için ideal.",
+      "health": "Mide ve sindirim sistemi sağlığına odaklanın.",
+      "finance": "Ev/gayrimenkul yatırımı planlaması yapın.",
+      "avoid": ["Saç kesimi (Su burcu Yeni Ay'ı)"]
+    }
+  },
+  {
+    "date": "2026-07-15",
+    "type": "positive",
+    "title": "15 Temmuz Demokrasi ve Milli Birlik Günü",
+    "description": "Demokrasi şehitlerinin anıldığı resmi tatil günü.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
     "intensity": 3
+  },
+  {
+    "date": "2026-07-18",
+    "type": "positive",
+    "title": "Uranüs Üçgen Plüton",
+    "description": "Derin toplumsal dönüşüm ve yenilik. Bireysel özgürleşme ile kolektif güç bir arada.",
+    "dotColor": "#7c3aed",
+    "category": "aspect",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Dönüşüm enerjisi: eski alışkanlıkları bırakın, yeni rutinler oluşturun.",
+      "health": "Detoks ve arınma programları için güçlü gün.",
+      "finance": "Teknoloji ve dönüşüm sektörlerinde fırsatlar.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-07-23",
+    "type": "positive",
+    "title": "Merkür Retrosu Sonu",
+    "description": "İkinci Merkür retrosu bitiyor! İletişim ve seyahat planları rahatça yapılabilir.",
+    "dotColor": "#f59e0b",
+    "category": "retrograde",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Ertelenen güzellik işlemlerini artık yapabilirsiniz.",
+      "health": "Ertelenen doktor randevularını alın.",
+      "finance": "Bekleyen sözleşmeleri imzalayabilirsiniz.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-07-26",
+    "type": "negative",
+    "title": "Satürn Retrosu Başlangıcı – Koç",
+    "description": "Satürn geri gidiyor. Sorumluluklar ve kısıtlamalar yeniden gündeme geliyor. Disiplin testi zamanı.",
+    "dotColor": "#78716c",
+    "category": "retrograde",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Mevcut rutinlerinizi sürdürün, büyük değişiklik yapmayın.",
+      "health": "Eski kronik sorunlar nüksetebilir.",
+      "finance": "Eski borçları çözün, yeni kredi almayın.",
+      "avoid": ["Yeni iş kurma", "Büyük taahhütler"]
+    }
+  },
+  {
+    "date": "2026-07-29",
+    "type": "positive",
+    "title": "Dolunay – Kova Burcu",
+    "description": "Topluluk ve bireysellik arasında denge. Yenilikçi projeler meyvelerini veriyor.",
+    "dotColor": "#22c55e",
+    "category": "lunar_phase",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Hava burcu Dolunay'ı: saç kesimi için uygun!",
+      "health": "Dolaşım sistemi ve bacaklara dikkat.",
+      "finance": "Grup yatırımlarını değerlendirin.",
+      "avoid": []
+    }
   },
   {
     "date": "2026-08-12",
     "type": "negative",
-    "title": "Merkür Geriye Gidiş Başlangıcı – Başak",
-    "description": "Üçüncü Merkür retrosu başlıyor. Sağlık, rutin ve iş detaylarında aksaklıklar çıkabilir. Kontrol listelerini gözden geçirin.",
-    "dotColor": "#ef4444",
-    "category": "retrograde",
-    "intensity": 3
-  },
-  {
-    "date": "2026-08-19",
-    "type": "positive",
-    "title": "Dolunay – Kova Burcu",
-    "description": "Yenilikçi projeler ve ortak hedefler meyvelerini veriyor. Grupla yürütülen çalışmalarda dönüm noktası.",
-    "dotColor": "#22c55e",
+    "title": "Yeni Ay – Aslan Burcu (Tam Güneş Tutulması)",
+    "description": "Çok güçlü Tam Güneş Tutulması! İspanya ve Portekiz'den görülecek. Yaratıcılık ve liderlikte köklü değişim.",
+    "dotColor": "#7c3aed",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Tutulma günü: KESİNLİKLE estetik işlem yapmayın!",
+      "health": "Kalp ve sırt bölgesine dikkat. Ağır egzersiz yapmayın.",
+      "finance": "Hiçbir büyük finansal karar almayın.",
+      "avoid": ["Saç kesimi/boyama", "Estetik işlemler", "Ameliyat", "Yatırım", "Sözleşme", "Evlilik teklifi"]
+    }
   },
   {
-    "date": "2026-08-22",
+    "date": "2026-08-24",
     "type": "positive",
-    "title": "Mars Balık Burcuna Geçiyor",
-    "description": "Enerji sezgisel ve yaratıcı alanlara kayıyor. Sanat ve maneviyat projeleri için güçlü dönem.",
-    "dotColor": "#ef4444",
-    "category": "planet_ingress",
-    "intensity": 2
+    "title": "Mevlid Kandili",
+    "description": "Hz. Muhammed'in doğumunun kutlandığı mübarek gece. Salavat, dua ve manevi sohbetler zamanı.",
+    "dotColor": "#f7e1e8",
+    "category": "special_day",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "İç huzur ve güzelliğe odaklanın.",
+      "health": "Manevi arınma ve huzur.",
+      "finance": "Sadaka ve hayır işleri için bereketli gece.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-09-03",
+    "date": "2026-08-27",
     "type": "negative",
-    "title": "Merkür Geri Dönüş Sonu",
-    "description": "Merkür ileri harekete geçiyor. İş ve sağlık konularında Ağustos'tan bu yana belirsiz olan konular netleşiyor.",
-    "dotColor": "#f59e0b",
-    "category": "retrograde",
+    "title": "Dolunay – Balık Burcu (Kısmi Ay Tutulması)",
+    "description": "Kısmi Ay Tutulması. Sezgiler çok güçlü ama yanıltıcı olabilir. Duygusal fırtınalar mümkün.",
+    "dotColor": "#f97316",
+    "category": "lunar_phase",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Tutulma: saç kesimi ve estetik işlemlerden kaçının.",
+      "health": "Ayak sağlığı ve bağışıklık sistemine dikkat.",
+      "finance": "Hayalperest yatırımlardan uzak durun.",
+      "avoid": ["Saç kesimi/boyama", "Estetik işlemler", "Büyük kararlar", "Alkol"]
+    }
+  },
+  {
+    "date": "2026-08-30",
+    "type": "positive",
+    "title": "30 Ağustos Zafer Bayramı",
+    "description": "Büyük Zafer'in yıl dönümü. Resmi tatil.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
     "intensity": 3
   },
   {
-    "date": "2026-09-04",
+    "date": "2026-08-31",
+    "type": "positive",
+    "title": "Jüpiter Üçgen Satürn (Tam Açı)",
+    "description": "Büyüme ile disiplin mükemmel dengede. İş kurma ve uzun vadeli projeler için yılın en güçlü açısı.",
+    "dotColor": "#22c55e",
+    "category": "aspect",
+    "intensity": 5,
+    "guidance": {
+      "beauty": "Uzun vadeli güzellik yatırımları (lazer, ortodonti) için harika.",
+      "health": "Uzun vadeli sağlık hedefleri koyun.",
+      "finance": "İş kurma, ortaklık ve uzun vadeli yatırımlar için YILIN EN İYİ GÜNÜ.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-09-10",
     "type": "positive",
     "title": "Yeni Ay – Başak Burcu",
-    "description": "Sağlık rutinleri, organizasyon ve hizmet alanında taze başlangıçlar için güçlü enerji.",
+    "description": "Sağlık rutinleri, organizasyon ve detaylara odaklanma zamanı.",
     "dotColor": "#a8c5da",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Detaylı bakım rutini oluşturun. Başak enerjisi mükemmeliyetçidir.",
+      "health": "Sindirim sistemi detoksu için ideal.",
+      "finance": "Bütçe ve masraf analizi yapın.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-09-07",
+    "date": "2026-09-22",
     "type": "positive",
-    "title": "Venüs Akrep Burcuna Geçiyor",
-    "description": "Aşkta derinlik ve tutku. Derin bağlar ve dönüştürücü ilişkiler. Mali ortaklıklar güçleniyor.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 3
+    "title": "Sonbahar Ekinoksu",
+    "description": "Güneş Terazi burcuna giriyor. Gece ve gündüz eşitleniyor. Denge ve uyum zamanı.",
+    "dotColor": "#22c55e",
+    "category": "seasonal",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Cilt bakım rutininizi sonbahar moduna geçirin.",
+      "health": "Bağışıklık güçlendirme zamanı. C vitamini alın.",
+      "finance": "Yıl sonu hedeflerinizi gözden geçirin.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-09-15",
+    "date": "2026-09-26",
     "type": "positive",
-    "title": "Jüpiter-Uranüs Sekstil",
-    "description": "Beklenmedik fırsatlar ve yenilikçi büyüme. Teknoloji ve girişimcilikte şans kapıları açılıyor.",
-    "dotColor": "#06b6d4",
-    "category": "aspect",
-    "intensity": 4
-  },
-  {
-    "date": "2026-09-18",
-    "type": "positive",
-    "title": "Dolunay – Balık Burcu",
-    "description": "Maneviyat, sanat ve empati dorukta. Sezgilerinize güvenin, rüyalar ve içgüdüler güçlü mesajlar taşıyabilir.",
+    "title": "Dolunay – Balık Burcu / Hasat Ay'ı",
+    "description": "Maneviyat ve sezgi dorukta. Hasat Ay'ı enerjisi: emeklerinizin karşılığını alın.",
     "dotColor": "#22c55e",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Nemlendirici maskeler ve saç bakımı için uygun.",
+      "health": "Sezgilerinize güvenin, rüyalar mesaj taşıyabilir.",
+      "finance": "Hasat zamanı: yatırımlarınızın meyvesini toplayın.",
+      "avoid": ["Saç kesimi (Su burcu Dolunay'ı)"]
+    }
   },
   {
     "date": "2026-10-03",
-    "type": "positive",
-    "title": "Yeni Ay – Terazi Burcu",
-    "description": "İlişkiler, ortaklıklar ve adalet alanında yeni bir dönem başlıyor. Sözleşmeler ve anlaşmalar için elverişli.",
-    "dotColor": "#a8c5da",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-10-05",
-    "type": "positive",
-    "title": "Venüs Yay Burcuna Geçiyor",
-    "description": "Aşkta özgürlük ve macera. Yabancı kültürlerle bağlantı. Felsefi ilişkiler ve seyahat aşkı.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-10-17",
     "type": "negative",
-    "title": "Dolunay – Koç Burcu",
-    "description": "Bireysel ihtiyaçlar ile ilişki dinamikleri arasında gerilim. Olgun, öfke kontrolüyle hareket edin.",
-    "dotColor": "#f97316",
-    "category": "lunar_phase",
-    "intensity": 3
+    "title": "Venüs Retrosu Başlangıcı – Akrep",
+    "description": "Venüs geri gidiyor. Eski aşklar dönebilir. Estetik kararlardan ve ilişki kararlarından kaçının.",
+    "dotColor": "#ef4444",
+    "category": "retrograde",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Saç kesimi, boyama, estetik operasyon YAPMAYIN. Radikal imaj değişikliğinden kaçının.",
+      "health": "Böbrek ve üreme sistemi hassas olabilir.",
+      "finance": "Lüks harcamalardan kaçının, eski borçları çözün.",
+      "avoid": ["Saç kesimi/boyama", "Estetik operasyonlar", "Botoks/dolgu", "Dövme", "Lüks alışveriş", "Yeni ilişki başlatma"]
+    }
   },
   {
-    "date": "2026-10-25",
-    "type": "negative",
-    "title": "Güneş Karşıt Uranüs",
-    "description": "Ani değişiklikler ve beklenmedik olaylar. Esneklik gerekli. Rutinler bozulabilir ama özgürleşme fırsatı.",
-    "dotColor": "#06b6d4",
+    "date": "2026-10-04",
+    "type": "positive",
+    "title": "Satürn Opozisyonu",
+    "description": "Satürn Dünya'ya en yakın konumunda. Sorumluluk ve olgunluk testi.",
+    "dotColor": "#78716c",
     "category": "aspect",
     "intensity": 3
   },
   {
-    "date": "2026-10-30",
+    "date": "2026-10-10",
     "type": "positive",
-    "title": "Venüs Oğlak Burcuna Geçiyor",
-    "description": "Ciddi ve olgun aşk dönemi. Uzun vadeli ilişki kararları için uygun. İş ilişkileri güçleniyor.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-11-02",
-    "type": "positive",
-    "title": "Yeni Ay – Akrep Burcu",
-    "description": "Dönüşüm, derinlik ve gizli konularda güçlü enerji. Mali yönetim ve ortak kaynaklar için başlangıç zamanı.",
+    "title": "Yeni Ay – Terazi Burcu",
+    "description": "İlişkiler, ortaklıklar ve denge alanında taze başlangıçlar. Ama Venüs retrosunda dikkatli olun.",
     "dotColor": "#a8c5da",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Venüs retrosunda: mevcut rutininizi sürdürün, yeni ürün denemeyin.",
+      "health": "Duygusal sağlığa odaklanın.",
+      "finance": "İlişki bazlı finansal kararları erteleyin.",
+      "avoid": ["Yeni güzellik ürünleri", "İlişki kararları"]
+    }
   },
   {
-    "date": "2026-11-11",
+    "date": "2026-10-24",
     "type": "negative",
-    "title": "Merkür Geriye Gidiş Başlangıcı – Yay",
-    "description": "Son Merkür retrosu yıl bitmeden başlıyor. Uluslararası konular, yayıncılık ve seyahatte dikkatli olun.",
+    "title": "Merkür Retrosu Başlangıcı – Akrep",
+    "description": "Yılın son Merkür retrosu + Venüs retrosu birlikte! Çift retro = maksimum dikkat. Gizli konular gün yüzüne çıkıyor.",
     "dotColor": "#ef4444",
     "category": "retrograde",
-    "intensity": 3
+    "intensity": 5,
+    "guidance": {
+      "beauty": "İki gezegen retrosunda: hiçbir estetik işlem yapmayın!",
+      "health": "Üreme ve sindirim sistemi hassas.",
+      "finance": "Kesinlikle sözleşme imzalamayın, yeni yatırım yapmayın.",
+      "avoid": ["Tüm estetik işlemler", "Sözleşme imzalama", "Yeni teknoloji alımı", "Yeni iş başvurusu", "Büyük alışverişler"]
+    }
   },
   {
-    "date": "2026-11-15",
+    "date": "2026-10-26",
     "type": "positive",
-    "title": "Mars Boğa Burcuna Geçiyor",
-    "description": "Enerji maddi hedeflere yöneliyor. Sabırlı ve kararlı çalışma. Finansal projeler için güçlü dönem.",
-    "dotColor": "#ef4444",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-11-16",
-    "type": "positive",
-    "title": "Dolunay – Boğa Burcu",
-    "description": "Materyal konularda ve değerlerde zirve enerji. Güzellik, sanat ve maddi güvenlik meyvelerini veriyor.",
+    "title": "Dolunay – Boğa Burcu (Avcı Ay'ı)",
+    "description": "Maddi değerler ve konfor alanında zirve. Güzellik ve sanat meyvelerini veriyor.",
     "dotColor": "#22c55e",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Dolunay Boğa'da: saç bakım maskesi için uygun ama kesim yapmayın (retro).",
+      "health": "Boğaz ve tiroid kontrolü.",
+      "finance": "Mevcut yatırımların kârını değerlendirin.",
+      "avoid": ["Saç kesimi (retro devam ediyor)"]
+    }
   },
   {
-    "date": "2026-11-20",
-    "type": "negative",
-    "title": "Mars Kare Plüton",
-    "description": "Güç mücadeleleri ve yoğun enerji. Kontrolcü eğilimlerden kaçının. Enerjinizi yapıcı kanalize edin.",
+    "date": "2026-10-29",
+    "type": "positive",
+    "title": "29 Ekim Cumhuriyet Bayramı",
+    "description": "Cumhuriyetimizin kuruluşunun yıl dönümü. Resmi tatil.",
+    "dotColor": "#22c55e",
+    "category": "special_day",
+    "intensity": 4
+  },
+  {
+    "date": "2026-11-09",
+    "type": "positive",
+    "title": "Yeni Ay – Akrep Burcu",
+    "description": "Dönüşüm ve gizli konularda güçlü enerji. Derinlere dalma zamanı.",
+    "dotColor": "#a8c5da",
+    "category": "lunar_phase",
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Retro bitiyor, biraz daha sabır.",
+      "health": "Detoks ve arınma çalışmaları için güçlü.",
+      "finance": "Mali durumunuzu temelden gözden geçirin.",
+      "avoid": ["Saç kesimi (Venüs retrosu devam ediyor)"]
+    }
+  },
+  {
+    "date": "2026-11-13",
+    "type": "positive",
+    "title": "Merkür ve Venüs Retroları Sona Eriyor",
+    "description": "Çift retro nihayet bitiyor! İletişim, aşk ve güzellik alanında enerji çözülüyor. Rahatlama zamanı.",
+    "dotColor": "#22c55e",
+    "category": "retrograde",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Retro bitti! Ertelediğiniz saç kesimi, boyama, estetik işlemleri artık yapabilirsiniz.",
+      "health": "Ertelenen sağlık randevularını alın.",
+      "finance": "Bekleyen sözleşmeleri imzalayabilirsiniz.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-11-24",
+    "type": "positive",
+    "title": "Dolunay – İkizler Burcu (Süper Ay)",
+    "description": "Süper Dolunay! İletişim, sosyal bağlantılar ve öğrenme dorukta.",
+    "dotColor": "#22c55e",
+    "category": "lunar_phase",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Süper Ay + Hava burcu: saç kestirmek için mükemmel gün!",
+      "health": "Sinir sistemi ve solunum dikkat.",
+      "finance": "Ticaret ve iletişim yatırımları meyvesini veriyor.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-11-29",
+    "type": "positive",
+    "title": "Uranüs Üçgen Plüton (2. Geçiş)",
+    "description": "Derin dönüşüm ve özgürleşme enerjisinin ikinci dalgası.",
     "dotColor": "#7c3aed",
     "category": "aspect",
     "intensity": 4
   },
   {
-    "date": "2026-11-24",
-    "type": "positive",
-    "title": "Venüs Kova Burcuna Geçiyor",
-    "description": "Alışılmadık aşk ve özgür ilişkiler. Arkadaşlıktan aşka geçişler olabilir. Toplumsal estetik.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 3
-  },
-  {
-    "date": "2026-12-01",
+    "date": "2026-12-08",
     "type": "positive",
     "title": "Yeni Ay – Yay Burcu",
-    "description": "Seyahat, yüksek öğrenim ve felsefe alanında taze başlangıçlar. Vizyonunuzu genişletmek için güçlü zaman.",
+    "description": "Seyahat, yüksek öğrenim ve felsefe alanında taze başlangıçlar.",
     "dotColor": "#a8c5da",
     "category": "lunar_phase",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Ateş burcu Yeni Ay'ı: cesaretli saç modelleri deneyebilirsiniz.",
+      "health": "Bacak ve kalçaya dikkat, stretching yapın.",
+      "finance": "Uluslararası yatırımlar ve eğitim planları yapın.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-12-01",
+    "date": "2026-12-10",
+    "type": "positive",
+    "title": "Satürn Retrosu Sonu / Regaip Kandili",
+    "description": "Satürn ileri harekete geçiyor + Regaip Kandili. Sorumluluk alanında netlik kazanılıyor. Üç ayların başlangıcı.",
+    "dotColor": "#f7e1e8",
+    "category": "special_day",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Uzun vadeli güzellik kararları için uygun dönem başlıyor.",
+      "health": "Manevi arınma ve dua zamanı.",
+      "finance": "Ertelenen projeler artık hayata geçirilebilir.",
+      "avoid": []
+    }
+  },
+  {
+    "date": "2026-12-13",
     "type": "negative",
-    "title": "Merkür Geri Dönüş Sonu",
-    "description": "Merkür Kasım'ın ikinci yarısından bu yana askıya alınan kararlar artık hayata geçirilebilir.",
+    "title": "Jüpiter Retrosu Başlangıcı – Aslan",
+    "description": "Jüpiter geri gidiyor. Büyüme ve genişleme planlarını içsel olarak yeniden değerlendirme zamanı.",
     "dotColor": "#f59e0b",
     "category": "retrograde",
-    "intensity": 3
-  },
-  {
-    "date": "2026-12-16",
-    "type": "positive",
-    "title": "Dolunay – İkizler Burcu",
-    "description": "İletişim, öğrenme ve sosyal bağlantılarda doruk. Yıl sonu projelerini tamamlamak için güçlü enerji.",
-    "dotColor": "#22c55e",
-    "category": "lunar_phase",
-    "intensity": 3
-  },
-  {
-    "date": "2026-12-19",
-    "type": "positive",
-    "title": "Venüs Balık Burcuna Geçiyor",
-    "description": "Yıl sonu romantizm zirvesi. Venüs yüceldiği burçta. Koşulsuz sevgi ve ruhani bağlar.",
-    "dotColor": "#ec4899",
-    "category": "planet_ingress",
-    "intensity": 5
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Mevcut rutinleri sürdürün.",
+      "health": "Karaciğer ve kalp sağlığı kontrolü.",
+      "finance": "Yeni büyük yatırımlardan kaçının, mevcut olanları optimize edin.",
+      "avoid": ["Büyük genişleme planları", "Aşırı harcama"]
+    }
   },
   {
     "date": "2026-12-21",
     "type": "positive",
     "title": "Kış Gündönümü",
-    "description": "Güneş Oğlak burcuna giriyor ve yılın en kısa günü. İçe dönme, planlama ve yeni yıla niyetleri belirleme zamanı.",
+    "description": "Yılın en kısa günü. Güneş Oğlak burcuna giriyor. İçe dönme ve yeni yıl niyetleri belirleme zamanı.",
     "dotColor": "#22c55e",
     "category": "seasonal",
-    "intensity": 3
+    "intensity": 3,
+    "guidance": {
+      "beauty": "Kış bakım rutinine geçiş: yoğun nemlendirici kullanın.",
+      "health": "D vitamini takviyesi önemli.",
+      "finance": "Yıl sonu muhasebesi yapın.",
+      "avoid": []
+    }
   },
   {
-    "date": "2026-12-27",
+    "date": "2026-12-23",
     "type": "positive",
-    "title": "Mars İkizler Burcuna Geçiyor",
-    "description": "Enerji iletişime ve sosyal hayata yöneliyor. Çok yönlü projeler, hızlı düşünce.",
-    "dotColor": "#ef4444",
-    "category": "planet_ingress",
-    "intensity": 2
+    "title": "Dolunay – Yengeç Burcu (Süper Ay)",
+    "description": "Yıl sonu Süper Dolunay'ı. Aile, yuva ve duygusal bağlar ön planda. Yılın duygusal kapanışı.",
+    "dotColor": "#22c55e",
+    "category": "lunar_phase",
+    "intensity": 4,
+    "guidance": {
+      "beauty": "Nemlendirici saç ve cilt maskeleri için ideal.",
+      "health": "Duygusal yeme eğilimi artabilir, dikkatli olun.",
+      "finance": "Yıl sonu harcamalarına dikkat.",
+      "avoid": ["Saç kesimi (Su burcu Dolunay'ı)"]
+    }
   }
 ]

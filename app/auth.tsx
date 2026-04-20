@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, Alert, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, Alert, StatusBar, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,7 +14,7 @@ type Mode = 'login' | 'register';
 
 export default function AuthScreen() {
     const router = useRouter();
-    const { signIn, signUp, isLoading, error, clearError } = useAuthStore();
+    const { signIn, signUp, resetPassword, isLoading, error, clearError } = useAuthStore();
 
     const [mode, setMode]           = useState<Mode>('login');
     const [email, setEmail]         = useState('');
@@ -22,6 +22,9 @@ export default function AuthScreen() {
     const [fullName, setFullName]   = useState('');
     const [showPass, setShowPass]   = useState(false);
     const [wooModalVisible, setWooModalVisible] = useState(false);
+    const [resetModalVisible, setResetModalVisible] = useState(false);
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetLoading, setResetLoading] = useState(false);
 
     const handleSubmit = async () => {
         clearError();
@@ -59,6 +62,23 @@ export default function AuthScreen() {
     const handleWooCommerceSuccess = () => {
         setWooModalVisible(false);
         router.replace('/(tabs)');
+    };
+
+    const handleResetPassword = async () => {
+        if (!resetEmail.trim()) {
+            Alert.alert('Uyarı', 'Lütfen e-posta adresinizi girin.');
+            return;
+        }
+        setResetLoading(true);
+        const result = await resetPassword(resetEmail.trim());
+        setResetLoading(false);
+        if (result.success) {
+            Alert.alert('✅ Başarılı', result.message, [
+                { text: 'Tamam', onPress: () => { setResetModalVisible(false); setResetEmail(''); } }
+            ]);
+        } else {
+            Alert.alert('Hata', result.message);
+        }
     };
 
     return (
@@ -151,6 +171,16 @@ export default function AuthScreen() {
                             </View>
                         </View>
 
+                        {/* Şifremi Unuttum Link — only in login mode */}
+                        {mode === 'login' && (
+                            <TouchableOpacity
+                                style={{ alignSelf: 'flex-end', marginBottom: 12, marginTop: -4 }}
+                                onPress={() => { setResetEmail(email); setResetModalVisible(true); }}
+                            >
+                                <Text style={{ fontSize: 13, color: '#ad92c9', fontWeight: '600' }}>Şifremi Unuttum</Text>
+                            </TouchableOpacity>
+                        )}
+
                         {error && (
                             <View style={styles.errorBox}>
                                 <MaterialIcons name="error-outline" size={16} color="#dc2626" />
@@ -223,6 +253,49 @@ export default function AuthScreen() {
                 onClose={() => setWooModalVisible(false)}
                 onSuccess={handleWooCommerceSuccess}
             />
+
+            {/* ─── Şifre Sıfırlama Modal ─── */}
+            <Modal
+                visible={resetModalVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setResetModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalCard}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                            <Text style={styles.modalTitle}>Şifremi Sıfırla</Text>
+                            <TouchableOpacity onPress={() => setResetModalVisible(false)}>
+                                <MaterialIcons name="close" size={24} color="#71717a" />
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.modalDesc}>
+                            E-posta adresinizi girin. Size şifre sıfırlama linki göndereceğiz.
+                        </Text>
+                        <TextInput
+                            style={[styles.input, { marginBottom: 20 }]}
+                            placeholder="ornek@mail.com"
+                            placeholderTextColor="#a1a1aa"
+                            value={resetEmail}
+                            onChangeText={setResetEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoFocus
+                        />
+                        <TouchableOpacity
+                            style={[styles.submitBtn, resetLoading && { opacity: 0.7 }]}
+                            onPress={handleResetPassword}
+                            disabled={resetLoading}
+                        >
+                            {resetLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.submitText}>Sıfırlama Linki Gönder</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }
@@ -290,5 +363,21 @@ const styles = StyleSheet.create({
     },
     wooBtnText: {
         fontSize: 14, fontWeight: '600', color: '#ad92c9',
+    },
+    modalOverlay: {
+        flex: 1, backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center', alignItems: 'center', padding: 24,
+    },
+    modalCard: {
+        backgroundColor: '#fff', borderRadius: 24, padding: 28,
+        width: '100%', maxWidth: 400,
+        shadowColor: '#000', shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.15, shadowRadius: 24, elevation: 12,
+    },
+    modalTitle: {
+        fontSize: 20, fontWeight: '700', color: '#1f1317',
+    },
+    modalDesc: {
+        fontSize: 14, color: '#71717a', lineHeight: 20, marginBottom: 20,
     },
 });

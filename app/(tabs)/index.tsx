@@ -5,7 +5,7 @@ import { useStore } from '../../store/useStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useProfileStore } from '../../store/profileStore';
 import { supabase } from '../../utils/supabase';
-
+import { useZikirStore, ESMA_LIST } from '../../store/useZikirStore';
 import { useRouter } from 'expo-router';
 
 import { useMemo, useEffect, useState } from 'react';
@@ -231,7 +231,10 @@ export default function DashboardScreen() {
 
                 <TouchableOpacity 
                     className="px-4 mb-4"
-                    onPress={() => router.push({ pathname: '/zikirmatik', params: { esma: recommendations.esma.name } } as any)}
+                    onPress={() => {
+                        useZikirStore.getState().setActiveEsma(recommendations.esma.id);
+                        router.push({ pathname: '/zikirmatik', params: { esma: recommendations.esma.id } } as any);
+                    }}
                 >
                     <View className="rounded-[24px] border border-border-light bg-card-light p-5 dark:border-border-dark dark:bg-card-dark shadow-sm flex-row items-center">
                         <View className="h-12 w-12 items-center justify-center rounded-full bg-primary mr-4">

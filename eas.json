@@ -1,0 +1,44 @@
+{
+  "cli": {
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://srphijvgyfbzvfbgprcy.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNycGhpanZneWZienZmYmdwcmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTM2MjIsImV4cCI6MjA4ODk4OTYyMn0.KvNy4GsJPDQS-dEv5aPvZaV1t70Q3qrv75SvTqxP81Y",
+        "EXPO_PUBLIC_GEMINI_API_KEY": "AIzaSyDmuqEfQGGTRTduWMWU8Nx1NVQV1ETC4QY",
+        "EXPO_PUBLIC_REVENUECAT_API_KEY": "test_JzOkwDHUKGnuyjVFjLdkDiaGKdO",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "178605506074-f2g23grhigqhqbpgthu2tv9dcgsjhhrs.apps.googleusercontent.com",
+        "EXPO_PUBLIC_META_APP_ID": "1271921835003487",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://e39837c90cb4777c6a4eb1ee6b2e9d5c@o4511195410399232.ingest.de.sentry.io/4511195450441808",
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://srphijvgyfbzvfbgprcy.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNycGhpanZneWZienZmYmdwcmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MTM2MjIsImV4cCI6MjA4ODk4OTYyMn0.KvNy4GsJPDQS-dEv5aPvZaV1t70Q3qrv75SvTqxP81Y",
+        "EXPO_PUBLIC_GEMINI_API_KEY": "AIzaSyDmuqEfQGGTRTduWMWU8Nx1NVQV1ETC4QY",
+        "EXPO_PUBLIC_REVENUECAT_API_KEY": "test_JzOkwDHUKGnuyjVFjLdkDiaGKdO",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "178605506074-f2g23grhigqhqbpgthu2tv9dcgsjhhrs.apps.googleusercontent.com",
+        "EXPO_PUBLIC_META_APP_ID": "1271921835003487",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://e39837c90cb4777c6a4eb1ee6b2e9d5c@o4511195410399232.ingest.de.sentry.io/4511195450441808",
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6761992914"
+      }
+    }
+  }
+}

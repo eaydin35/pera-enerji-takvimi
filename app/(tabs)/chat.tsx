@@ -20,9 +20,13 @@ import { getDailyRecommendation } from '../../utils/recommendation-engine';
 import { supabase } from '../../utils/supabase';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useProfileStore } from '../../store/profileStore';
+import { deductTokens } from '../../utils/profile-service';
+import { useRouter } from 'expo-router';
+import { Alert } from 'react-native';
 
 export default function ChatScreen() {
-    const { tokens, isPremium, useTokens } = useStore();
+    const { tokens, setTokens } = useStore();
+    const router = useRouter();
     const { user } = useAuthStore();
     const { profile: userProfile } = useProfileStore();
     const [messages, setMessages] = useState<Message[]>([
@@ -88,11 +92,14 @@ export default function ChatScreen() {
 
         // Token check
         if (tokens <= 0) {
-            const tokenErrorMsg: Message = { 
-                role: 'model', 
-                parts: [{ text: "Üzgünüm, jetonun bitmiş görünüyor. Sohbetine devam etmek için yeni jeton alabilir veya abonelik modellerimizi inceleyebilirsin. ✨" }] 
-            };
-            setMessages([...messages, tokenErrorMsg]);
+            Alert.alert(
+                "Yıldızların Sesi Kesildi...",
+                "Rehberliğe devam etmek ve kozmik içgörüler almak için yıldız cüzdanını doldur veya abone ol.",
+                [
+                    { text: "Daha Sonra", style: "cancel" },
+                    { text: "Yıldız Al", onPress: () => router.push("/paywall") }
+                ]
+            );
             return;
         }
 
@@ -117,8 +124,17 @@ export default function ChatScreen() {
         }
 
         try {
-            // Deduct token
-            useTokens(1);
+            // Deduct token from backend first
+            if (user) {
+                const deducted = await deductTokens(user.id, 1, tokens);
+                if (deducted) {
+                    setTokens(tokens - 1); // Update local instantly
+                } else {
+                    Alert.alert('Hata', 'Yıldızınız düşülemedi.');
+                    setIsLoading(false);
+                    return;
+                }
+            }
 
             const aiResponse = await chatWithAI(
                 undefined, // ID yet to be implemented in Store
@@ -206,8 +222,8 @@ export default function ChatScreen() {
                     <Text style={styles.headerSubtitle}>Pera AI Danışmanı</Text>
                 </View>
                 <View style={styles.tokenBadge}>
-                    <MaterialIcons name={isPremium ? "all-inclusive" : "stars"} size={16} color="#E91E63" />
-                    <Text style={styles.tokenText}>{isPremium ? "Sınırsız" : `${tokens} Jeton`}</Text>
+                    <MaterialIcons name={"stars"} size={16} color="#E91E63" />
+                    <Text style={styles.tokenText}>{`${tokens} Yıldız`}</Text>
                 </View>
             </View>
 

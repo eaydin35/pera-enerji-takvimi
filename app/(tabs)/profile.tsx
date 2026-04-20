@@ -94,7 +94,7 @@ function SettingsRow({
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
-    const { tokens, isPremium, setPremiumStatus, setAvatarUrl: setStoreAvatar, resetOnboarding } = useStore();
+    const { tokens, setAvatarUrl: setStoreAvatar, resetOnboarding } = useStore();
     const { profile: userProfile, isGuest } = useProfileStore();
     const { sessions, resetAll: resetZikir } = useZikirStore();
 
@@ -302,10 +302,10 @@ export default function ProfileScreen() {
                     ) : null}
                 </View>
 
-                {/* Jeton Cüzdanı & Premium Plan */}
+                {/* Jeton Cüzdanı (Kozmik Cüzdan) */}
                 <View style={styles.section}>
                     <LinearGradient
-                        colors={isPremium ? ['#4c1d95', '#1e1127'] : ['#1e1127', '#2d1a3e']}
+                        colors={['#1e1127', '#2d1a3e']}
                         start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                         style={styles.premiumCard}
                     >
@@ -314,35 +314,26 @@ export default function ProfileScreen() {
                             <View style={styles.premiumHeader}>
                                 <View>
                                     <View style={styles.tokenRow}>
-                                        <MaterialIcons name={isPremium ? "all-inclusive" : "stars"} size={18} color="#f7e1e8" />
+                                        <MaterialIcons name="stars" size={18} color="#f7e1e8" />
                                         <Text style={styles.premiumLabel}>
-                                            {isPremium ? "SINIRSIZ ERİŞİM AKTİF" : `${tokens} JETONUN VAR`}
+                                            {`${tokens} YILDIZIN VAR`}
                                         </Text>
                                     </View>
                                     <Text style={styles.premiumTitle}>
-                                        {isPremium ? "Premium Üyelik" : "Kozmik Cüzdan"}
+                                        Kozmik Cüzdan
                                     </Text>
                                 </View>
-                                <MaterialIcons name={isPremium ? "verified" : "auto-awesome"} size={26} color="#f7e1e8" />
+                                <MaterialIcons name="auto-awesome" size={26} color="#f7e1e8" />
                             </View>
                             <Text style={styles.premiumDesc}>
-                                {isPremium 
-                                    ? "Tüm AI Danışmanlık ve derinlemesine analiz özelliklerine sınırsız erişimin var. Yıldızlar seninle!" 
-                                    : "AI Danışman Sema ile yapacağın her soru 1 jeton harcamaktadır."}
+                                AI Danışman Sema ile yapacağın her soru 1 yıldız, harita güncellemeleri 3 yıldız harcamaktadır.
                             </Text>
                             <View style={{ flexDirection: 'row', gap: 10 }}>
-                                {!isPremium && (
-                                    <TouchableOpacity style={[styles.premiumBtn, { flex: 1 }]}>
-                                        <Text style={styles.premiumBtnText}>Jeton Yükle</Text>
-                                    </TouchableOpacity>
-                                )}
                                 <TouchableOpacity 
-                                    style={[styles.premiumBtn, { flex: 1, backgroundColor: isPremium ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)', borderWidth: 1, borderColor: '#f7e1e8' }]}
-                                    onPress={() => isPremium ? null : setPremiumStatus(true)} // Mock subscription for demo
+                                    style={[styles.premiumBtn, { flex: 1 }]}
+                                    onPress={() => router.push('/paywall')}
                                 >
-                                    <Text style={[styles.premiumBtnText, { color: '#f7e1e8' }]}>
-                                        {isPremium ? "Planı Yönet" : "Abone Ol"}
-                                    </Text>
+                                    <Text style={styles.premiumBtnText}>Yıldız Al / Abone Ol</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -403,7 +394,7 @@ export default function ProfileScreen() {
                             onPress={() => setBirthEditorVisible(true)}
                         >
                             <Text style={styles.editBirthDataBtnText}>
-                                {(userProfile && !('isGuest' in userProfile) && !isPremium) ? "Doğum Bilgilerimi Güncelle (1 Jeton)" : "Doğum Bilgilerimi Güncelle"}
+                                {(userProfile && !('isGuest' in userProfile)) ? "Doğum Bilgilerimi Güncelle (3 Yıldız)" : "Doğum Bilgilerini Gir"}
                             </Text>
                             <MaterialIcons name="edit" size={16} color="#ad92c9" />
                         </TouchableOpacity>

@@ -44,11 +44,15 @@ Persona & Stil Kuralları (KRİTİK):
 4. Sınırlar: Tıbbi, hukuki veya kesin gelecek tahmini yapma. "Olasılıklar" ve "enerjiler" üzerinden konuş.
 5. Esma ve Ritüel: Önerilerinde esmalar ve niyet ritüellerine yer ver.
 6. Hitap: Kullanıcıya her zaman adıyla hitap et.
-7. Önerilen Sorular (ÇOK ÖNEMLİ): Cevabının EN SONUNA kullanıcının sana sorabileceği, sohbeti derinleştirecek 2 veya 3 adet kısa ve ilgi çekici devam sorusu üret. Bunları cevabının EN ALTINA mutlaka şu formatta (satır arası boşluk bırakarak) ekle:
+7. Kişiselleştirme: Cinsiyete göre yaklaşımı uyarla, yaşa göre beklentileri ve hayat odağına göre önerileri şekillendir. Mesela 18 yaşında birinin kariyer beklentisi ile 45 yaşında birininki farklı olacaktır.
+8. Önerilen Sorular (ÇOK ÖNEMLİ): Cevabının EN SONUNA kullanıcının sana sorabileceği, sohbeti derinleştirecek 2 veya 3 adet kısa ve ilgi çekici devam sorusu üret. Bunları cevabının EN ALTINA mutlaka şu formatta (satır arası boşluk bırakarak) ekle:
 [SUGGESTED_QUESTIONS: ["Soru 1?", "Soru 2?"]]
 
 ═══════════════ KULLANICI PROFİLİ ═══════════════
 - Ad Soyad: {userName}
+- Cinsiyet: {gender}
+- Yaş: {age}
+- Hayat Odağı: {lifeFocus}
 - Doğum Tarihi: {birthDate}
 - Doğum Saati: {birthTime}
 - Doğum Yeri: {birthPlace}
@@ -237,7 +241,7 @@ export const chatWithAI = async (
     history: Message[],
     natalChart: ChartData,
     currentTransits: any,
-    userProfile?: { firstName?: string; lastName?: string; birthDate?: string; birthTime?: string; birthPlace?: string },
+    userProfile?: { firstName?: string; lastName?: string; birthDate?: string; birthTime?: string; birthPlace?: string; gender?: string; lifeFocus?: string[] },
     recommendations?: { stone?: { name: string }; esma?: { name: string; meaning: string }; color?: { name: string }; elementWarning?: { elementTr: string; advice: string } | null }
 ): Promise<string> => {
     try {
@@ -263,8 +267,41 @@ export const chatWithAI = async (
 
         console.log(`[AI Chat] Using Gemini API Key starting with: ${GEMINI_API_KEY.slice(0, 4)}...`);
 
+        // Calculate age from birth date
+        let ageStr = 'Belirtilmemiş';
+        if (userProfile?.birthDate) {
+            try {
+                const parts = userProfile.birthDate.split('.');
+                let birthYear: number;
+                if (parts.length === 3 && parts[2].length === 4) {
+                    birthYear = parseInt(parts[2]); // DD.MM.YYYY
+                } else {
+                    birthYear = parseInt(userProfile.birthDate.split('-')[0]); // YYYY-MM-DD
+                }
+                if (!isNaN(birthYear)) {
+                    ageStr = `${new Date().getFullYear() - birthYear} yaşında`;
+                }
+            } catch { ageStr = 'Hesaplanamadı'; }
+        }
+
+        // Map gender to Turkish
+        const genderMap: Record<string, string> = { male: 'Erkek', female: 'Kadın', other: 'Diğer' };
+        const genderStr = userProfile?.gender ? genderMap[userProfile.gender] || 'Belirtilmemiş' : 'Belirtilmemiş';
+
+        // Map life focus to Turkish
+        const focusMap: Record<string, string> = {
+            love: 'Aşk', career: 'Kariyer', family: 'Aile', children: 'Çocuk',
+            money: 'Para/Finans', health: 'Sağlık', spiritual: 'Maneviyat'
+        };
+        const lifeFocusStr = userProfile?.lifeFocus?.length
+            ? userProfile.lifeFocus.map(f => focusMap[f] || f).join(', ')
+            : 'Belirtilmemiş';
+
         const fullSystemPrompt = SYSTEM_PROMPT
             .replace('{userName}', `${userProfile?.firstName || 'Gezgin'} ${userProfile?.lastName || ''}`.trim())
+            .replace('{gender}', genderStr)
+            .replace('{age}', ageStr)
+            .replace('{lifeFocus}', lifeFocusStr)
             .replace('{birthDate}', userProfile?.birthDate || 'Belirtilmemiş')
             .replace('{birthTime}', userProfile?.birthTime || 'Belirtilmemiş')
             .replace('{birthPlace}', userProfile?.birthPlace || 'Belirtilmemiş')

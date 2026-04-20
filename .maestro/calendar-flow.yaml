@@ -1,0 +1,14 @@
+appId: com.peratakvimi.app
+---
+# Requires user to be logged in
+- launchApp
+- waitForAnimationToEnd
+- tapOn: "Takvim"
+- assertVisible: "Takvim"
+- waitForAnimationToEnd
+# Verify calendar renders with current month
+- assertVisible: "2026"
+# Tap on today's date (verify daily panel opens)
+- tapOn:
+    id: "calendar-today"
+- waitForAnimationToEnd

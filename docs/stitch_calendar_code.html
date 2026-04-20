@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-dim": "#345d00",
+              "on-surface-variant": "#605d68",
+              "surface-bright": "#fdf8ff",
+              "tertiary-fixed": "#fd6c9c",
+              "surface": "#fdf8ff",
+              "surface-tint": "#76527d",
+              "secondary": "#3d6b00",
+              "tertiary-container": "#fd6c9c",
+              "error": "#a8364b",
+              "secondary-fixed-dim": "#abe56e",
+              "primary-fixed-dim": "#e3b8ea",
+              "error-container": "#f97386",
+              "on-tertiary-container": "#47001f",
+              "surface-container-high": "#ebe6f1",
+              "on-tertiary-fixed": "#000000",
+              "on-secondary": "#eeffd6",
+              "on-primary-fixed": "#4a2a52",
+              "primary-container": "#f2c6f8",
+              "on-error": "#fff7f7",
+              "on-error-container": "#6e0523",
+              "outline-variant": "#b4b0bc",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#ec5f8f",
+              "on-tertiary": "#fff7f7",
+              "on-tertiary-fixed-variant": "#590029",
+              "primary-dim": "#694771",
+              "surface-variant": "#e6e0ed",
+              "background": "#fdf8ff",
+              "inverse-on-surface": "#9f9ca2",
+              "on-secondary-fixed": "#274800",
+              "on-primary-fixed-variant": "#684670",
+              "surface-container-low": "#f7f2fb",
+              "error-dim": "#6b0221",
+              "primary": "#76527d",
+              "tertiary-dim": "#9c1f52",
+              "secondary-container": "#b8f47a",
+              "inverse-surface": "#0f0e12",
+              "surface-container": "#f1ecf6",
+              "on-primary": "#fff7fb",
+              "on-primary-container": "#5e3d66",
+              "on-surface": "#33313b",
+              "on-secondary-container": "#335c00",
+              "on-background": "#33313b",
+              "tertiary": "#ac2d5e",
+              "on-secondary-fixed-variant": "#3a6700",
+              "surface-dim": "#ddd8e5",
+              "primary-fixed": "#f2c6f8",
+              "outline": "#7c7984",
+              "surface-container-highest": "#e6e0ed",
+              "inverse-primary": "#f2c6f8",
+              "secondary-fixed": "#b8f47a"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#fdf8ff]/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#76527d] hover:opacity-70 transition-opacity cursor-pointer active:scale-95 duration-200">menu</span>
+<h1 class="font-['Plus_Jakarta_Sans'] font-extrabold text-lg tracking-tighter text-[#76527d]">Pera Enerji</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#76527d] hover:opacity-70 transition-opacity cursor-pointer active:scale-95 duration-200">account_circle</span>
+</div>
+</header>
+<main class="pt-20 pb-32 px-4 max-w-2xl mx-auto">
+<!-- Category Selector -->
+<section class="mb-8">
+<div class="flex gap-3 overflow-x-auto hide-scrollbar py-2">
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low px-5 py-3 rounded-xl hover:bg-surface-container-highest transition-colors active:scale-95 duration-200">
+<span class="text-lg">🏃</span>
+<span class="font-label text-sm font-semibold text-on-surface">Aktivite</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low px-5 py-3 rounded-xl hover:bg-surface-container-highest transition-colors active:scale-95 duration-200">
+<span class="text-lg">🏛️</span>
+<span class="font-label text-sm font-semibold text-on-surface">Resmi</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 bg-primary-container px-5 py-3 rounded-xl transition-colors active:scale-95 duration-200">
+<span class="text-lg">✨</span>
+<span class="font-label text-sm font-semibold text-on-primary-container">Manevi</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low px-5 py-3 rounded-xl hover:bg-surface-container-highest transition-colors active:scale-95 duration-200">
+<span class="text-lg">🎨</span>
+<span class="font-label text-sm font-semibold text-on-surface">Renk</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 bg-surface-container-low px-5 py-3 rounded-xl hover:bg-surface-container-highest transition-colors active:scale-95 duration-200">
+<span class="text-lg">💡</span>
+<span class="font-label text-sm font-semibold text-on-surface">Öneriler</span>
+</button>
+</div>
+</section>
+<!-- Month Navigation -->
+<section class="flex items-center justify-between mb-6 px-2">
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Ağustos 2024</h2>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container-low rounded-full active:scale-90 duration-200">
+<span class="material-symbols-outlined text-primary">chevron_left</span>
+</button>
+<button class="p-2 bg-surface-container-low rounded-full active:scale-90 duration-200">
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Calendar Grid -->
+<section class="bg-surface-container-low rounded-[2.5rem] p-6 mb-8">
+<div class="grid grid-cols-7 gap-y-6 text-center mb-4">
+<span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">Pzt</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">Sal</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">Çar</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">Per</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">Cum</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">Cmt</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">Paz</span>
+</div>
+<div class="grid grid-cols-7 gap-y-2 gap-x-1">
+<!-- Empty spaces for start of month -->
+<div class="aspect-square flex items-center justify-center text-outline-variant text-sm font-medium opacity-30">29</div>
+<div class="aspect-square flex items-center justify-center text-outline-variant text-sm font-medium opacity-30">30</div>
+<div class="aspect-square flex items-center justify-center text-outline-variant text-sm font-medium opacity-30">31</div>
+<!-- Calendar Days -->
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">1</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">2</span>
+<span class="absolute top-1 right-1 text-[10px]">✨</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">3</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">4</span>
+<div class="absolute bottom-1 w-1 h-1 bg-secondary rounded-full"></div>
+</button>
+<!-- Selected Day (5th) -->
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl bg-white outline outline-2 outline-primary outline-offset-0 shadow-sm">
+<span class="text-sm font-bold text-primary">5</span>
+<span class="absolute top-1 right-1 text-[10px]">🌙</span>
+<div class="absolute bottom-1 w-1 h-1 bg-tertiary rounded-full"></div>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">6</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">7</span>
+<span class="absolute top-1 right-1 text-[10px]">❤️</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">8</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">9</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">10</span>
+<div class="absolute bottom-1 w-1 h-1 bg-secondary rounded-full"></div>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">11</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">12</span>
+<span class="absolute top-1 right-1 text-[10px]">⭐</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">13</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">14</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">15</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">16</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">17</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">18</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">19</span>
+<div class="absolute bottom-1 w-1 h-1 bg-tertiary rounded-full"></div>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">20</span>
+</button>
+<button class="aspect-square relative flex flex-col items-center justify-center rounded-2xl hover:bg-surface-container transition-colors">
+<span class="text-sm font-semibold">21</span>
+</button>
+</div>
+</section>
+<!-- Today Summary -->
+<section class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline text-xl font-bold text-on-surface">Bugün: 5 Ağustos</h3>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded-full uppercase tracking-tighter">Yüksek Enerji</span>
+</div>
+<!-- Bento Energy Cards -->
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 relative h-48 rounded-[2rem] overflow-hidden group">
+<img alt="surreal cosmic nebula with soft lavender and gold dust" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="ethereal abstract cosmic background with swirling clouds of lavender and soft gold sparkling dust and stars" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYzKVy3NaDG1zNN_5nY3YQULda03CFb1gwnyC7RiR8dTNOY8VK5KKBuTSj6krUFof-1LlLOY9_y5ZHW1GsxVVBcG1nUG2TmQbm4YnKPCjyaWbRHz7YcIkvpVIQrv9xoGkqkUVUjC9xdVrYhERlcL6bUuCrxMxBs5WgDLjJqRG_yo_gM2v7Zms2IuUk-h9GQqFllgY68m2AtWGsGz-PI_2tCJcmJk-gMgtf7MDf1pUDFVbRwH7pds5OHdKtmtRPRihSeNiAJDw9xQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary-fixed text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-primary-fixed text-[10px] font-bold uppercase tracking-widest">Günün Etkisi</span>
+</div>
+<h4 class="text-white font-headline text-lg font-bold leading-tight">Güneş - Jüpiter Üçgeni: Şans Kapıda</h4>
+</div>
+</div>
+<div class="bg-surface-container p-5 rounded-[2rem] flex flex-col gap-3">
+<div class="w-10 h-10 bg-primary/10 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div>
+<h5 class="font-headline font-bold text-sm text-on-surface">Kişisel Şans</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">İkili ilişkilerde dengeyi bulma vakti.</p>
+</div>
+</div>
+<div class="bg-surface-container p-5 rounded-[2rem] flex flex-col gap-3">
+<div class="w-10 h-10 bg-secondary/10 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div>
+<h5 class="font-headline font-bold text-sm text-on-surface">Enerji Seviyesi</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Fiziksel aktiviteler için ideal zaman.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Insights -->
+<section class="mb-12">
+<h3 class="font-headline text-xl font-bold text-on-surface mb-4">Manevi Rehber</h3>
+<div class="space-y-4">
+<div class="bg-white p-4 rounded-3xl flex items-center gap-4 shadow-[0_4px_20px_rgba(118,82,125,0.04)]">
+<div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-[#fdf8ff] flex items-center justify-center overflow-hidden">
+<img alt="meditating person in silhouette against soft pastel sunset" class="w-full h-full object-cover" data-alt="minimalist silhouette of a person meditating against a hazy soft pastel pink and lavender sunrise sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6JwVfDUq2ve-U0T0Y3iODHRIPzHGSEp1idbM9jgxx1XopsMHUfRJiAoazXxu0DEX1KqwvpcTeV543JDaHFcQ8GUKYbJNGh_3IODM9TKUHFof5EH1Tvu9Ph7TDsdqBchrTlpP082x8MKxCkx0XOldNGZC7hXrxYyDPFCDWOdtTSQF1CC68uI_RFagcqDfRzOdx_ZUsismpYCI-arhD6qDtK3Dcm6f8UEn46KByhd5-goUcQdxRlbP0gOEclXkS1BlpatJc06Euig"/>
+</div>
+<div class="flex-grow">
+<p class="text-sm font-semibold text-on-surface">Sabah Ritüeli: Niyet Belirleme</p>
+<p class="text-xs text-outline italic">"Bugün sevgiyle doluyum..."</p>
+</div>
+<button class="material-symbols-outlined text-outline-variant">chevron_right</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#fdf8ff]/80 backdrop-blur-xl rounded-t-[2rem] z-50 shadow-[0_-12px_32px_rgba(51,49,59,0.06)]">
+<a class="flex flex-col items-center justify-center text-[#76527d] dark:text-[#A881AF] bg-[#76527d]/10 rounded-2xl px-4 py-1 active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Takvim</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 hover:text-[#76527d] transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Enerji</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 hover:text-[#76527d] transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Rehber</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 hover:text-[#76527d] transition-colors active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Manrope'] text-[10px] font-semibold uppercase tracking-widest mt-1">Profil</span>
+</a>
+</nav>
+<!-- Floating Action Button (Center SOR Style) -->
+<div class="fixed bottom-24 right-6 z-40">
+<button class="w-14 h-14 bg-inverse-surface text-surface flex items-center justify-center rounded-full shadow-lg active:scale-90 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+</body></html>

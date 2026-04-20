@@ -48,3 +48,29 @@ This document outlines core requirements and behaviors requested by the primary 
   5. Zikirmatik
   6. Profil
 - The "Egzersiz" (Exercise) tab must be removed.
+
+## 10. EAS Build & TestFlight Pipeline (CRITICAL — NEVER VIOLATE)
+This project uses Expo/React Native with **EAS Build** for CI/CD. TestFlight distributions are triggered via EAS CLI. The following rules are absolute:
+
+1. **NEVER** create or commit `ios/` or `android/` folders. This is a **Managed Workflow** project.
+2. **NEVER** run `npx expo prebuild` — EAS handles native code generation in the cloud.
+3. **ALWAYS** use `npx expo install` for adding new dependencies to ensure SDK compatibility.
+4. **ALWAYS** keep `eas.json` environment variables in sync with `.env`.
+5. **NEVER** hardcode API keys directly in source code — use `process.env.EXPO_PUBLIC_*` pattern.
+6. **NEVER** change `bundleIdentifier` without coordinating with Apple Developer Portal.
+
+## 11. Deployment (EAS Build via Terminal)
+When instructed to deploy (e.g., "TestFlight'a yolla", "Güncellemeyi çık", "Deploy et"), follow the `/deploy` workflow which runs:
+
+```bash
+npx eas-cli build --platform ios --profile production --auto-submit --non-interactive
+```
+
+After the build, confirm with: "Build başarıyla EAS'a gönderildi. Ortalama 15-25 dakika içinde uygulama paketlenip TestFlight'a otomatik yüklenecektir."
+
+## 12. Error Reporting & Bug Tracking
+1. **All errors** must be reported through `captureError()` from `utils/error-reporter.ts`, not raw `console.error`.
+2. **New bugs** must be logged in `docs/bug-tracker.md` using the `/report-bug` workflow.
+3. **Bug fixes** must update the tracker using the `/fix-bug` workflow.
+4. **Never swallow errors silently** — every catch block must either handle or report.
+

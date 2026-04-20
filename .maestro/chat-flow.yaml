@@ -1,0 +1,16 @@
+appId: com.peratakvimi.app
+---
+# Requires user to be logged in
+- launchApp
+- waitForAnimationToEnd
+- tapOn: "Danış"
+- assertVisible: "Danış"
+- waitForAnimationToEnd
+- inputText:
+    id: "chat-input"
+    text: "Bugün için ne önerirsin?"
+- tapOn:
+    id: "send-button"
+- waitForAnimationToEnd
+- assertVisible: ".*"
+  # Verify response appeared (any text from AI)

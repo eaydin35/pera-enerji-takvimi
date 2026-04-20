@@ -1,10 +1,17 @@
 // types/profile.ts
 
+export type Gender = 'male' | 'female' | 'other';
+export type LifeFocus = 'love' | 'career' | 'family' | 'children' | 'money' | 'health' | 'spiritual';
+
 export interface UserProfile {
   id: string;
   email?: string;
   firstName: string;
   lastName: string;
+  
+  // Demographics / Persona
+  gender?: Gender;
+  lifeFocus?: LifeFocus[];
   
   // Birth Data
   birthDate: string;       // YYYY-MM-DD format
@@ -21,8 +28,11 @@ export interface UserProfile {
   avatarUrl?: string;
   chartVersion?: number; // Used for recalculating the charting;
   
-  // Chart Update Rights
+  // Chart & Token Rights
   chartUpdatesRemaining: number;
+  tokens: number;
+  sub_stars?: number;
+  bonus_stars?: number;
   chartLastUpdatedAt?: string;
   
   // WooCommerce Connection
@@ -38,6 +48,10 @@ export interface GuestProfile {
   firstName: string;
   lastName: string;
   
+  // Demographics / Persona
+  gender?: Gender;
+  lifeFocus?: LifeFocus[];
+  
   // Birth Data
   birthDate: string;
   birthTime: string;
@@ -47,6 +61,7 @@ export interface GuestProfile {
   
   avatarUrl?: string;
   chartVersion?: number;
+  tokens: number;
   
   createdAt: string; // Local timestamp ISO string
   isGuest: true;

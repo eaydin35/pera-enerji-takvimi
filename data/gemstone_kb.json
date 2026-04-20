@@ -108,6 +108,7 @@
         "Altın Topaz",
         "Kaplan Gözü"
       ],
+      "esma_id": "ya_nur",
       "esma": "En-Nûr",
       "esma_meaning": "Nur veren, aydınlatan",
       "color": "#FFA500",
@@ -119,6 +120,7 @@
         "Selenite",
         "İnci"
       ],
+      "esma_id": "ya_vedud",
       "esma": "El-Vedûd",
       "esma_meaning": "Seven, sevgi kaynağı",
       "color": "#C0C0C0",
@@ -130,6 +132,7 @@
         "Florit",
         "Agat"
       ],
+      "esma_id": "ya_alim",
       "esma": "El-Alîm",
       "esma_meaning": "Her şeyi bilen",
       "color": "#00CED1",
@@ -141,8 +144,9 @@
         "Rodokrozit",
         "Kunzit"
       ],
-      "esma": "El-Cemîl",
-      "esma_meaning": "Güzel olan, güzellik veren",
+      "esma_id": "ya_latif",
+      "esma": "El-Latîf",
+      "esma_meaning": "Lütuf sahibi, incelik veren",
       "color": "#FF69B4",
       "color_name": "Pembe"
     },
@@ -152,6 +156,7 @@
         "Garnet",
         "Kan Taşı"
       ],
+      "esma_id": "ya_kaviyy",
       "esma": "El-Kavî",
       "esma_meaning": "Güçlü olan",
       "color": "#DC143C",
@@ -163,6 +168,7 @@
         "Lapis Lazuli",
         "Safir"
       ],
+      "esma_id": "ya_fettah",
       "esma": "El-Fettâh",
       "esma_meaning": "Açan, fetheden",
       "color": "#4B0082",
@@ -174,6 +180,7 @@
         "Oniks",
         "Hematit"
       ],
+      "esma_id": "ya_sabur",
       "esma": "Es-Sabûr",
       "esma_meaning": "Çok sabırlı olan",
       "color": "#2F4F4F",
@@ -185,6 +192,7 @@
         "Tanzanit",
         "Opal"
       ],
+      "esma_id": "ya_bedi",
       "esma": "El-Bedî",
       "esma_meaning": "Eşsiz yaratıcı",
       "color": "#00BFFF",
@@ -196,6 +204,7 @@
         "Larimar",
         "Sujilit"
       ],
+      "esma_id": "ya_batin",
       "esma": "El-Bâtın",
       "esma_meaning": "Gizli olan, iç yüz",
       "color": "#7B68EE",
@@ -207,6 +216,7 @@
         "Moldavit",
         "Smoky Kuvars"
       ],
+      "esma_id": "ya_muhyi",
       "esma": "El-Muhyî",
       "esma_meaning": "Hayat veren, dirilten",
       "color": "#800020",
@@ -218,6 +228,7 @@
       "planet": "Moon",
       "color_name": "Gümüş/Beyaz",
       "color_hex": "#C0C0C0",
+      "esma_id": "ya_kadir",
       "esma": "El-Kadîr",
       "esma_meaning": "Güç ve kudret sahibi",
       "stone": "Aytaşı",
@@ -227,6 +238,7 @@
       "planet": "Mars",
       "color_name": "Kırmızı",
       "color_hex": "#DC143C",
+      "esma_id": "ya_kaviyy",
       "esma": "El-Kavî",
       "esma_meaning": "Güçlü olan",
       "stone": "Garnet",
@@ -236,6 +248,7 @@
       "planet": "Mercury",
       "color_name": "Yeşil/Turkuaz",
       "color_hex": "#00CED1",
+      "esma_id": "ya_alim",
       "esma": "El-Alîm",
       "esma_meaning": "Her şeyi bilen",
       "stone": "Zümrüt",
@@ -245,6 +258,7 @@
       "planet": "Jupiter",
       "color_name": "Mor/Lacivert",
       "color_hex": "#4B0082",
+      "esma_id": "ya_fettah",
       "esma": "El-Fettâh",
       "esma_meaning": "Açan, fetheden",
       "stone": "Ametist",
@@ -254,6 +268,7 @@
       "planet": "Venus",
       "color_name": "Pembe/Yeşil",
       "color_hex": "#FF69B4",
+      "esma_id": "ya_vedud",
       "esma": "El-Vedûd",
       "esma_meaning": "Seven, sevgi kaynağı",
       "stone": "Gül Kuvarsı",
@@ -263,6 +278,7 @@
       "planet": "Saturn",
       "color_name": "Siyah/Koyu Gri",
       "color_hex": "#2F4F4F",
+      "esma_id": "ya_sabur",
       "esma": "Es-Sabûr",
       "esma_meaning": "Çok sabırlı olan",
       "stone": "Obsidyen",
@@ -272,6 +288,7 @@
       "planet": "Sun",
       "color_name": "Altın/Turuncu",
       "color_hex": "#FFA500",
+      "esma_id": "ya_nur",
       "esma": "En-Nûr",
       "esma_meaning": "Nur veren, aydınlatan",
       "stone": "Sitrin",

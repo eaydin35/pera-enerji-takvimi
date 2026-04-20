@@ -72,7 +72,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             try {
                 const { error: insertError } = await supabase.from('profiles').insert({
                     id: authUser.id,
-                    chart_updates_remaining: 1
+                    tokens: 5
                 });
                 if (!insertError) {
                     const p = await loadUserProfile(authUser.id);
@@ -116,7 +116,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             try {
                 const { error: insertError } = await supabase.from('profiles').insert({
                     id: authUser.id,
-                    chart_updates_remaining: 1,
+                    tokens: 5,
                     first_name: authUser.user_metadata?.full_name || 'Misafir'
                 });
                 if (!insertError) {
@@ -150,24 +150,12 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
                 return { success: true };
             }
 
-            // Registered user
-            let p = targetProfile as UserProfile;
-            const isPremium = useStore.getState().isPremium;
-
-            // If user is basic and has 0 free chart updates left, see if they have 'Jeton' (tokens)
-            if (!isPremium && p.chartUpdatesRemaining <= 0) {
-                const currentTokens = useStore.getState().tokens;
-                if (currentTokens >= 1) {
-                    // Deduct 1 Jeton to authorize this map update map
-                    useStore.getState().useTokens(1);
-                    // Temporarily boost the payload remaining updates to 1 so the service layer executes it
-                    p = { ...p, chartUpdatesRemaining: 1 };
-                } else {
-                    return { success: false, error: 'Harita güncellemek için jetonunuz bulunmuyor. Lütfen mağazadan jeton temin ediniz.' };
-                }
+            // Map updates require 3 Tokens now
+            if (p.tokens < 3) {
+                return { success: false, error: 'Harita güncellemek için 3 yıldızınız bulunmuyor. Lütfen kozmik cüzdanınıza yıldız yükleyin.' };
             }
 
-            const res = await updateBirthData(p.id, p.chartUpdatesRemaining, newData, isPremium);
+            const res = await updateBirthData(p.id, p.tokens, newData);
             if (res.success) {
                 set({
                     profile: {
@@ -177,10 +165,13 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
                         birthPlace: newData.place,
                         birthLat: newData.lat,
                         birthLng: newData.lng,
-                        chartUpdatesRemaining: res.remainingUpdates,
+                        tokens: res.remainingTokens,
                         chartLastUpdatedAt: new Date().toISOString(),
                     }
                 });
+                
+                // Keep legacy global store in sync
+                useStore.getState().setTokens(res.remainingTokens);
                 return { success: true };
             } else {
                 set({ error: res.error });
