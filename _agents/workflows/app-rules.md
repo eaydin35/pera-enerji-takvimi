@@ -74,3 +74,26 @@ After the build, confirm with: "Build başarıyla EAS'a gönderildi. Ortalama 15
 3. **Bug fixes** must update the tracker using the `/fix-bug` workflow.
 4. **Never swallow errors silently** — every catch block must either handle or report.
 
+## 13. Yıldız (Star) Ekonomisi — Veritabanı Kuralları
+1. **Token harcama ve yükleme işlemleri ASLA doğrudan SQL UPDATE ile yapılmaz.** Mutlaka `supabase.rpc('deduct_stars', ...)` veya `supabase.rpc('add_bonus_stars', ...)` kullanılmalıdır.
+2. **sub_stars**: Aylık abonelik yıldızları — ay sonunda sıfırlanır, devretmez.
+3. **bonus_stars**: Ekstra satın alınan yıldızlar — devreder, sıfırlanmaz.
+4. **Harcama sırası**: Önce sub_stars, bitince bonus_stars düşer.
+5. **profiles.tokens**: Toplam bakiye (sub_stars + bonus_stars). Geriye dönük uyumluluk için korunur.
+
+## 14. Gemini API — Ücretli Katman Kuralları
+1. Proje artık **Google AI Studio Pay-as-you-go** katmanındadır. API key ücretsiz değildir.
+2. **Model**: `gemini-2.0-flash` veya `gemini-2.0-flash-lite` — başka model YASAK.
+3. **Maliyet kontrolü**: Her AI çağrısında token sayısı loglanmalıdır (`[Token Usage]` prefix'i ile).
+4. **Cache**: Aynı natal chart + aynı gün için yapılan tekrarlayan çağrılar cache'lenmeli (gelecek sprint).
+5. **Google Cloud Console** üzerinden aylık bütçe alarmı kurulmalıdır.
+
+## 15. CHANGELOG Disiplini
+1. Her `/commit` sonrası `CHANGELOG.md` dosyası güncellenmelidir.
+2. Her yeni chat oturumunda AI asistan **ilk olarak CHANGELOG.md dosyasını okumalıdır**.
+3. Sürüm numaraları [Semantic Versioning](https://semver.org/) formatındadır.
+
+## 16. Chat Oturumu Yönetimi
+1. Her büyük özellik veya bug fix için **ayrı chat oturumu** açılmalıdır.
+2. Her chat'in sonunda mutlaka `/commit` çalıştırılmalıdır.
+3. Deploy öncesi `/lint` kontrolü yapılmalıdır.
